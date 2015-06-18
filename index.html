@@ -2,14 +2,22 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RegDem2015</title>
 
+    <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="static/bundle.css" />
     <link rel="stylesheet" href="libs/leaflet-0.7.3/leaflet.css" />
   </head>
   <body>
-    <h1>Kart</h1>
-    <div id="map"></div>
+    <div id="sok">
+      <input placeholder="Søk etter vegobjekt" />
+    </div>
+
+    <div id="vegobjekt"></div>
+    <div id="rediger-vegobjekt"></div>
+
+    <div id="kart"></div>
 
     <script src="libs/leaflet-0.7.3/leaflet.js"></script>
     <script src="libs/proj4-compressed.js"></script>

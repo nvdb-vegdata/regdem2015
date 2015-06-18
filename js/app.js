@@ -24,9 +24,9 @@ var crs = new L.Proj.CRS('EPSG:25833',
     }
 );
 
-var _kartcache = 'http://m{s}.nvdbcache.geodataonline.no/arcgis/rest/services/Trafikkportalen/GeocacheTrafikkJPG/MapServer/tile/{z}/{y}/{x}';
+var kartcache = 'http://m{s}.nvdbcache.geodataonline.no/arcgis/rest/services/Trafikkportalen/GeocacheTrafikkJPG/MapServer/tile/{z}/{y}/{x}';
 
-var bakgrunnskart = new L.tileLayer(_kartcache, {
+var bakgrunnskart = new L.tileLayer(kartcache, {
     maxZoom: 16,
     minZoom: 3,
     subdomains: '123456789',
@@ -34,7 +34,7 @@ var bakgrunnskart = new L.tileLayer(_kartcache, {
     attribution: 'Registratordemonstrator'
 });
 
-var map = new L.map('map', {
+var kart = new L.map('kart', {
     crs: crs,
     continuousWorld: true,
     worldCopyJump: false,
@@ -42,5 +42,8 @@ var map = new L.map('map', {
         bakgrunnskart
     ],
     center: [63.43,10.40],
-    zoom: 13
+    zoom: 13,
+    zoomControl: false
 });
+
+new L.Control.Zoom( {position: 'bottomleft'}).addTo(kart);
