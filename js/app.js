@@ -61,3 +61,41 @@ var kart = new L.map('kart', {
 new L.Control.Zoom( {position: 'bottomleft'}).addTo(kart);
 
 
+/* Component
+------------------------------------------------------*/
+var Select = require('react-select');
+
+
+/* Rendering
+------------------------------------------------------*/
+
+var getOptions = function(input, callback) {
+    setTimeout(function() {
+        callback(null, {
+            options: [
+                { value: 'one', label: 'One' },
+                { value: 'two', label: 'Two' }
+            ],
+            complete: true
+        });
+    }, 500);
+};
+
+function logChange(val) {
+    console.log("Selected: " + val);
+}
+
+var render = function () {
+  React.render(
+    <Select
+      name="sok"
+      placeholder="Søk etter vegobjekt"
+      asyncOptions={getOptions}
+      noResultsText="Ingen treff i datakatalogen"
+      onChange={logChange}
+    />,
+    document.getElementById('sok')
+  );
+}
+
+render();
