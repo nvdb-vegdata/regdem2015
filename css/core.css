@@ -1,5 +1,8 @@
 @import (inline) 'reset.css';
 @import (inline) 'react-select.css';
+
+html, body {
+  font-family: sans-serif;
 }
 
 #kart {
