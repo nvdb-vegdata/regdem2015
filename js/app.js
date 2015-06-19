@@ -5,6 +5,11 @@ var immstruct = require('immstruct');
 var component = omniscient.withDefaults({
   jsx: true
 });
+
+
+/* Naiv kart implementasjon
+------------------------------------------------------*/
+
 var crs = new L.Proj.CRS('EPSG:25833',
     '+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs ',
     {
@@ -54,3 +59,5 @@ var kart = new L.map('kart', {
 });
 
 new L.Control.Zoom( {position: 'bottomleft'}).addTo(kart);
+
+
