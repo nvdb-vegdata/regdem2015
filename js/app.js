@@ -1,3 +1,10 @@
+var React = require('react');
+var omniscient = require('omniscient');
+var immstruct = require('immstruct');
+
+var component = omniscient.withDefaults({
+  jsx: true
+});
 var crs = new L.Proj.CRS('EPSG:25833',
     '+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs ',
     {
