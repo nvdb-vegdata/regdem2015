@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "less": "^2.5.1",
-    "react-select": "^0.4.9"
+    "react-select": "^0.4.9",
+    "qwest": "^1.7.0"
   }
 }
