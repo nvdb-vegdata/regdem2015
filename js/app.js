@@ -1,6 +1,7 @@
 var React = require('react');
 var omniscient = require('omniscient');
 var immstruct = require('immstruct');
+var Fetch = require('../js/fetch.js');
 
 var component = omniscient.withDefaults({
   jsx: true
@@ -70,15 +71,12 @@ var Select = require('react-select');
 ------------------------------------------------------*/
 
 var getOptions = function(input, callback) {
-    setTimeout(function() {
-        callback(null, {
-            options: [
-                { value: 'one', label: 'One' },
-                { value: 'two', label: 'Two' }
-            ],
+    Fetch.fetch(function(data) {
+          callback(null, {
+            options: data,
             complete: true
         });
-    }, 500);
+    });
 };
 
 function logChange(val) {
@@ -92,6 +90,7 @@ var render = function () {
       placeholder="Søk etter vegobjekt"
       asyncOptions={getOptions}
       noResultsText="Ingen treff i datakatalogen"
+      searchPromptText = "Søk etter vegobjekt"
       onChange={logChange}
     />,
     document.getElementById('sok')
