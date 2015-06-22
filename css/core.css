@@ -1,5 +1,8 @@
-* {
-  box-sizing: border-box;
+@import (inline) 'reset.css';
+@import (inline) 'react-select.css';
+
+html, body {
+  font-family: sans-serif;
 }
 
 #kart {
@@ -19,10 +22,4 @@
   top: 0;
   margin: 10px;
   max-width: 500px;
-}
-
-#sok input {
-  font-size: 16px;
-  padding: 10px;
-  width: 100%;
 }
