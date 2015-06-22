@@ -44,6 +44,7 @@ var bakgrunnskart = new L.tileLayer(kartcache, {
   minZoom: 3,
   subdomains: '123456789',
   continuousWorld: true,
+  detectRetina: true,
   attribution: 'Registratordemonstrator'
 });
 
