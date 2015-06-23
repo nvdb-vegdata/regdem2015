@@ -1,14 +1,17 @@
 var React = require('react');
 var omniscient = require('omniscient');
 var immstruct = require('immstruct');
+var omnivore = require('leaflet-omnivore');
+
 var Fetch = require('./fetch.js');
+
 
 var component = omniscient.withDefaults({
   jsx: true
 });
 
 
-/* Naiv kart implementasjon
+/* Naiv kartimplementasjon
 ------------------------------------------------------*/
 
 // Spesifisering av vegkartets projeksjon
@@ -67,12 +70,10 @@ var kart = new L.map('kart', {
 // PLassering av zoom kontrollene
 new L.Control.Zoom( {position: 'bottomleft'}).addTo(kart);
 
-
 /* Component
 ------------------------------------------------------*/
 // Inkluderer komponenten for autocomplete. Brukes i søkefelt.
 var Select = require('react-select');
-
 
 /* Rendering
 ------------------------------------------------------*/
@@ -90,6 +91,19 @@ function logChange(val) {
   console.log("Selected: " + val);
 }
 
+function displayMarkers(id) {
+
+  var mapbox = kart.getBounds();
+
+  Fetch.fetchAPIObjekter(id, mapbox, function(data){
+    for(var elem in data.vegObjekter){
+      var posisjon = data.vegObjekter[elem].lokasjon.geometriWgs84;
+      omnivore.wkt.parse(posisjon).addTo(kart);
+    }
+    });
+
+}
+
 var render = function () {
   // Renderer søkefeltet med autocomplete
   React.render(
@@ -99,7 +113,7 @@ var render = function () {
     asyncOptions={getOptions}
     noResultsText="Ingen treff i datakatalogen"
     searchPromptText = "Søk etter vegobjekt"
-    onChange={logChange}
+    onChange={displayMarkers}
     />,
     document.getElementById('sok')
   );
