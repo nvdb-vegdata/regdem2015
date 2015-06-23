@@ -1,5 +1,6 @@
 @import (inline) 'reset.css';
 @import (inline) 'react-select.css';
+@import (inline) 'easy-button.css';
 
 html, body {
   font-family: sans-serif;
@@ -23,3 +24,5 @@ html, body {
   margin: 10px;
   max-width: 500px;
 }
+
+.target {font-size:1.5em}
