@@ -7,6 +7,7 @@ var L = window.L || {};
 
 /* Naiv kart implementasjon
 ------------------------------------------------------*/
+// Spesifisering av vegkartets projeksjon
 var crs = new L.Proj.CRS('EPSG:25833',
   '+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs ',
   {
@@ -35,6 +36,7 @@ var crs = new L.Proj.CRS('EPSG:25833',
 
 var kartcache = 'http://m{s}.nvdbcache.geodataonline.no/arcgis/rest/services/Trafikkportalen/GeocacheTrafikkJPG/MapServer/tile/{z}/{y}/{x}';
 
+// Oppsett av bakgrunnskartet
 var bakgrunnskart = new L.tileLayer(kartcache, {
   maxZoom: 16,
   minZoom: 3,
@@ -44,6 +46,7 @@ var bakgrunnskart = new L.tileLayer(kartcache, {
   attribution: 'Registratordemonstrator'
 });
 
+// Oppsett av kart
 var kart = new L.map('kart', {
   crs: crs,
   continuousWorld: true,
@@ -56,6 +59,7 @@ var kart = new L.map('kart', {
   zoomControl: false
 });
 
+// PLassering av zoom kontrollene
 new L.Control.Zoom( {position: 'bottomleft'}).addTo(kart);
 kart.locate({setView: true, maxZoom: 14});
 
@@ -63,11 +67,16 @@ L.easyButton('<span class="target">&curren;</span>', function (){
   kart.locate({setView: true, maxZoom: 14});
 }).addTo( kart );
 
+/* Component
+------------------------------------------------------*/
+// Inkluderer komponenten for autocomplete. Brukes i søkefelt.
+
 
 /* Rendering
 ------------------------------------------------------*/
+// Henter inn alle dataobjektene som vises i søkefeltet med autocomplete
 var getOptions = function(input, callback) {
-  Fetch.fetch(function(data) {
+  Fetch.fetchObjekttyper( function(data) {
     callback(null, {
       options: data,
       complete: true
@@ -80,6 +89,7 @@ function logChange(val) {
 }
 
 var render = function () {
+  // Renderer søkefeltet med autocomplete
   React.render(
     <Select
     name="sok"
