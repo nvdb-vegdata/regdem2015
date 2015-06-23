@@ -38,7 +38,8 @@ var kartcache = 'http://m{s}.nvdbcache.geodataonline.no/arcgis/rest/services/Tra
 
 // Oppsett av bakgrunnskartet
 var bakgrunnskart = new L.tileLayer(kartcache, {
-  maxZoom: 16,
+  maxZoom: 17,
+  maxNativeZoom: 16,
   minZoom: 3,
   subdomains: '123456789',
   continuousWorld: true,
