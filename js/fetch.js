@@ -1,6 +1,6 @@
 var qwest = require('qwest');
 
-module.exports.fetch = function(callback) {
+module.exports.fetchObjekttyper = function(callback) {
   qwest.get('resources/objekttyper.json').then(function (responseData) {
     var listObjects = responseData.vegObjektTyper.map( function(obj) {
       return {value: obj.id, label: obj.navn};
@@ -19,5 +19,17 @@ module.exports.fetch = function(callback) {
     });
 
     callback(sortedListObjects);
+  });
+};
+
+module.exports.fetchDatakatalogBomstasjoner = function(callback) {
+  qwest.get('resources/datakatalog-bomstasjoner.json').then(function (responseData) {
+    callback(responseData);
+  });
+};
+
+module.exports.fetchBomstasjoner = function(callback) {
+  qwest.get('resources/bomstasjoner.json').then(function (responseData) {
+    callback(responseData);
   });
 };
