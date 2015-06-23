@@ -70,6 +70,9 @@ var kart = new L.map('kart', {
 // PLassering av zoom kontrollene
 new L.Control.Zoom( {position: 'bottomleft'}).addTo(kart);
 
+// Gruppe m
+var markers = new L.FeatureGroup();
+
 /* Component
 ------------------------------------------------------*/
 // Inkluderer komponenten for autocomplete. Brukes i søkefelt.
@@ -92,16 +95,27 @@ function logChange(val) {
 }
 
 function displayMarkers(id) {
-
   var mapbox = kart.getBounds();
-
   Fetch.fetchAPIObjekter(id, mapbox, function(data){
-    for(var elem in data.vegObjekter){
-      var posisjon = data.vegObjekter[elem].lokasjon.geometriWgs84;
-      omnivore.wkt.parse(posisjon).addTo(kart);
-    }
-    });
 
+    for (var elem in data.vegObjekter){
+      var posisjon = data.vegObjekter[elem].lokasjon.geometriWgs84;
+      var marker = omnivore.wkt.parse(posisjon);
+      markers.addLayer(marker);
+    }
+    kart.addLayer(markers);
+  });
+}
+
+function clearAllMarkers() {
+  markers.clearLayers();
+}
+
+function updateMarkers(id) {
+  if (id) {
+    clearAllMarkers();
+    displayMarkers(id);
+  }
 }
 
 var render = function () {
@@ -113,7 +127,7 @@ var render = function () {
     asyncOptions={getOptions}
     noResultsText="Ingen treff i datakatalogen"
     searchPromptText = "Søk etter vegobjekt"
-    onChange={displayMarkers}
+    onChange={updateMarkers}
     />,
     document.getElementById('sok')
   );
