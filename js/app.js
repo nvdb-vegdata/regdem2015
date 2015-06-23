@@ -60,10 +60,11 @@ var kart = new L.map('kart', {
 });
 
 new L.Control.Zoom( {position: 'bottomleft'}).addTo(kart);
+kart.locate({setView: true, maxZoom:14});
 
-
-kart.locate({setView: true, maxZoom: 16});
-
+L.easyButton('<span class="target">&curren;</span>', function (){
+  kart.locate({setView: true, maxZoom:14});
+}).addTo( kart );
 
 /* Component
 ------------------------------------------------------*/
