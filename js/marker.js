@@ -2,34 +2,43 @@ var omnivore = require('leaflet-omnivore');
 
 var Fetch = require('./fetch.js');
 
-var objektID;
-
+var objektID = null;
 var markers = new L.MarkerClusterGroup({
   maxClusterRadius: 50,
-  disableClusteringAtZoom:16
+  disableClusteringAtZoom:16 // Ved bunn av zoom, vil clustering slås av.
 });
 
-
-
-function displayMarkers(kart, id) {
+// Tar inn kart og objektID, fetcher objekter og viser på kart.
+function updateMarkers(kart, id) {
   var mapbox = kart.getBounds();
-  Fetch.fetchAPIObjekter(id, mapbox, function(data){
-    markers.clearLayers();
-    data.vegObjekter.forEach(function (vegObjekt) {
-      var posisjon = vegObjekt.lokasjon.geometriWgs84;
-      var marker = omnivore.wkt.parse(posisjon);
-      markers.addLayer(marker);
-    });
 
-    kart.addLayer(markers);
+  Fetch.fetchAPIObjekter(id, mapbox, function(data){
+    clearMarkers();
+    displayMarkers(kart, data.vegObjekter);
   });
+}
+
+// Viser listen av objekter på kartet som enten punkt, linje eller flate.
+function displayMarkers(kart, objekter) {
+  objekter.forEach(function (vegObjekt) {
+    var posisjon = vegObjekt.lokasjon.geometriWgs84;
+    var marker = omnivore.wkt.parse(posisjon);
+    markers.addLayer(marker);
+  });
+
+  kart.addLayer(markers);
+}
+
+// Fjerner alle markører på kartet.
+function clearMarkers() {
+  markers.clearLayers();
 }
 
 module.exports.update = function (kart, id) {
   if (id) {
     objektID = id;
-    displayMarkers(kart, id);
+    updateMarkers(kart, id);
   } else if (objektID) {
-    displayMarkers(kart, objektID);
+    updateMarkers(kart, objektID);
   }
 }
