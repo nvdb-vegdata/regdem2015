@@ -14,7 +14,7 @@ var markers = new L.MarkerClusterGroup({
 function displayMarkers(kart, id) {
   var mapbox = kart.getBounds();
   Fetch.fetchAPIObjekter(id, mapbox, function(data){
-
+    markers.clearLayers();
     data.vegObjekter.forEach(function (vegObjekt) {
       var posisjon = vegObjekt.lokasjon.geometriWgs84;
       var marker = omnivore.wkt.parse(posisjon);
@@ -25,17 +25,11 @@ function displayMarkers(kart, id) {
   });
 }
 
-function clearAllMarkers() {
-  markers.clearLayers();
-}
-
 module.exports.update = function (kart, id) {
   if (id) {
     objektID = id;
-    clearAllMarkers();
     displayMarkers(kart, id);
   } else if (objektID) {
-    clearAllMarkers();
     displayMarkers(kart, objektID);
   }
 }
