@@ -39,7 +39,7 @@ module.exports.fetchAPIObjekter = function(objectID, box, callback) {
   var nelng = box._northEast.lng;
   var swlat = box._southWest.lat;
   var swlng = box._southWest.lng;
-  var url = 'https://www.vegvesen.no/nvdb/api/vegobjekter/' + objectID + '/.json?bbox='+ nelng + ','+ nelat +','+ swlng + ',' + swlat + '&srid=WGS84';
+  var url = 'https://www.vegvesen.no/nvdb/api/vegobjekter/' + objectID + '/.json?bbox='+ nelng + ','+ nelat +','+ swlng + ',' + swlat + '&srid=WGS84&rows=2000';
   qwest.get(url).then(function(responseData) {
     callback(responseData);
   });
