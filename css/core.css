@@ -1,5 +1,5 @@
 @import (inline) 'reset.css';
-@import (inline) 'react-select.css';
+@import (inline) 'typeahead.css';
 @import (inline) 'easy-button.css';
 
 html, body {
