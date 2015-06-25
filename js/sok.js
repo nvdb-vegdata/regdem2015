@@ -1,7 +1,7 @@
 var React = require('react');
 var Typeahead = require('react-typeahead-component');
 
-var Fetch = require('./fetch.js')
+var Fetch = require('./fetch.js');
 var OptionTemplate = require('./optiontemplate.jsx');
 
 // var getOptions = function(input, callback) {
@@ -53,9 +53,9 @@ module.exports.ObjektSok = React.createClass({
   },
 
   getOptions: function(input) {
-    var _this = this;
+    var that = this;
     Fetch.fetch( input, function(data) {
-      _this.handleStoreChange(data);
+      that.handleStoreChange(data);
     });
 
   },

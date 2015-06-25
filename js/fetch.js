@@ -1,26 +1,17 @@
 var qwest = require('qwest');
 
-module.exports.fetch = function(input, callback) {
-  stub = input;
-  qwest.get('resources/objekttyper.json').then(function (responseData) {
-    var listObjects = convert(responseData.vegObjektTyper).filter(containsInput).sort(comparator);
-
-    callback(listObjects);
-  });
-};
-
-var stub = "";
+var stub = '';
 
 var containsInput = function(obj) {
   var string = obj.label.toLowerCase();
   return string.includes(stub);
-}
+};
 
 var convert = function(list) {
   return list.map( function(obj) {
     return {value: obj.id, label: obj.navn};
   });
-}
+};
 
 var comparator = function (a, b) {
   if (a.label > b.label) {
@@ -32,4 +23,13 @@ var comparator = function (a, b) {
   }
 
   return 0;
+};
+
+module.exports.fetch = function(input, callback) {
+  stub = input;
+  qwest.get('resources/objekttyper.json').then(function (responseData) {
+    var listObjects = convert(responseData.vegObjektTyper).filter(containsInput).sort(comparator);
+
+    callback(listObjects);
+  });
 };

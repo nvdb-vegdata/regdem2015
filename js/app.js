@@ -1,10 +1,6 @@
 var React = require('react');
-var Select = require('react-select');
-
-var Fetch = require('../js/fetch.js');
 var Sok = require('../js/sok.js');
 var L = window.L || {};
-
 
 /* Naiv kart implementasjon
 ------------------------------------------------------*/

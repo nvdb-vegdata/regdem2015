@@ -6,7 +6,7 @@ module.exports = React.createClass({
 
         // If this option is currently selected, render it with a green background.
         if (this.props.isSelected) {
-            selected = "selected";
+            selected = 'selected';
         }
 
         return (
