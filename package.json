@@ -43,7 +43,8 @@
   },
   "dependencies": {
     "less": "^2.5.1",
+    "qwest": "^1.7.0",
     "react-select": "^0.4.9",
-    "qwest": "^1.7.0"
+    "react-typeahead-component": "^0.6.0"
   }
 }
