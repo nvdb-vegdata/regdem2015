@@ -2,6 +2,7 @@ var React = require('react');
 var Select = require('react-select');
 
 var Fetch = require('../js/fetch.js');
+var Sok = require('../js/sok.js');
 var L = window.L || {};
 
 
@@ -62,35 +63,3 @@ kart.locate({setView: true, maxZoom: 14});
 L.easyButton('<span class="target">&curren;</span>', function (){
   kart.locate({setView: true, maxZoom: 14});
 }).addTo( kart );
-
-
-/* Rendering
-------------------------------------------------------*/
-var getOptions = function(input, callback) {
-  Fetch.fetch(function(data) {
-    callback(null, {
-      options: data,
-      complete: true
-    });
-  });
-};
-
-function logChange(val) {
-  console.log('Selected: ' + val);
-}
-
-var render = function () {
-  React.render(
-    <Select
-    name="sok"
-    placeholder="Søk etter vegobjekt"
-    asyncOptions={getOptions}
-    noResultsText="Ingen treff i datakatalogen"
-    searchPromptText = "Søk etter vegobjekt"
-    onChange={logChange}
-    />,
-    document.getElementById('sok')
-  );
-};
-
-render();
