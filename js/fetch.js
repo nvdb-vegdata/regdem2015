@@ -1,23 +1,35 @@
 var qwest = require('qwest');
 
-module.exports.fetch = function(callback) {
+module.exports.fetch = function(input, callback) {
+  stub = input;
   qwest.get('resources/objekttyper.json').then(function (responseData) {
-    var listObjects = responseData.vegObjektTyper.map( function(obj) {
-      return {value: obj.id, label: obj.navn};
-    });
+    var listObjects = convert(responseData.vegObjektTyper).filter(containsInput).sort(comparator);
 
-    var sortedListObjects = listObjects.sort(function (a, b) {
-      if (a.label > b.label) {
-        return 1;
-      }
-
-      if (a.label < b.label) {
-        return -1;
-      }
-
-      return 0;
-    });
-
-    callback(sortedListObjects);
+    callback(listObjects);
   });
+};
+
+var stub = "";
+
+var containsInput = function(obj) {
+  var string = obj.label.toLowerCase();
+  return string.includes(stub);
+}
+
+var convert = function(list) {
+  return list.map( function(obj) {
+    return {value: obj.id, label: obj.navn};
+  });
+}
+
+var comparator = function (a, b) {
+  if (a.label > b.label) {
+    return 1;
+  }
+
+  if (a.label < b.label) {
+    return -1;
+  }
+
+  return 0;
 };
