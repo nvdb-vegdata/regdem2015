@@ -63,3 +63,5 @@ kart.locate({setView: true, maxZoom: 14});
 L.easyButton('<span class="target">&curren;</span>', function (){
   kart.locate({setView: true, maxZoom: 14});
 }).addTo( kart );
+
+React.render(<Sok.ObjektSok />, document.getElementById('sok'));
