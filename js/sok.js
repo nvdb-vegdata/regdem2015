@@ -25,7 +25,7 @@ var OptionTemplate = require('./optiontemplate.jsx');
 // );
 
 
-var ObjektSok = React.createClass({
+module.exports.ObjektSok = React.createClass({
   getInitialState: function() {
     return {
       inputValue: '',
@@ -80,5 +80,3 @@ var ObjektSok = React.createClass({
     });
   }
 });
-
-React.render(<ObjektSok />, document.getElementById('sok'));
