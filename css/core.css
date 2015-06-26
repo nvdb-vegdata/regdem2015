@@ -1,6 +1,7 @@
 @import (inline) 'reset.css';
 @import (inline) 'typeahead.css';
 @import (inline) 'easy-button.css';
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500);
 
 html, body {
   font-family: sans-serif;
@@ -22,7 +23,7 @@ html, body {
   right: 0;
   top: 0;
   margin: 10px;
-  max-width: 500px;
+  max-width: 400px;
 }
 
-.target {font-size:1.5em}
+.target {font-size:1.2em}
