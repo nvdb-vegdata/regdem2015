@@ -1,15 +1,15 @@
 var React = require('react');
 var Select = require('react-select');
-
 var RedigerObjekt = require('./redigerObjekt.jsx');
-
+var Marker = require('../js/marker.js');
 var Fetch = require('../js/fetch.js');
-var L = window.L || {};
-
 
 /* Naiv kart implementasjon
 ------------------------------------------------------*/
 // Spesifisering av vegkartets projeksjon
+
+var L = window.L || {};
+
 var crs = new L.Proj.CRS('EPSG:25833',
   '+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs ',
   {
@@ -87,9 +87,9 @@ var getOptions = function(input, callback) {
   });
 };
 
-function logChange(val) {
-  console.log('Selected: ' + val);
-}
+kart.on('moveend', function() {
+   Marker.update(kart);
+});
 
 var render = function () {
   // Renderer søkefeltet med autocomplete
@@ -100,16 +100,19 @@ var render = function () {
     asyncOptions={getOptions}
     noResultsText="Ingen treff i datakatalogen"
     searchPromptText = "Søk etter vegobjekt"
-    onChange={logChange}
+    onChange={Marker.update.bind(null, kart)}
     />,
     document.getElementById('sok')
   );
+};
 
-  // Rendrer skjema for redigering av objekt
+window.visObjekt = function (objektID) {
   React.render(
-    <RedigerObjekt objektID="487458621" />,
+    <RedigerObjekt objektID={objektID} />,
     document.getElementById('rediger-vegobjekt')
   );
+
+  document.getElementById('rediger-vegobjekt').style.display = 'block';
 };
 
 render();

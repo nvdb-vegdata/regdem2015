@@ -74,6 +74,10 @@ let RedigerObjekt = React.createClass({
     });
   },
 
+  closeDialog: function () {
+    document.getElementById('rediger-vegobjekt').style.display = 'none';
+  },
+
   render: function() {
     let objektTypeNavn = this.state.objektType ? this.state.objektType.navn : '';
     let objektId = this.state.objekt ? this.state.objekt.objektId : '';
@@ -129,7 +133,7 @@ let RedigerObjekt = React.createClass({
         }
 
         <div className="RedigerObjekt-knapp-container">
-          <RaisedButton label="Lagre" primary={true} /> <RaisedButton label="Avbryt" />
+          <RaisedButton label="Lagre" primary={true} /> <RaisedButton label="Avbryt" onClick={this.closeDialog} />
         </div>
 
       </div>
