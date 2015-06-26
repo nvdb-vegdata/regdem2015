@@ -42,8 +42,10 @@
     "watchify": "^3.2.1"
   },
   "dependencies": {
+    "leaflet-markercluster": "^0.2.0",
+    "leaflet-omnivore": "^0.3.2",
     "less": "^2.5.1",
-    "react-select": "^0.4.9",
-    "qwest": "^1.7.0"
+    "qwest": "^1.7.0",
+    "react-select": "^0.4.9"
   }
 }

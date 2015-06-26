@@ -1,12 +1,10 @@
 var React = require('react');
 var Select = require('react-select');
 
+var Marker = require('../js/marker.js');
 var Fetch = require('../js/fetch.js');
 var L = window.L || {};
 
-
-/* Naiv kart implementasjon
-------------------------------------------------------*/
 var crs = new L.Proj.CRS('EPSG:25833',
   '+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs ',
   {
@@ -35,8 +33,10 @@ var crs = new L.Proj.CRS('EPSG:25833',
 
 var kartcache = 'http://m{s}.nvdbcache.geodataonline.no/arcgis/rest/services/Trafikkportalen/GeocacheTrafikkJPG/MapServer/tile/{z}/{y}/{x}';
 
+// Oppsett av bakgrunnskartet
 var bakgrunnskart = new L.tileLayer(kartcache, {
-  maxZoom: 16,
+  maxZoom: 17,
+  maxNativeZoom: 16,
   minZoom: 3,
   subdomains: '123456789',
   continuousWorld: true,
@@ -44,6 +44,7 @@ var bakgrunnskart = new L.tileLayer(kartcache, {
   attribution: 'Registratordemonstrator'
 });
 
+// Oppsett av kart
 var kart = new L.map('kart', {
   crs: crs,
   continuousWorld: true,
@@ -56,6 +57,7 @@ var kart = new L.map('kart', {
   zoomControl: false
 });
 
+// PLassering av zoom kontrollene
 new L.Control.Zoom( {position: 'bottomleft'}).addTo(kart);
 kart.locate({setView: true, maxZoom: 14});
 
@@ -63,11 +65,12 @@ L.easyButton('<span class="target">&curren;</span>', function (){
   kart.locate({setView: true, maxZoom: 14});
 }).addTo( kart );
 
-
 /* Rendering
 ------------------------------------------------------*/
+
+// Henter inn alle dataobjektene som vises i søkefeltet med autocomplete
 var getOptions = function(input, callback) {
-  Fetch.fetch(function(data) {
+  Fetch.fetchObjekttyper( function(data) {
     callback(null, {
       options: data,
       complete: true
@@ -79,7 +82,12 @@ function logChange(val) {
   console.log('Selected: ' + val);
 }
 
+kart.on('moveend', function(e) {
+   Marker.update(kart);
+});
+
 var render = function () {
+  // Renderer søkefeltet med autocomplete
   React.render(
     <Select
     name="sok"
@@ -87,7 +95,7 @@ var render = function () {
     asyncOptions={getOptions}
     noResultsText="Ingen treff i datakatalogen"
     searchPromptText = "Søk etter vegobjekt"
-    onChange={logChange}
+    onChange={Marker.update.bind(null, kart)}
     />,
     document.getElementById('sok')
   );
