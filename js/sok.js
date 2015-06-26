@@ -4,27 +4,6 @@ var Typeahead = require('react-typeahead-component');
 var Fetch = require('./fetch.js');
 var OptionTemplate = require('./optiontemplate.jsx');
 
-// var getOptions = function(input, callback) {
-//   Fetch.fetch(function(data) {
-//     callback(null, {
-//       options: data,
-//       complete: true
-//     });
-//   });
-// };
-//
-// React.render(
-//     <Typeahead
-//         placeholder = 'Search'
-//         optionTemplate = {OptionTemplate}
-//         options = {getOptions() }
-//     />,
-//
-//     // Render Typeahead into the container of your choice.
-//     document.getElementById('sok')
-// );
-
-
 module.exports.ObjektSok = React.createClass({
   getInitialState: function() {
     return {
@@ -35,14 +14,17 @@ module.exports.ObjektSok = React.createClass({
 
   render: function() {
     return (
-      <Typeahead
-      inputValue={this.state.inputValue}
-      options={this.state.options}
-      onChange={this.handleChange}
-      optionTemplate={OptionTemplate}
-      onOptionChange={this.handleOptionChange}
-      onOptionClick={this.handleOptionClick}
-      />
+      <div>
+        <i className="material-icons search-icon">search</i>
+        <Typeahead
+        inputValue={this.state.inputValue}
+        options={this.state.options}
+        onChange={this.handleChange}
+        optionTemplate={OptionTemplate}
+        onOptionChange={this.handleOptionChange}
+        onOptionClick={this.handleOptionClick}
+        />
+      </div>
     );
   },
 
