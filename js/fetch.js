@@ -1,7 +1,9 @@
 var qwest = require('qwest');
 
 module.exports.fetchObjekttyper = function(callback) {
-  qwest.get('resources/objekttyper.json').then(function (responseData) {
+  var url = 'https://www.vegvesen.no/nvdb/api/datakatalog/objekttyper/.json';
+
+  qwest.get(url).then(function (responseData) {
     var listObjects = responseData.vegObjektTyper.map( function(obj) {
       return {value: obj.id, label: obj.navn};
     });
@@ -22,14 +24,18 @@ module.exports.fetchObjekttyper = function(callback) {
   });
 };
 
-module.exports.fetchDatakatalogBomstasjoner = function(callback) {
-  qwest.get('resources/datakatalog-bomstasjoner.json').then(function (responseData) {
+module.exports.fetchObjektType = function(objektTypeID, callback) {
+   var url = 'https://www.vegvesen.no/nvdb/api/datakatalog/objekttyper/' + objektTypeID + '/.json';
+
+  qwest.get(url).then(function (responseData) {
     callback(responseData);
   });
 };
 
-module.exports.fetchBomstasjoner = function(callback) {
-  qwest.get('resources/bomstasjoner.json').then(function (responseData) {
+module.exports.fetchObjekt = function(objektID, callback) {
+  var url = 'https://www.vegvesen.no/nvdb/api/vegobjekter/objekt/' + objektID + '/.json';
+
+  qwest.get(url).then(function (responseData) {
     callback(responseData);
   });
 };

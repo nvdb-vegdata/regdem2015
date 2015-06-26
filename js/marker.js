@@ -23,7 +23,7 @@ function displayMarkers(kart, objekter) {
   objekter.forEach(function (vegObjekt) {
     var posisjon = vegObjekt.lokasjon.geometriWgs84;
     var marker = omnivore.wkt.parse(posisjon);
-    marker.bindPopup("ObjektID: " + vegObjekt.objektId);
+    marker.bindPopup('ObjektID: <button onClick="visObjekt(' + vegObjekt.objektId + ')">' + vegObjekt.objektId + '</button>');
     markers.addLayer(marker);
   });
 

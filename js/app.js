@@ -1,8 +1,13 @@
 var React = require('react');
 var Select = require('react-select');
-
+var RedigerObjekt = require('./redigerObjekt.jsx');
 var Marker = require('../js/marker.js');
 var Fetch = require('../js/fetch.js');
+
+/* Naiv kart implementasjon
+------------------------------------------------------*/
+// Spesifisering av vegkartets projeksjon
+
 var L = window.L || {};
 
 var crs = new L.Proj.CRS('EPSG:25833',
@@ -65,9 +70,13 @@ L.easyButton('<span class="target">&curren;</span>', function (){
   kart.locate({setView: true, maxZoom: 14});
 }).addTo( kart );
 
+/* Component
+------------------------------------------------------*/
+// Inkluderer komponenten for autocomplete. Brukes i søkefelt.
+
+
 /* Rendering
 ------------------------------------------------------*/
-
 // Henter inn alle dataobjektene som vises i søkefeltet med autocomplete
 var getOptions = function(input, callback) {
   Fetch.fetchObjekttyper( function(data) {
@@ -78,11 +87,7 @@ var getOptions = function(input, callback) {
   });
 };
 
-function logChange(val) {
-  console.log('Selected: ' + val);
-}
-
-kart.on('moveend', function(e) {
+kart.on('moveend', function() {
    Marker.update(kart);
 });
 
@@ -99,6 +104,15 @@ var render = function () {
     />,
     document.getElementById('sok')
   );
+};
+
+window.visObjekt = function (objektID) {
+  React.render(
+    <RedigerObjekt objektID={objektID} />,
+    document.getElementById('rediger-vegobjekt')
+  );
+
+  document.getElementById('rediger-vegobjekt').style.display = 'block';
 };
 
 render();
