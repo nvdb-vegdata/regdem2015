@@ -24,13 +24,18 @@
   text-overflow: ellipsis;
 }
 
-#sok .search-icon {
+.search-icon, .clear-icon {
   position:absolute;
   z-index: 10;
   height:100%;
   padding:6px;
   font-size:20px;
   color:#999;
+}
+
+#sok .clear-icon {
+  top:0;
+  right:0;
 }
 
 .react-typeahead-input-container input:focus {

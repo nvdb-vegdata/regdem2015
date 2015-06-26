@@ -15,17 +15,29 @@ module.exports.ObjektSok = React.createClass({
   render: function() {
     return (
       <div>
-        <i className="material-icons search-icon">search</i>
-        <Typeahead
-        inputValue={this.state.inputValue}
-        options={this.state.options}
-        onChange={this.handleChange}
-        optionTemplate={OptionTemplate}
-        onOptionChange={this.handleOptionChange}
-        onOptionClick={this.handleOptionClick}
-        />
+      <i className="material-icons search-icon">search</i>
+      <Typeahead
+      inputValue={this.state.inputValue}
+      options={this.state.options}
+      onChange={this.handleChange}
+      optionTemplate={OptionTemplate}
+      onOptionChange={this.handleOptionChange}
+      onOptionClick={this.handleOptionClick}
+      />
+      {this.renderRemoveIcon()}
       </div>
     );
+  },
+
+  renderRemoveIcon: function() {
+    if(this.state.inputValue.length > 0) {
+      return (
+        <i
+        onClick={this.handleRemoveClick}
+        className="material-icons clear-icon">clear</i>
+      );
+    }
+
   },
 
   handleChange: function(event) {
@@ -37,7 +49,7 @@ module.exports.ObjektSok = React.createClass({
   getOptions: function(input) {
     var that = this;
     Fetch.fetch( input, function(data) {
-      that.handleStoreChange(data.slice(0, 10));
+      that.setOptions(data.slice(0, 10));
     });
 
   },
@@ -56,9 +68,14 @@ module.exports.ObjektSok = React.createClass({
     });
   },
 
-  handleStoreChange: function(newOptions) {
-    this.setState({
-      options: newOptions
-    });
+  setOptions: function(options) {
+        this.setState({
+            options: options
+        });
+    },
+
+  handleRemoveClick: function() {
+    this.setInputValue("");
+    this.setOptions([]);
   }
 });
