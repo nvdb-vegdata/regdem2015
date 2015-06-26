@@ -1,6 +1,8 @@
 var React = require('react');
 var Select = require('react-select');
 
+var RedigerObjekt = require('./redigerObjekt.jsx');
+
 var Fetch = require('../js/fetch.js');
 var L = window.L || {};
 
@@ -101,6 +103,12 @@ var render = function () {
     onChange={logChange}
     />,
     document.getElementById('sok')
+  );
+
+  // Rendrer skjema for redigering av objekt
+  React.render(
+    <RedigerObjekt objektID="487458621" />,
+    document.getElementById('rediger-vegobjekt')
   );
 };
 

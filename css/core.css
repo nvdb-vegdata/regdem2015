@@ -2,6 +2,7 @@
 @import (inline) 'react-select.css';
 @import (inline) 'easy-button.css';
 @import (inline) 'material-design-typography.css';
+@import (inline) 'RedigerObjekt.css';
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500);
 
 html, body {
@@ -28,3 +29,16 @@ html, body {
 }
 
 .target {font-size:1.5em}
+
+#rediger-vegobjekt {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 50px;
+  margin: 10px;
+  max-width: 500px;
+  background-color: white;
+  overflow: auto;
+}
