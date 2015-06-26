@@ -37,7 +37,7 @@ module.exports.ObjektSok = React.createClass({
   getOptions: function(input) {
     var that = this;
     Fetch.fetch( input, function(data) {
-      that.handleStoreChange(data);
+      that.handleStoreChange(data.slice(0, 10));
     });
 
   },
