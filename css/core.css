@@ -1,11 +1,15 @@
 @import (inline) 'reset.css';
-@import (inline) 'react-select.css';
+@import (inline) 'typeahead.css';
 @import (inline) 'easy-button.css';
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,5
 @import (inline) 'RedigerObjekt.css';
-@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500);
 
 html, body {
   font-family: 'Roboto', sans-serif;
+}
+
+strong {
+  font-weight:700;
 }
 
 #kart {
@@ -24,10 +28,10 @@ html, body {
   right: 0;
   top: 0;
   margin: 10px;
-  max-width: 500px;
+  max-width: 400px;
 }
 
-.target {font-size:1.5em}
+.target {font-size:1.2em}
 
 #rediger-vegobjekt {
   position: absolute;

@@ -1,0 +1,82 @@
+
+#yt-typeahead, h1 {
+  font-family: Roboto,arial,sans-serif;
+}
+
+#yt-typeahead {
+  width: 583px
+}
+
+.react-typeahead-input-container input {
+  border: 1px solid transparent;
+  border-radius: 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  width: 100%;
+  height: 32px;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  background-color: #fff;
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: 300;
+  padding: 0 11px 0 30px;
+  text-overflow: ellipsis;
+}
+
+.search-icon, .clear-icon {
+  position:absolute;
+  z-index: 10;
+  height:100%;
+  padding:6px;
+  font-size:20px;
+  color:#999;
+}
+
+#sok .clear-icon {
+  top:0;
+  right:0;
+  cursor:pointer;
+}
+
+.react-typeahead-input-container input:focus {
+  border: 1px solid #1c62b9;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.react-typeahead-options {
+  z-index: -10;
+  font-size:13px;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  border: 1px solid #ccc;
+  border-top: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  max-height: 700px;
+  overflow-y: scroll;
+}
+
+.optionElement {
+  padding:7px 0 8px;
+  border-top: 1px solid #e6e6e6;
+  cursor:pointer;
+}
+
+.optionElement p {
+  display:inline-block;
+  padding-left: 10px;
+}
+
+.optionElement .material-icons {
+  font-size:19px;
+  color:#999;
+  vertical-align:bottom;
+}
+
+.selected {
+  background-color: #ebf2fe;
+}
+.selected .material-icons {
+  color:rgb(240, 65, 73);
+}
