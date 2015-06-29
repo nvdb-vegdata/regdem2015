@@ -14,6 +14,7 @@ module.exports = React.createClass({
         }
         return (
             <div className={selected}>
+                <p>{this.renderGeomIcon()}</p>
                 <p>
                   {optionData.slice(0,pos1)}
                   <strong>{optionData.slice(pos1,pos2)}</strong>
@@ -21,5 +22,17 @@ module.exports = React.createClass({
                 </p>
             </div>
         );
+    },
+
+    renderGeomIcon: function() {
+      if (this.props.data.geom == 'PUNKT') {
+        return (
+          <i className="material-icons">place</i>
+        );
+      } else if (this.props.data.geom == 'LINJE') {
+        return (
+          <i className="material-icons">trending_up</i>
+        );
+      }
     }
 });
