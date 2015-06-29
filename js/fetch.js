@@ -9,7 +9,7 @@ var containsInput = function(obj) {
 
 var convert = function(list) {
   return list.map( function(obj) {
-    return {value: obj.id, label: obj.navn};
+    return {value: obj.id, label: obj.navn, geom: obj.geometriType};
   });
 };
 
