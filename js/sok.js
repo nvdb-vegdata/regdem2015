@@ -49,7 +49,7 @@ module.exports.ObjektSok = React.createClass({
   getOptions: function(input) {
     var that = this;
     Fetch.fetch( input, function(data) {
-      that.setOptions(data.slice(0, 10));
+      that.setOptions(data);
     });
 
   },
