@@ -27,7 +27,8 @@ var comparator = function (a, b) {
 
 module.exports.fetch = function(input, callback) {
   stub = input;
-  qwest.get('resources/objekttyper.json').then(function (responseData) {
+  var url = 'https://www.vegvesen.no/nvdb/api/datakatalog/objekttyper/.json';
+  qwest.get(url).then(function (responseData) {
     var listObjects = convert(responseData.vegObjektTyper).filter(containsInput).sort(comparator);
     callback(listObjects);
   });
