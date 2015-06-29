@@ -2,7 +2,8 @@ let React = require('react/addons');
 let mui = require('material-ui');
 let Fetch = require('./fetch.js');
 let Helper = require('./helper.js');
-let { Mixins, SelectField, TextField, RaisedButton, TimePicker, DatePicker } = require('material-ui');
+let { Mixins, SelectField, TextField, RaisedButton, TimePicker, DatePicker, Card,
+  ClearFix, CardActions, FlatButton, CardTitle, CardText, CircularProgress } = require('material-ui');
 
 //Needed for onTouchTap
 //Can go away when react 1.0 release
@@ -23,7 +24,8 @@ let RedigerObjekt = React.createClass({
   getInitialState: function() {
     return {
       objekt: null,
-      objektType: null
+      objektType: null,
+      loaded: false
     };
   },
 
@@ -67,7 +69,10 @@ let RedigerObjekt = React.createClass({
 
             });
 
-            this.setState({objektType: objektTypeData});
+            this.setState({
+              objektType: objektTypeData,
+              loaded: true
+            });
           }
         });
       }
@@ -84,6 +89,13 @@ let RedigerObjekt = React.createClass({
     let vegreferanse = this.state.objekt ? Helper.vegReferanseString(this.state.objekt.lokasjon.vegReferanser[0]) : '';
     let egenskapsTyper = this.state.objektType ? this.state.objektType.egenskapsTyper : [];
     let objekt = this.state.objekt ? this.state.objekt : [];
+
+    let containerStyles = "RedigerObjekt-container hidden";
+    let cardLoaderStyles = "RedigerObjekt-loader visible"
+    if (this.state.loaded) {
+      containerStyles = "RedigerObjekt-container visible";
+      cardLoaderStyles = "RedigerObjekt-loader hidden"
+    }
 
     // Finner verdien til egenskapen til objektet. Brukes til å pre-populate egenskapene
     let finnVerdi = function (egenskap, returFunksjon) {
@@ -104,39 +116,43 @@ let RedigerObjekt = React.createClass({
       return finnVerdi(egenskap, function (obj) { return obj.verdi; });
     };
 
+
     return (
-      <div className="RedigerObjekt-container">
+      <Card className="RedigerObjekt-Card">
+        <ClearFix>
+          <CircularProgress mode="indeterminate" className={cardLoaderStyles} />
+          <div className={containerStyles}>
 
-        <div className="RedigerObjekt-info-container">
-          <div className="text-headline">{objektTypeNavn}</div>
-          <div className="text-subhead">Objektid: {objektId}</div>
-          <div className="text-subhead">Vegreferanse: {vegreferanse}</div>
-        </div>
+            <CardTitle title={objektTypeNavn} subtitle={['Objektid: ', objektId, <br />, 'Vegreferanse: ', vegreferanse]} />
+            <CardText>
+            {
+                egenskapsTyper.map(function (egenskap) {
+                  switch (egenskap.type) {
+                    case 'ENUM':
+                      return (<RSkjema.ENUM verdi={finnENUMVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                    case 'Tekst':
+                      return (<RSkjema.Tekst verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                    case 'Tall':
+                      return (<RSkjema.Tall verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                    case 'Klokkeslett':
+                      return (<RSkjema.Klokkeslett verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                    case 'Dato':
+                      return (<RSkjema.Dato verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                    default:
+                      break;
+                  }
+                })
+            }
+            </CardText>
 
-        {
-            egenskapsTyper.map(function (egenskap) {
-              switch (egenskap.type) {
-                case 'ENUM':
-                  return (<RSkjema.ENUM verdi={finnENUMVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                case 'Tekst':
-                  return (<RSkjema.Tekst verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                case 'Tall':
-                  return (<RSkjema.Tall verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                case 'Klokkeslett':
-                  return (<RSkjema.Klokkeslett verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                case 'Dato':
-                  return (<RSkjema.Dato verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                default:
-                  break;
-              }
-            })
-        }
+            <CardActions className="RedigerObjekt-knapp-container">
+              <FlatButton label="Lagre" primary={true} />
+              <FlatButton label="Avbryt" onClick={this.closeDialog} />
+            </CardActions>
 
-        <div className="RedigerObjekt-knapp-container">
-          <RaisedButton label="Lagre" primary={true} /> <RaisedButton label="Avbryt" onClick={this.closeDialog} />
-        </div>
-
-      </div>
+          </div>
+        </ClearFix>
+      </Card>
     );
   }
 
@@ -438,9 +454,10 @@ let RSkjema = {
         classNameBeskrivelse += ' RedigerObjekt-beskrivelseTekstVis';
       }
 
+      // <div className="RedigerObjekt-beskrivelseKnapp" onClick={this.toggleDescription}>Info</div>
+
       return (
         <div className="RedigerObjekt-beskrivelse">
-          <div className="RedigerObjekt-beskrivelseKnapp" onClick={this.toggleDescription}>Info</div>
           <div className={classNameBeskrivelse}>{this.props.beskrivelse}</div>
         </div>
       );
