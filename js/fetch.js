@@ -4,7 +4,7 @@ var stub = '';
 
 var containsInput = function(obj) {
   var string = obj.label.toLowerCase();
-  return string.includes(stub);
+  return string.includes(stub.toLowerCase());
 };
 
 var convert = function(list) {
@@ -29,7 +29,6 @@ module.exports.fetch = function(input, callback) {
   stub = input;
   qwest.get('resources/objekttyper.json').then(function (responseData) {
     var listObjects = convert(responseData.vegObjektTyper).filter(containsInput).sort(comparator);
-
     callback(listObjects);
   });
 };
