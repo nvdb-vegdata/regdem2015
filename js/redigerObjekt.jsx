@@ -454,9 +454,10 @@ let RSkjema = {
         classNameBeskrivelse += ' RedigerObjekt-beskrivelseTekstVis';
       }
 
+      // <div className="RedigerObjekt-beskrivelseKnapp" onClick={this.toggleDescription}>Info</div>
+
       return (
         <div className="RedigerObjekt-beskrivelse">
-          <div className="RedigerObjekt-beskrivelseKnapp" onClick={this.toggleDescription}>Info</div>
           <div className={classNameBeskrivelse}>{this.props.beskrivelse}</div>
         </div>
       );
