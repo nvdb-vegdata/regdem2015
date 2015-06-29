@@ -2,6 +2,7 @@ var React = require('react');
 var Typeahead = require('react-typeahead-component');
 
 var Fetch = require('./fetch.js');
+var Marker = require('./marker.js');
 var OptionTemplate = require('./optiontemplate.jsx');
 
 module.exports.ObjektSok = React.createClass({
@@ -23,6 +24,7 @@ module.exports.ObjektSok = React.createClass({
       optionTemplate={OptionTemplate}
       onOptionChange={this.handleOptionChange}
       onOptionClick={this.handleOptionClick}
+      onKeyDown={this.handleKeyDown}
       />
       {this.renderRemoveIcon()}
       </div>
@@ -60,6 +62,7 @@ module.exports.ObjektSok = React.createClass({
 
   handleOptionClick: function(event, option) {
     this.setInputValue(option.label);
+    Marker.update(this.props.map.kart, option.value);
   },
 
   setInputValue: function(value) {
