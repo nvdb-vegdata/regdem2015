@@ -36,6 +36,7 @@
 #sok .clear-icon {
   top:0;
   right:0;
+  cursor:pointer;
 }
 
 .react-typeahead-input-container input:focus {
@@ -59,6 +60,7 @@
 .optionElement {
   padding:7px 0 8px;
   border-top: 1px solid #e6e6e6;
+  cursor:pointer;
 }
 
 .optionElement p {
