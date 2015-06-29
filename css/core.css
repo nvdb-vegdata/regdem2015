@@ -38,7 +38,5 @@ html, body {
   top: 50px;
   margin: 10px;
   max-width: 500px;
-  background-color: white;
-  overflow: auto;
   display: none;
 }

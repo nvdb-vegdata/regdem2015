@@ -1,8 +1,38 @@
-.RedigerObjekt-container {
-  padding: 20px;
+.RedigerObjekt-Card {
+  height: 100%;
+  text-align: center;
 }
 
-.RedigerObjekt-info-container {
+.RedigerObjekt-loader {
+  margin-top: 100px !important;
+}
+
+.RedigerObjekt-loader.visible {
+  display: inherit;
+}
+
+.RedigerObjekt-loader.hidden {
+  display: none !important;
+}
+
+.RedigerObjekt-container {
+  text-align: left;
+  padding: 5px;
+  overflow: auto !important;
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  max-width: 500px;
+  box-sizing: border-box;
+}
+
+.RedigerObjekt-container.visible {
+  display: inherit;
+}
+
+.RedigerObjekt-container.hidden {
+  display: none !important;
 }
 
 .RedigerObjekt-knapp-container {
