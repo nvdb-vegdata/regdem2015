@@ -56,7 +56,7 @@ var kart = new L.map('kart', {
 new L.Control.Zoom( {position: 'bottomleft'}).addTo(kart);
 kart.locate({setView: true, maxZoom: 14});
 
-L.easyButton('<i class="material-icons target">location_searching</i>', function (){
+L.easyButton('<i class="material-icons target">my_location</i>', function (){
   kart.locate({setView: true, maxZoom: 14});
 }).addTo( kart );
 
