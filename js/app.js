@@ -1,9 +1,16 @@
 var React = require('react');
 var Sok = require('../js/sok.js');
-var L = window.L || {};
+
+var RedigerObjekt = require('./redigerObjekt.jsx');
+var Marker = require('../js/marker.js');
+var Fetch = require('../js/fetch.js');
 
 /* Naiv kart implementasjon
 ------------------------------------------------------*/
+// Spesifisering av vegkartets projeksjon
+
+var L = window.L || {};
+
 var crs = new L.Proj.CRS('EPSG:25833',
   '+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs ',
   {
@@ -32,8 +39,10 @@ var crs = new L.Proj.CRS('EPSG:25833',
 
 var kartcache = 'http://m{s}.nvdbcache.geodataonline.no/arcgis/rest/services/Trafikkportalen/GeocacheTrafikkJPG/MapServer/tile/{z}/{y}/{x}';
 
+// Oppsett av bakgrunnskartet
 var bakgrunnskart = new L.tileLayer(kartcache, {
-  maxZoom: 16,
+  maxZoom: 17,
+  maxNativeZoom: 16,
   minZoom: 3,
   subdomains: '123456789',
   continuousWorld: true,
@@ -41,6 +50,7 @@ var bakgrunnskart = new L.tileLayer(kartcache, {
   attribution: 'Registratordemonstrator'
 });
 
+// Oppsett av kart
 var kart = new L.map('kart', {
   crs: crs,
   continuousWorld: true,
@@ -53,6 +63,7 @@ var kart = new L.map('kart', {
   zoomControl: false
 });
 
+// PLassering av zoom kontrollene
 new L.Control.Zoom( {position: 'bottomleft'}).addTo(kart);
 kart.locate({setView: true, maxZoom: 14});
 
@@ -61,3 +72,13 @@ L.easyButton('<i class="material-icons target">my_location</i>', function (){
 }).addTo( kart );
 
 React.render(<Sok.ObjektSok />, document.getElementById('sok'));
+
+
+window.visObjekt = function (objektID) {
+  React.render(
+    <RedigerObjekt objektID={objektID} />,
+    document.getElementById('rediger-vegobjekt')
+  );
+
+  document.getElementById('rediger-vegobjekt').style.display = 'block';
+};

@@ -2,9 +2,11 @@
 @import (inline) 'typeahead.css';
 @import (inline) 'easy-button.css';
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
+@import (inline) 'material-design-typography.css';
+@import (inline) 'RedigerObjekt.css';
 
 html, body {
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 strong {
@@ -31,3 +33,17 @@ strong {
 }
 
 .target {font-size:1.2em}
+
+#rediger-vegobjekt {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 50px;
+  margin: 10px;
+  max-width: 500px;
+  background-color: white;
+  overflow: auto;
+  display: none;
+}
