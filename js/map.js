@@ -65,7 +65,7 @@ kart.on('moveend', function() {
 });
 
 // Plassering av min poisisjon-knapp
-L.easyButton('<i class="material-icons">my_location</i>', function (){
+L.easyButton('<i class="material-icons target">my_location</i>', function (){
   kart.locate({setView: true, maxZoom: 14});
 }).addTo( kart );
 
