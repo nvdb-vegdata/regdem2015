@@ -1,7 +1,7 @@
 @import (inline) 'reset.css';
 @import (inline) 'typeahead.css';
 @import (inline) 'easy-button.css';
-@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,5
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
 @import (inline) 'RedigerObjekt.css';
 
 html, body {
