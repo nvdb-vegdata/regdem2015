@@ -184,6 +184,11 @@ let RSkjema = {
         return enumListeTilMenuItems;
       };
 
+      let SelectFieldClassName = 'RedigerObjekt-selectField RedigerObjekt-permanentEtikett';
+      if (this.state.selectLinkValue !== '') {
+        SelectFieldClassName += ' RedigerObjekt-endretVerdi';
+      }
+
       return (
           <div className="RedigerObjekt-enum">
             <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
@@ -192,7 +197,7 @@ let RSkjema = {
               floatingLabelText={egenskaper.navn}
               fullWidth={true}
               menuItems={genererMenuItems(egenskaper)}
-              className="RedigerObjekt-selectField"
+              className={SelectFieldClassName}
             />
             <RSkjema.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
           </div>
@@ -211,6 +216,11 @@ let RSkjema = {
     render: function() {
       let egenskaper = this.props.egenskaper;
 
+      let TextFieldClassName = 'RedigerObjekt-permanentEtikett';
+      if (this.state.textLinkValue !== '') {
+        TextFieldClassName += ' RedigerObjekt-endretVerdi';
+      }
+
       return (
         <div className="RedigerObjekt-tekst">
           <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
@@ -218,6 +228,7 @@ let RSkjema = {
             floatingLabelText={egenskaper.navn}
             valueLink={this.linkState('textLinkValue')}
             fullWidth={true}
+            className={TextFieldClassName}
           />
           <RSkjema.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
@@ -260,14 +271,24 @@ let RSkjema = {
     render: function() {
       let egenskaper = this.props.egenskaper;
 
+      let NumberFieldClassName = 'RedigerObjekt-permanentEtikett';
+      if (this.state.numberValue !== '') {
+        NumberFieldClassName += ' RedigerObjekt-endretVerdi';
+      }
+      if (this.state.numberValueErrorText !== '') {
+        NumberFieldClassName += ' RedigerObjekt-feilmelding';
+      }
+
       return (
         <div className="RedigerObjekt-tall">
+          <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
           <TextField
             floatingLabelText={egenskaper.navn}
             value={this.state.numberValue}
             onChange={this.handleChange}
             errorText={this.state.numberValueErrorText}
             fullWidth={true}
+            className={NumberFieldClassName}
           />
           <RSkjema.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
@@ -312,10 +333,9 @@ let RSkjema = {
       // Setter klassenavn
       let classNameLabelText = 'RedigerObjekt-etikett';
 
-      // Setter på et nytt klassenavn hvis datofelt er tomt. Det gjør at vi kan lage
-      // en større label mer likt TextField
-      if (this.state.klokkeVerdi.length === 0) {
-        classNameLabelText += ' RedigerObjekt-etikettTom';
+      let TimePickerClassName = 'RedigerObjekt-timePicker';
+      if (this.state.klokkeVerdi !== '') {
+        TimePickerClassName += ' RedigerObjekt-endretVerdi';
       }
 
       return (
@@ -329,7 +349,7 @@ let RSkjema = {
               ref="tidvelger"
               format="24hr"
               onChange={this.handleChange}
-              className="RedigerObjekt-timePicker"
+              className={TimePickerClassName}
             />
           </div>
           <RSkjema.TomFelt tomFelt={this.handleClear} tomt={(this.state.klokkeVerdi.length === 0)} />
@@ -375,8 +395,9 @@ let RSkjema = {
       // Setter klassenavn
       let classNameLabelText = 'RedigerObjekt-etikett';
 
-      if (this.state.datoVerdi.length === 0) {
-        classNameLabelText += ' RedigerObjekt-etikettTom';
+      let DatePickerClassName = 'RedigerObjekt-datePicker';
+      if (this.state.datoVerdi !== '') {
+        DatePickerClassName += ' RedigerObjekt-endretVerdi';
       }
 
       return (
@@ -390,7 +411,7 @@ let RSkjema = {
               ref="datovelger"
               showYearSelector={true}
               onChange={this.handleChange}
-              className="RedigerObjekt-datePicker"
+              className={DatePickerClassName}
             />
           </div>
           <RSkjema.TomFelt tomFelt={this.handleClear} tomt={(this.state.datoVerdi.length === 0)} />
