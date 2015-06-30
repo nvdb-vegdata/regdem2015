@@ -47,40 +47,62 @@ let RedigerObjekt = React.createClass({
 
   componentDidMount: function () {
     // Hent data på objektet
-    Fetch.fetchObjekt(this.props.objektID, (objektData) => {
+    this.getNewData(this.props.objektID);
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    if (nextProps.objektID) {
+      this.getNewData(nextProps.objektID);
+    } else {
+      this.replaceState(this.getInitialState());
+    }
+  },
+
+  getNewData: function (objektID) {
+    // Ser om det er relevant å hente inn ny data
+    if (objektID) {
+      if (this.state.objekt) {
+        if (objektID !== this.state.objekt.objektId) {
+          this.setState({loaded: false});
+          this.fetchData(objektID);
+        }
+      } else {
+        this.fetchData(objektID);
+      }
+    }
+  },
+
+  fetchData: function (objektID) {
+    Fetch.fetchObjekt(objektID, (objektData) => {
       if (this.isMounted()) {
         this.setState({objekt: objektData});
 
         // Nå som vi har objektet, kan vi hente objekttype
         Fetch.fetchObjektType(objektData.objektTypeId, (objektTypeData) => {
-          if (this.isMounted()) {
+          // Sorterer egenskaper til objekttype etter viktighet og sorteringsnummer
+          objektTypeData.egenskapsTyper.sort(function (a, b) {
+            let differanseMellomAogB = Helper.objektTypeViktighetTilNummer(a.viktighet) - Helper.objektTypeViktighetTilNummer(b.viktighet);
 
-            // Sorterer egenskaper til objekttype etter viktighet og sorteringsnummer
-            objektTypeData.egenskapsTyper.sort(function (a, b) {
-              let differanseMellomAogB = Helper.objektTypeViktighetTilNummer(a.viktighet) - Helper.objektTypeViktighetTilNummer(b.viktighet);
+            if (differanseMellomAogB === 0) {
+              // Sorter på sorteringsnummer, nivå 2
+              return a.sorteringsnummer - b.sorteringsnummer;
+            } else {
+              // Sorter på viktighet, nivå 1
+              return differanseMellomAogB;
+            }
+          });
 
-              if (differanseMellomAogB === 0) {
-                // Sorter på sorteringsnummer, nivå 2
-                return a.sorteringsnummer - b.sorteringsnummer;
-              } else {
-                // Sorter på viktighet, nivå 1
-                return differanseMellomAogB;
-              }
-
-            });
-
-            this.setState({
-              objektType: objektTypeData,
-              loaded: true
-            });
-          }
+          this.setState({
+            objektType: objektTypeData,
+            loaded: true
+          });
         });
       }
     });
   },
 
   closeDialog: function () {
-    document.getElementById('rediger-vegobjekt').style.display = 'none';
+    app.setObjektID(null);
   },
 
   render: function() {
@@ -117,44 +139,50 @@ let RedigerObjekt = React.createClass({
       return finnVerdi(egenskap, function (obj) { return obj.verdi; });
     };
 
+    if (!this.props.objektID) {
+      return null;
+    } else {
+      return (
+        <div className="RedigerObjekt">
+          <Card className="RedigerObjekt-Card">
+            <ClearFix>
+              <CircularProgress mode="indeterminate" className={cardLoaderStyles} />
+              <div className={containerStyles}>
+                <CardActions className="RedigerObjekt-lukk"><i className="material-icons" onClick={this.closeDialog}>clear</i></CardActions>
+                <CardTitle title={objektTypeNavn} subtitle={['Objektid: ', objektId, <br />, 'Vegreferanse: ', vegreferanse]} />
+                <CardText>
+                {
+                    egenskapsTyper.map(function (egenskap) {
+                      switch (egenskap.type) {
+                        case 'ENUM':
+                          return (<RSkjema.ENUM verdi={finnENUMVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                        case 'Tekst':
+                          return (<RSkjema.Tekst verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                        case 'Tall':
+                          return (<RSkjema.Tall verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                        case 'Klokkeslett':
+                          return (<RSkjema.Klokkeslett verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                        case 'Dato':
+                          return (<RSkjema.Dato verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                        default:
+                          break;
+                      }
+                    })
+                }
+                </CardText>
 
-    return (
-      <Card className="RedigerObjekt-Card">
-        <ClearFix>
-          <CircularProgress mode="indeterminate" className={cardLoaderStyles} />
-          <div className={containerStyles}>
+                <CardActions className="RedigerObjekt-knapp-container">
+                  <FlatButton label="Lagre" primary={true} />
+                  <FlatButton label="Avbryt" onClick={this.closeDialog} />
+                </CardActions>
 
-            <CardTitle title={objektTypeNavn} subtitle={['Objektid: ', objektId, <br />, 'Vegreferanse: ', vegreferanse]} />
-            <CardText>
-            {
-                egenskapsTyper.map(function (egenskap) {
-                  switch (egenskap.type) {
-                    case 'ENUM':
-                      return (<RSkjema.ENUM verdi={finnENUMVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                    case 'Tekst':
-                      return (<RSkjema.Tekst verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                    case 'Tall':
-                      return (<RSkjema.Tall verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                    case 'Klokkeslett':
-                      return (<RSkjema.Klokkeslett verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                    case 'Dato':
-                      return (<RSkjema.Dato verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                    default:
-                      break;
-                  }
-                })
-            }
-            </CardText>
+              </div>
+            </ClearFix>
+          </Card>
+        </div>
+      );
+    }
 
-            <CardActions className="RedigerObjekt-knapp-container">
-              <FlatButton label="Lagre" primary={true} />
-              <FlatButton label="Avbryt" onClick={this.closeDialog} />
-            </CardActions>
-
-          </div>
-        </ClearFix>
-      </Card>
-    );
   }
 
 });

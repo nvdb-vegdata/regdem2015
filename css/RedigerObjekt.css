@@ -30,6 +30,14 @@
 .RedigerObjekt-container.hidden {
   display: none !important;
 }
+.RedigerObjekt-lukk {
+  float: right;
+  margin-top: 5px;
+  cursor: pointer;
+}
+.RedigerObjekt-lukk i {
+  color: rgba(0, 0, 0, 0.5);
+}
 .RedigerObjekt-knapp-container {
   margin-top: 20px;
   text-align: right;

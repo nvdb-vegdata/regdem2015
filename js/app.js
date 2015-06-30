@@ -3,21 +3,24 @@ var Kart = require('./map.js');
 var RedigerObjekt = require('./redigerObjekt.jsx');
 
 var App = React.createClass({
+  getInitialState: function() {
+    return {
+      objektID: null
+    };
+  },
 
-window.visObjekt = function (objektID) {
-  React.render(
-    <RedigerObjekt objektID={objektID} />,
-    document.getElementById('rediger-vegobjekt')
-  );
+  setObjektID: function (id) {
+    this.setState({objektID: id});
+  },
+
   render: function() {
     return (
       <div>
+        <RedigerObjekt objektID={this.state.objektID} />
         <Kart />
       </div>
     );
   }
 });
 
-  document.getElementById('rediger-vegobjekt').style.display = 'block';
-};
 window.app = React.render(<App />, document.body);
