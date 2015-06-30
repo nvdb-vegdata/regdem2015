@@ -90,11 +90,12 @@ let RedigerObjekt = React.createClass({
     let egenskapsTyper = this.state.objektType ? this.state.objektType.egenskapsTyper : [];
     let objekt = this.state.objekt ? this.state.objekt : [];
 
-    let containerStyles = "RedigerObjekt-container hidden";
-    let cardLoaderStyles = "RedigerObjekt-loader visible"
+    // Stilendring for å vise innlasting
+    let containerStyles = 'RedigerObjekt-container hidden';
+    let cardLoaderStyles = 'RedigerObjekt-loader visible';
     if (this.state.loaded) {
-      containerStyles = "RedigerObjekt-container visible";
-      cardLoaderStyles = "RedigerObjekt-loader hidden"
+      containerStyles = 'RedigerObjekt-container visible';
+      cardLoaderStyles = 'RedigerObjekt-loader hidden';
     }
 
     // Finner verdien til egenskapen til objektet. Brukes til å pre-populate egenskapene
