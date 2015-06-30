@@ -25,6 +25,8 @@ module.exports.ObjektSok = React.createClass({
       onOptionChange={this.handleOptionChange}
       onOptionClick={this.handleOptionClick}
       onKeyDown={this.handleKeyDown}
+      onComplete={this.handleComplete}
+      handleHint={this.handleHint}
       />
       {this.renderRemoveIcon()}
       </div>
@@ -72,10 +74,26 @@ module.exports.ObjektSok = React.createClass({
   },
 
   setOptions: function(options) {
-        this.setState({
-            options: options
-        });
-    },
+    this.setState({
+      options: options
+    });
+  },
+
+  handleHint: function(inputValue, options) {
+    for(var opt in options){
+      if (new RegExp('^' + inputValue).test(options[opt].label)){
+        return options[opt].label;
+      }
+    }
+    return "";
+
+  },
+
+  handleComplete: function (event, completedInputValue) {
+    this.setInputValue(completedInputValue);
+    this.getOptions(completedInputValue);
+  },
+
   handleKeyDown: function(event, optionData, selectedIndex) {
     if (event.keyCode === 13) {
       if (optionData.value) {
