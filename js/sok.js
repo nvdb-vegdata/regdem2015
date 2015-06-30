@@ -76,6 +76,21 @@ module.exports.ObjektSok = React.createClass({
             options: options
         });
     },
+  handleKeyDown: function(event, optionData, selectedIndex) {
+    if (event.keyCode === 13) {
+      if (optionData.value) {
+        Marker.update(this.props.map.kart, optionData.value);
+      } else {
+        for (var opt in this.state.options) {
+          var obj = this.state.options[opt];
+          if (obj.label.toLowerCase() == optionData.toLowerCase()) {
+            Marker.update(this.props.map.kart, obj.value);
+
+          }
+        }
+      }
+    }
+  },
 
   handleRemoveClick: function() {
     this.setInputValue("");
