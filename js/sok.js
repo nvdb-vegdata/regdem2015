@@ -9,7 +9,8 @@ module.exports.ObjektSok = React.createClass({
   getInitialState: function() {
     return {
       inputValue: '',
-      options: []
+      options: [],
+      loading: 'false'
     };
   },
 
@@ -77,6 +78,12 @@ module.exports.ObjektSok = React.createClass({
     this.setState({
       options: options
     });
+  },
+
+  setLoading: function (val) {
+    this.setState({
+      loading: val
+    })
   },
 
   handleHint: function(inputValue, options) {
