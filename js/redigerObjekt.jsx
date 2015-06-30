@@ -167,10 +167,6 @@ let RSkjema = {
       return {selectLinkValue: this.props.verdi};
     },
 
-    toggleDescription: function () {
-      this.refs.beskrivelse.setState({visBeskrivelse: !this.refs.beskrivelse.state.visBeskrivelse});
-    },
-
     render: function() {
       let egenskaper = this.props.egenskaper;
       let viktighetTall = Helper.objektTypeViktighetTilNummer(egenskaper.viktighet);
@@ -198,7 +194,7 @@ let RSkjema = {
               menuItems={genererMenuItems(egenskaper)}
               className="RedigerObjekt-selectField"
             />
-            <RSkjema.Beskrivelse ref="beskrivelse" beskrivelse={egenskaper.beskrivelse} />
+            <RSkjema.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
           </div>
       );
     }
@@ -212,10 +208,6 @@ let RSkjema = {
       return { textLinkValue: this.props.verdi };
     },
 
-    toggleDescription: function () {
-      this.refs.beskrivelse.setState({visBeskrivelse: !this.refs.beskrivelse.state.visBeskrivelse});
-    },
-
     render: function() {
       let egenskaper = this.props.egenskaper;
 
@@ -227,7 +219,7 @@ let RSkjema = {
             valueLink={this.linkState('textLinkValue')}
             fullWidth={true}
           />
-          <RSkjema.Beskrivelse ref="beskrivelse" beskrivelse={egenskaper.beskrivelse} />
+          <RSkjema.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
       );
     }
@@ -265,10 +257,6 @@ let RSkjema = {
 
     },
 
-    toggleDescription: function () {
-      this.refs.beskrivelse.setState({visBeskrivelse: !this.refs.beskrivelse.state.visBeskrivelse});
-    },
-
     render: function() {
       let egenskaper = this.props.egenskaper;
 
@@ -282,7 +270,7 @@ let RSkjema = {
             errorText={this.state.numberValueErrorText}
             fullWidth={true}
           />
-          <RSkjema.Beskrivelse ref="beskrivelse" beskrivelse={egenskaper.beskrivelse} />
+          <RSkjema.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
       );
     }
@@ -304,10 +292,6 @@ let RSkjema = {
     handleClear: function () {
       this.refs.tidvelger.refs.input.clearValue();
       this.replaceState(this.getInitialState());
-    },
-
-    toggleDescription: function () {
-      this.refs.beskrivelse.setState({visBeskrivelse: !this.refs.beskrivelse.state.visBeskrivelse});
     },
 
     componentDidMount: function () {
@@ -350,7 +334,7 @@ let RSkjema = {
             />
           </div>
           <RSkjema.TomFelt tomFelt={this.handleClear} tomt={(this.state.klokkeVerdi.length === 0)} />
-          <RSkjema.Beskrivelse ref="beskrivelse" beskrivelse={egenskaper.beskrivelse} />
+          <RSkjema.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
       );
     }
@@ -372,10 +356,6 @@ let RSkjema = {
     handleClear: function () {
       this.refs.datovelger.refs.input.clearValue();
       this.replaceState(this.getInitialState());
-    },
-
-    toggleDescription: function () {
-      this.refs.beskrivelse.setState({visBeskrivelse: !this.refs.beskrivelse.state.visBeskrivelse});
     },
 
     componentDidMount: function () {
@@ -415,7 +395,7 @@ let RSkjema = {
             />
           </div>
           <RSkjema.TomFelt tomFelt={this.handleClear} tomt={(this.state.datoVerdi.length === 0)} />
-          <RSkjema.Beskrivelse ref="beskrivelse" beskrivelse={egenskaper.beskrivelse} />
+          <RSkjema.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
       );
     }
@@ -440,26 +420,10 @@ let RSkjema = {
   }),
 
   Beskrivelse: React.createClass({
-    getInitialState: function() {
-      return { visBeskrivelse: false };
-    },
-
-    toggleDescription: function () {
-      this.setState({visBeskrivelse: !this.state.visBeskrivelse});
-    },
-
     render: function() {
-      // Setter klassenavn
-      let classNameBeskrivelse = 'RedigerObjekt-beskrivelseTekst';
-      if (this.state.visBeskrivelse) {
-        classNameBeskrivelse += ' RedigerObjekt-beskrivelseTekstVis';
-      }
-
-      // <div className="RedigerObjekt-beskrivelseKnapp" onClick={this.toggleDescription}>Info</div>
-
       return (
         <div className="RedigerObjekt-beskrivelse">
-          <div className={classNameBeskrivelse}>{this.props.beskrivelse}</div>
+          <div className="RedigerObjekt-beskrivelseTekst">{this.props.beskrivelse}</div>
         </div>
       );
     }
