@@ -3,13 +3,15 @@ var Typeahead = require('react-typeahead-component');
 
 var Fetch = require('./fetch.js');
 var Marker = require('./marker.js');
+var Indicator = require('./indicator.jsx');
 var OptionTemplate = require('./optiontemplate.jsx');
 
 module.exports.ObjektSok = React.createClass({
   getInitialState: function() {
     return {
       inputValue: '',
-      options: []
+      options: [],
+      loading: 'false'
     };
   },
 
@@ -28,6 +30,7 @@ module.exports.ObjektSok = React.createClass({
       onComplete={this.handleComplete}
       handleHint={this.handleHint}
       />
+      {this.renderIndicator()}
       {this.renderRemoveIcon()}
       </div>
     );
@@ -41,7 +44,14 @@ module.exports.ObjektSok = React.createClass({
         className="material-icons clear-icon">clear</i>
       );
     }
+  },
 
+  renderIndicator: function () {
+    return (
+      <Indicator
+      visible={this.state.loading}
+      />
+    );
   },
 
   handleChange: function(event) {
@@ -79,6 +89,12 @@ module.exports.ObjektSok = React.createClass({
     });
   },
 
+  setLoading: function (val) {
+    this.setState({
+      loading: val
+    })
+  },
+
   handleHint: function(inputValue, options) {
     for(var opt in options){
       if (new RegExp('^' + inputValue).test(options[opt].label)){
@@ -109,7 +125,11 @@ module.exports.ObjektSok = React.createClass({
   },
 
   executeSearch: function (id) {
-    Marker.update(this.props.map.kart, id);
+    var sok = this;
+    Marker.update(this.props.map.kart, id, function(){
+      sok.setLoading('false');
+    });
+    this.setLoading('true');
   },
 
   handleRemoveClick: function() {
