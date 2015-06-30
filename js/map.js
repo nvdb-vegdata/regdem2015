@@ -58,7 +58,7 @@ var kart = new L.map('kart', {
 
 // PLassering av zoom kontrollene
 new L.Control.Zoom( {position: 'bottomleft'}).addTo(kart);
-kart.locate({setView: true, maxZoom: 14});
+kart.locate({setView: true, maxZoom: 15});
 
 kart.on('moveend', function() {
   Marker.update(kart);
@@ -66,7 +66,7 @@ kart.on('moveend', function() {
 
 // Plassering av min poisisjon-knapp
 L.easyButton('<i class="material-icons target">my_location</i>', function (){
-  kart.locate({setView: true, maxZoom: 14});
+  kart.locate({setView: true, maxZoom: 15});
 }).addTo( kart );
 
 module.exports = {
