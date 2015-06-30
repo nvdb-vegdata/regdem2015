@@ -64,7 +64,7 @@ module.exports.ObjektSok = React.createClass({
 
   handleOptionClick: function(event, option) {
     this.setInputValue(option.label);
-    Marker.update(this.props.map.kart, option.value);
+    this.executeSearch(option.value);
   },
 
   setInputValue: function(value) {
@@ -86,7 +86,6 @@ module.exports.ObjektSok = React.createClass({
       }
     }
     return "";
-
   },
 
   handleComplete: function (event, completedInputValue) {
@@ -97,17 +96,20 @@ module.exports.ObjektSok = React.createClass({
   handleKeyDown: function(event, optionData, selectedIndex) {
     if (event.keyCode === 13) {
       if (optionData.value) {
-        Marker.update(this.props.map.kart, optionData.value);
+        this.executeSearch(optionData.value);
       } else {
         for (var opt in this.state.options) {
           var obj = this.state.options[opt];
           if (obj.label.toLowerCase() == optionData.toLowerCase()) {
-            Marker.update(this.props.map.kart, obj.value);
-
+            this.executeSearch(obj.value);
           }
         }
       }
     }
+  },
+
+  executeSearch: function (id) {
+    Marker.update(this.props.map.kart, id);
   },
 
   handleRemoveClick: function() {
