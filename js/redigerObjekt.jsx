@@ -186,7 +186,7 @@ let RSkjema = {
 
       return (
           <div className="RedigerObjekt-enum">
-            <RSkjema.Ekstra viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+            <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
             <SelectField
               valueLink={this.linkState('selectLinkValue')}
               floatingLabelText={egenskaper.navn}
@@ -213,7 +213,7 @@ let RSkjema = {
 
       return (
         <div className="RedigerObjekt-tekst">
-          <RSkjema.Ekstra viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+          <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
           <TextField
             floatingLabelText={egenskaper.navn}
             valueLink={this.linkState('textLinkValue')}
@@ -262,7 +262,6 @@ let RSkjema = {
 
       return (
         <div className="RedigerObjekt-tall">
-          <RSkjema.Ekstra viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
           <TextField
             floatingLabelText={egenskaper.navn}
             value={this.state.numberValue}
@@ -321,7 +320,7 @@ let RSkjema = {
 
       return (
         <div className="RedigerObjekt-klokkeslett" >
-          <RSkjema.Ekstra viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+          <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
 
           <div className="RedigerObjekt-timePickerContainer">
             <div className={classNameLabelText}>{egenskaper.navn}</div>
@@ -382,7 +381,7 @@ let RSkjema = {
 
       return (
         <div className="RedigerObjekt-klokkeslett">
-          <RSkjema.Ekstra viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+          <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
 
           <div className="RedigerObjekt-datePickerContainer">
             <div className={classNameLabelText}>{egenskaper.navn}</div>
@@ -430,14 +429,14 @@ let RSkjema = {
 
   }),
 
-  Ekstra: React.createClass({
+  Viktighet: React.createClass({
     render: function() {
       // Setter klassenavn
       let viktighetTall = Helper.objektTypeViktighetTilNummer(this.props.viktighet);
       let classNameViktighet = 'RedigerObjekt-viktighet RedigerObjekt-viktighet-' + viktighetTall;
 
       return (
-        <div className="RedigerObjekt-ekstra">
+        <div className="RedigerObjekt-viktighetContainer">
           <div className={classNameViktighet}>{this.props.viktighet}</div>
         </div>
       );

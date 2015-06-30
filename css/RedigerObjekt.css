@@ -39,8 +39,7 @@
   margin-top: 20px;
   text-align: right;
 }
-
-.RedigerObjekt-ekstra {
+.RedigerObjekt-viktighetContainer {
   display: inline-block;
   position: absolute;
   right: 0px;
@@ -110,9 +109,6 @@
   /*display: none;*/
   font-size: 12px;
 }
-
-.RedigerObjekt-beskrivelseTekstVis {
-  display: inline;
 }
 
 .RedigerObjekt-enum, .RedigerObjekt-tekst, .RedigerObjekt-tall, .RedigerObjekt-klokkeslett {
