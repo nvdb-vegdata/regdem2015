@@ -2,7 +2,6 @@ var React = require('react');
 var Typeahead = require('react-typeahead-component');
 
 var Fetch = require('./fetch.js');
-var Marker = require('./marker.js');
 var OptionTemplate = require('./optiontemplate.jsx');
 
 let Sok = React.createClass({
@@ -85,7 +84,7 @@ let Sok = React.createClass({
         return options[opt].label;
       }
     }
-    return "";
+    return '';
   },
 
   handleComplete: function (event, completedInputValue) {
@@ -93,14 +92,14 @@ let Sok = React.createClass({
     this.getOptions(completedInputValue);
   },
 
-  handleKeyDown: function(event, optionData, selectedIndex) {
+  handleKeyDown: function(event, optionData) {
     if (event.keyCode === 13) {
       if (optionData.value) {
         this.executeSearch(optionData.value);
       } else {
         for (var opt in this.state.options) {
           var obj = this.state.options[opt];
-          if (obj.label.toLowerCase() == optionData.toLowerCase()) {
+          if (obj.label.toLowerCase() === optionData.toLowerCase()) {
             this.executeSearch(obj.value);
           }
         }
@@ -109,11 +108,12 @@ let Sok = React.createClass({
   },
 
   executeSearch: function (id) {
-    Marker.update(this.props.map.kart, id);
+    app.setObjektID(null);
+    this.props.updateMarkers(this, id);
   },
 
   handleRemoveClick: function() {
-    this.setInputValue("");
+    this.setInputValue('');
     this.setOptions([]);
   }
 });
