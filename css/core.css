@@ -9,10 +9,10 @@ html, body {
 strong {
   font-weight: 700;
 }
-#kart {
 .target {
   font-size: 1.2em
 }
+.kart {
   position: absolute;
   top: 0;
   left: 0;
@@ -20,7 +20,7 @@ strong {
   bottom: 0;
   z-index: 1;
 }
-#sok {
+.sok {
   position: absolute;
   z-index: 10;
   left: 0;

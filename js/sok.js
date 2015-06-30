@@ -5,7 +5,7 @@ var Fetch = require('./fetch.js');
 var Marker = require('./marker.js');
 var OptionTemplate = require('./optiontemplate.jsx');
 
-module.exports.ObjektSok = React.createClass({
+let Sok = React.createClass({
   getInitialState: function() {
     return {
       inputValue: '',
@@ -15,20 +15,20 @@ module.exports.ObjektSok = React.createClass({
 
   render: function() {
     return (
-      <div>
-      <i className="material-icons search-icon">search</i>
-      <Typeahead
-      inputValue={this.state.inputValue}
-      options={this.state.options}
-      onChange={this.handleChange}
-      optionTemplate={OptionTemplate}
-      onOptionChange={this.handleOptionChange}
-      onOptionClick={this.handleOptionClick}
-      onKeyDown={this.handleKeyDown}
-      onComplete={this.handleComplete}
-      handleHint={this.handleHint}
-      />
-      {this.renderRemoveIcon()}
+      <div className="sok">
+        <i className="material-icons search-icon">search</i>
+        <Typeahead
+        inputValue={this.state.inputValue}
+        options={this.state.options}
+        onChange={this.handleChange}
+        optionTemplate={OptionTemplate}
+        onOptionChange={this.handleOptionChange}
+        onOptionClick={this.handleOptionClick}
+        onKeyDown={this.handleKeyDown}
+        onComplete={this.handleComplete}
+        handleHint={this.handleHint}
+        />
+        {this.renderRemoveIcon()}
       </div>
     );
   },
@@ -117,3 +117,5 @@ module.exports.ObjektSok = React.createClass({
     this.setOptions([]);
   }
 });
+
+module.exports = Sok;
