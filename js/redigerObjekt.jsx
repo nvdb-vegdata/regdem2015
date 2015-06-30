@@ -176,7 +176,7 @@ let RSkjema = {
             return {payload: egenskap.enumVerdier[enumVerdi].id, text: egenskap.enumVerdier[enumVerdi].verdi};
         });
 
-        // Legg til blank førstevalg.
+        // Legg til blank førstevalg på enums som ikke er obligatorisk
         if (viktighetTall > 2) {
           enumListeTilMenuItems.unshift({payload: 0, text: ''});
         }
