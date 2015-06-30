@@ -2,6 +2,9 @@ var React = require('react');
 var Kart = require('./map.js');
 var RedigerObjekt = require('./redigerObjekt.jsx');
 
+// For React developer tools
+window.React = React;
+
 var App = React.createClass({
   getInitialState: function() {
     return {
