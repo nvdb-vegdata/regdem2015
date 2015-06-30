@@ -81,6 +81,7 @@
 .RedigerObjekt-enum, .RedigerObjekt-tekst, .RedigerObjekt-tall, .RedigerObjekt-klokkeslett {
   position: relative;
   min-height: 100px;
+  margin-bottom: 30px;
 }
 .RedigerObjekt-klokkeslett {
   box-sizing: content-box;
