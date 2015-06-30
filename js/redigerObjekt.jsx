@@ -2,7 +2,7 @@ let React = require('react/addons');
 let mui = require('material-ui');
 let Fetch = require('./fetch.js');
 let Helper = require('./helper.js');
-let { Mixins, SelectField, TextField, RaisedButton, TimePicker, DatePicker, Card,
+let { Mixins, SelectField, TextField, TimePicker, DatePicker, Card,
   ClearFix, CardActions, FlatButton, CardTitle, CardText, CircularProgress } = require('material-ui');
 
 //Needed for onTouchTap
@@ -90,11 +90,12 @@ let RedigerObjekt = React.createClass({
     let egenskapsTyper = this.state.objektType ? this.state.objektType.egenskapsTyper : [];
     let objekt = this.state.objekt ? this.state.objekt : [];
 
-    let containerStyles = "RedigerObjekt-container hidden";
-    let cardLoaderStyles = "RedigerObjekt-loader visible"
+    // Stilendring for å vise innlasting
+    let containerStyles = 'RedigerObjekt-container hidden';
+    let cardLoaderStyles = 'RedigerObjekt-loader visible';
     if (this.state.loaded) {
-      containerStyles = "RedigerObjekt-container visible";
-      cardLoaderStyles = "RedigerObjekt-loader hidden"
+      containerStyles = 'RedigerObjekt-container visible';
+      cardLoaderStyles = 'RedigerObjekt-loader hidden';
     }
 
     // Finner verdien til egenskapen til objektet. Brukes til å pre-populate egenskapene
@@ -166,10 +167,6 @@ let RSkjema = {
       return {selectLinkValue: this.props.verdi};
     },
 
-    toggleDescription: function () {
-      this.refs.beskrivelse.setState({visBeskrivelse: !this.refs.beskrivelse.state.visBeskrivelse});
-    },
-
     render: function() {
       let egenskaper = this.props.egenskaper;
       let viktighetTall = Helper.objektTypeViktighetTilNummer(egenskaper.viktighet);
@@ -179,7 +176,7 @@ let RSkjema = {
             return {payload: egenskap.enumVerdier[enumVerdi].id, text: egenskap.enumVerdier[enumVerdi].verdi};
         });
 
-        // Legg til blank førstevalg.
+        // Legg til blank førstevalg på enums som ikke er obligatorisk
         if (viktighetTall > 2) {
           enumListeTilMenuItems.unshift({payload: 0, text: ''});
         }
@@ -187,17 +184,22 @@ let RSkjema = {
         return enumListeTilMenuItems;
       };
 
+      let SelectFieldClassName = 'RedigerObjekt-selectField RedigerObjekt-permanentEtikett';
+      if (this.state.selectLinkValue !== '') {
+        SelectFieldClassName += ' RedigerObjekt-endretVerdi';
+      }
+
       return (
           <div className="RedigerObjekt-enum">
-            <RSkjema.Ekstra viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+            <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
             <SelectField
               valueLink={this.linkState('selectLinkValue')}
               floatingLabelText={egenskaper.navn}
               fullWidth={true}
               menuItems={genererMenuItems(egenskaper)}
-              className="RedigerObjekt-selectField"
+              className={SelectFieldClassName}
             />
-            <RSkjema.Beskrivelse ref="beskrivelse" beskrivelse={egenskaper.beskrivelse} />
+            <RSkjema.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
           </div>
       );
     }
@@ -211,22 +213,24 @@ let RSkjema = {
       return { textLinkValue: this.props.verdi };
     },
 
-    toggleDescription: function () {
-      this.refs.beskrivelse.setState({visBeskrivelse: !this.refs.beskrivelse.state.visBeskrivelse});
-    },
-
     render: function() {
       let egenskaper = this.props.egenskaper;
 
+      let TextFieldClassName = 'RedigerObjekt-permanentEtikett';
+      if (this.state.textLinkValue !== '') {
+        TextFieldClassName += ' RedigerObjekt-endretVerdi';
+      }
+
       return (
         <div className="RedigerObjekt-tekst">
-          <RSkjema.Ekstra viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+          <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
           <TextField
             floatingLabelText={egenskaper.navn}
             valueLink={this.linkState('textLinkValue')}
             fullWidth={true}
+            className={TextFieldClassName}
           />
-          <RSkjema.Beskrivelse ref="beskrivelse" beskrivelse={egenskaper.beskrivelse} />
+          <RSkjema.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
       );
     }
@@ -250,7 +254,7 @@ let RSkjema = {
 
       let newValue = event.target.value;
 
-      if (isNumber(newValue)) {
+      if (isNumber(newValue) || newValue === '') {
         this.setState({
           numberValue: newValue,
           numberValueErrorText: ''
@@ -264,24 +268,29 @@ let RSkjema = {
 
     },
 
-    toggleDescription: function () {
-      this.refs.beskrivelse.setState({visBeskrivelse: !this.refs.beskrivelse.state.visBeskrivelse});
-    },
-
     render: function() {
       let egenskaper = this.props.egenskaper;
 
+      let NumberFieldClassName = 'RedigerObjekt-permanentEtikett';
+      if (this.state.numberValue !== '') {
+        NumberFieldClassName += ' RedigerObjekt-endretVerdi';
+      }
+      if (this.state.numberValueErrorText !== '') {
+        NumberFieldClassName += ' RedigerObjekt-feilmelding';
+      }
+
       return (
         <div className="RedigerObjekt-tall">
-          <RSkjema.Ekstra viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+          <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
           <TextField
             floatingLabelText={egenskaper.navn}
             value={this.state.numberValue}
             onChange={this.handleChange}
             errorText={this.state.numberValueErrorText}
             fullWidth={true}
+            className={NumberFieldClassName}
           />
-          <RSkjema.Beskrivelse ref="beskrivelse" beskrivelse={egenskaper.beskrivelse} />
+          <RSkjema.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
       );
     }
@@ -305,10 +314,6 @@ let RSkjema = {
       this.replaceState(this.getInitialState());
     },
 
-    toggleDescription: function () {
-      this.refs.beskrivelse.setState({visBeskrivelse: !this.refs.beskrivelse.state.visBeskrivelse});
-    },
-
     componentDidMount: function () {
       if (this.refs.tidvelger) {
         if (this.props.verdi.length > 0) {
@@ -328,15 +333,14 @@ let RSkjema = {
       // Setter klassenavn
       let classNameLabelText = 'RedigerObjekt-etikett';
 
-      // Setter på et nytt klassenavn hvis datofelt er tomt. Det gjør at vi kan lage
-      // en større label mer likt TextField
-      if (this.state.klokkeVerdi.length === 0) {
-        classNameLabelText += ' RedigerObjekt-etikettTom';
+      let TimePickerClassName = 'RedigerObjekt-timePicker';
+      if (this.state.klokkeVerdi !== '') {
+        TimePickerClassName += ' RedigerObjekt-endretVerdi';
       }
 
       return (
         <div className="RedigerObjekt-klokkeslett" >
-          <RSkjema.Ekstra viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+          <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
 
           <div className="RedigerObjekt-timePickerContainer">
             <div className={classNameLabelText}>{egenskaper.navn}</div>
@@ -345,11 +349,11 @@ let RSkjema = {
               ref="tidvelger"
               format="24hr"
               onChange={this.handleChange}
-              className="RedigerObjekt-timePicker"
+              className={TimePickerClassName}
             />
           </div>
           <RSkjema.TomFelt tomFelt={this.handleClear} tomt={(this.state.klokkeVerdi.length === 0)} />
-          <RSkjema.Beskrivelse ref="beskrivelse" beskrivelse={egenskaper.beskrivelse} />
+          <RSkjema.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
       );
     }
@@ -373,10 +377,6 @@ let RSkjema = {
       this.replaceState(this.getInitialState());
     },
 
-    toggleDescription: function () {
-      this.refs.beskrivelse.setState({visBeskrivelse: !this.refs.beskrivelse.state.visBeskrivelse});
-    },
-
     componentDidMount: function () {
       if (this.refs.datovelger) {
         if (this.state.datoVerdi.length > 0) {
@@ -395,13 +395,14 @@ let RSkjema = {
       // Setter klassenavn
       let classNameLabelText = 'RedigerObjekt-etikett';
 
-      if (this.state.datoVerdi.length === 0) {
-        classNameLabelText += ' RedigerObjekt-etikettTom';
+      let DatePickerClassName = 'RedigerObjekt-datePicker';
+      if (this.state.datoVerdi !== '') {
+        DatePickerClassName += ' RedigerObjekt-endretVerdi';
       }
 
       return (
         <div className="RedigerObjekt-klokkeslett">
-          <RSkjema.Ekstra viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+          <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
 
           <div className="RedigerObjekt-datePickerContainer">
             <div className={classNameLabelText}>{egenskaper.navn}</div>
@@ -410,11 +411,11 @@ let RSkjema = {
               ref="datovelger"
               showYearSelector={true}
               onChange={this.handleChange}
-              className="RedigerObjekt-datePicker"
+              className={DatePickerClassName}
             />
           </div>
           <RSkjema.TomFelt tomFelt={this.handleClear} tomt={(this.state.datoVerdi.length === 0)} />
-          <RSkjema.Beskrivelse ref="beskrivelse" beskrivelse={egenskaper.beskrivelse} />
+          <RSkjema.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
       );
     }
@@ -439,40 +440,24 @@ let RSkjema = {
   }),
 
   Beskrivelse: React.createClass({
-    getInitialState: function() {
-      return { visBeskrivelse: false };
-    },
-
-    toggleDescription: function () {
-      this.setState({visBeskrivelse: !this.state.visBeskrivelse});
-    },
-
     render: function() {
-      // Setter klassenavn
-      let classNameBeskrivelse = 'RedigerObjekt-beskrivelseTekst';
-      if (this.state.visBeskrivelse) {
-        classNameBeskrivelse += ' RedigerObjekt-beskrivelseTekstVis';
-      }
-
-      // <div className="RedigerObjekt-beskrivelseKnapp" onClick={this.toggleDescription}>Info</div>
-
       return (
         <div className="RedigerObjekt-beskrivelse">
-          <div className={classNameBeskrivelse}>{this.props.beskrivelse}</div>
+          <div className="RedigerObjekt-beskrivelseTekst">{this.props.beskrivelse}</div>
         </div>
       );
     }
 
   }),
 
-  Ekstra: React.createClass({
+  Viktighet: React.createClass({
     render: function() {
       // Setter klassenavn
       let viktighetTall = Helper.objektTypeViktighetTilNummer(this.props.viktighet);
       let classNameViktighet = 'RedigerObjekt-viktighet RedigerObjekt-viktighet-' + viktighetTall;
 
       return (
-        <div className="RedigerObjekt-ekstra">
+        <div className="RedigerObjekt-viktighetContainer">
           <div className={classNameViktighet}>{this.props.viktighet}</div>
         </div>
       );

@@ -1,20 +1,17 @@
+/* Containers og meta */
 .RedigerObjekt-Card {
   height: 100%;
   text-align: center;
 }
-
 .RedigerObjekt-loader {
   margin-top: 100px !important;
 }
-
 .RedigerObjekt-loader.visible {
   display: inherit;
 }
-
 .RedigerObjekt-loader.hidden {
   display: none !important;
 }
-
 .RedigerObjekt-container {
   text-align: left;
   padding: 5px;
@@ -26,41 +23,45 @@
   max-width: 500px;
   box-sizing: border-box;
 }
-
 .RedigerObjekt-container.visible {
   display: inherit;
 }
-
 .RedigerObjekt-container.hidden {
   display: none !important;
 }
-
 .RedigerObjekt-knapp-container {
   margin-top: 20px;
   text-align: right;
 }
-
-.RedigerObjekt-ekstra {
+.RedigerObjekt-viktighetContainer {
   display: inline-block;
   position: absolute;
   right: 0px;
   top: 15px;
 }
-
 .RedigerObjekt-viktighet {
   font-size: 10px;
   float: right;
   margin: 8px;
   letter-spacing: 1px;
 }
-
-.RedigerObjekt-infoKnapp {
-  user-select: none;
-  cursor: pointer;
-  float: right;
-  opacity: 0.25;
+.RedigerObjekt-viktighet-1, .RedigerObjekt-viktighet-2 {
+  color: #D0021B;
 }
-
+.RedigerObjekt-viktighet-3 {
+  color: orange;
+}
+.RedigerObjekt-viktighet-4 {
+  color: blue;
+}
+.RedigerObjekt-beskrivelse {
+  color: #999;
+}
+.RedigerObjekt-beskrivelseTekst {
+  font-size: 13px;
+  line-height: 1.4em;
+  color: rgba(0,0,0,0.5);
+}
 .RedigerObjekt-tomKnapp {
   user-select: none;
   cursor: pointer;
@@ -70,66 +71,26 @@
   right: 8px;
   top: 39px;
 }
-
 .RedigerObjekt-tomKnappSkjul {
   display: none;
 }
-
 .RedigerObjekt-tomKnapp i {
   font-size: 18px;
 }
-
-.RedigerObjekt-viktighet-1, .RedigerObjekt-viktighet-2 {
-  color: #D0021B;
-}
-
-.RedigerObjekt-viktighet-3 {
-  color: orange;
-}
-
-.RedigerObjekt-viktighet-4 {
-  color: blue;
-}
-
-.RedigerObjekt-beskrivelse {
-  color: #999;
-}
-
-.RedigerObjekt-beskrivelseKnapp {
-  display: inline-block;
-  user-select: none;
-  cursor: pointer;
-  margin: 4px 8px 0 0;
-  text-transform: uppercase;
-  font-size: 12px;
-  background-color: #f8f8f8;
-  padding: 3px;
-}
-
-.RedigerObjekt-beskrivelseTekst {
-  /*display: none;*/
-  font-size: 12px;
-}
-
-.RedigerObjekt-beskrivelseTekstVis {
-  display: inline;
-}
-
+/* Components */
 .RedigerObjekt-enum, .RedigerObjekt-tekst, .RedigerObjekt-tall, .RedigerObjekt-klokkeslett {
   position: relative;
   min-height: 100px;
+  margin-bottom: 30px;
 }
-
 .RedigerObjekt-klokkeslett {
   box-sizing: content-box;
 }
-
 .RedigerObjekt-timePicker {
   width: 100% !important;
   margin-top: 22px;
 }
-
-.RedigerObjekt-datePickerContainer, .RedigerObjekt-timePickerContainer  {
+.RedigerObjekt-datePickerContainer, .RedigerObjekt-timePickerContainer {
   font-size: 16px;
   line-height: 24px;
   width: 100%;
@@ -139,31 +100,8 @@
   font-family: Roboto, sans-serif;
   transition: height 200ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
 }
-
-.RedigerObjekt-etikett {
-  position: absolute;
-  line-height: 48px;
-  opacity: 1;
-  color: rgba(0,0,0,0.5);
-  transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-  top: 22px;
-  transform: perspective(1px) scale(0.75) translate3d(0, -18px, 0);
-  transform-origin: left top;
-}
-
-.RedigerObjekt-etikettTom {
-  position: absolute;
-  line-height: 48px;
-  opacity: 1;
-  color: rgba(0,0,0,0.3);
-  transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-  top: 24px;
-  transform: scale(1) translate3d(0, 0, 0);
-  transform-origin: left top;
-}
-
 .RedigerObjekt-datePicker {
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   position: relative;
   width: 100% !important;
   height: 100%;
@@ -174,4 +112,25 @@
   font: inherit;
   box-sizing: border-box;
   margin-top: 23px;
+}
+.RedigerObjekt-etikett {
+  position: absolute;
+  line-height: 48px;
+  opacity: 1;
+  color: rgba(0, 0, 0, 0.5);
+  transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+  top: 22px;
+  transform: perspective(1px) scale(0.75) translate3d(0, -18px, 0);
+  transform-origin: left top;
+}
+.RedigerObjekt-permanentEtikett > label:first-child  {
+  color: rgba(0,0,0,0.5) !important;
+  transform: perspective(1px) scale(0.75) translate3d(0, -18px, 0) !important;
+}
+.RedigerObjekt-endretVerdi > hr:last-of-type {
+  transform: scaleX(1) !important;
+}
+.RedigerObjekt-feilmelding > div:last-of-type {
+  position: relative !important;
+  bottom: 2px !important;
 }
