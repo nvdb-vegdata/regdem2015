@@ -130,3 +130,7 @@
 .RedigerObjekt-endretVerdi > hr:last-of-type {
   transform: scaleX(1) !important;
 }
+.RedigerObjekt-feilmelding > div:last-of-type {
+  position: relative !important;
+  bottom: 2px !important;
+}

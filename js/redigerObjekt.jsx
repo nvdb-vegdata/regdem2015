@@ -254,7 +254,7 @@ let RSkjema = {
 
       let newValue = event.target.value;
 
-      if (isNumber(newValue)) {
+      if (isNumber(newValue) || newValue === '') {
         this.setState({
           numberValue: newValue,
           numberValueErrorText: ''
