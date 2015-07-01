@@ -97,9 +97,10 @@ let Sok = React.createClass({
   },
 
   handleHint: function(inputValue, options) {
+    var expression = new RegExp('^' + inputValue.toLowerCase());
     for(var opt in options){
-      if (new RegExp('^' + inputValue).test(options[opt].label)){
-        return options[opt].label;
+      if (expression.test(options[opt].label.toLowerCase())){
+        return inputValue + options[opt].label.slice(inputValue.length);
       }
     }
     return '';
