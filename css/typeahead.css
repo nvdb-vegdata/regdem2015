@@ -32,13 +32,13 @@
   color:#999;
 }
 
-#sok .clear-icon {
+.sok .clear-icon {
   top:0;
   right:0;
   cursor:pointer;
 }
 
-#sok .indicator_container {
+.sok .indicator_container {
   position:absolute;
   top:-20px;
   right:20px;

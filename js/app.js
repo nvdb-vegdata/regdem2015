@@ -1,16 +1,29 @@
 var React = require('react');
-var Sok = require('../js/sok.js');
-
+var Kart = require('./map.js');
 var RedigerObjekt = require('./redigerObjekt.jsx');
-var Map = require('./map.js');
 
-React.render(<Sok.ObjektSok map={Map}/>, document.getElementById('sok'));
+// For React developer tools
+window.React = React;
 
-window.visObjekt = function (objektID) {
-  React.render(
-    <RedigerObjekt objektID={objektID} />,
-    document.getElementById('rediger-vegobjekt')
-  );
+var App = React.createClass({
+  getInitialState: function() {
+    return {
+      objektID: null
+    };
+  },
 
-  document.getElementById('rediger-vegobjekt').style.display = 'block';
-};
+  setObjektID: function (id) {
+    this.setState({objektID: id});
+  },
+
+  render: function() {
+    return (
+      <div>
+        <RedigerObjekt objektID={this.state.objektID} />
+        <Kart />
+      </div>
+    );
+  }
+});
+
+window.app = React.render(<App />, document.body);
