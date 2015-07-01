@@ -3,16 +3,16 @@
 @import (inline) 'easy-button.css';
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
 @import (inline) 'RedigerObjekt.css';
-
 html, body {
   font-family: 'Roboto', sans-serif;
 }
-
 strong {
-  font-weight:700;
+  font-weight: 700;
 }
-
-#kart {
+.target {
+  font-size: 1.2em
+}
+.kart {
   position: absolute;
   top: 0;
   left: 0;
@@ -20,8 +20,7 @@ strong {
   bottom: 0;
   z-index: 1;
 }
-
-#sok {
+.sok {
   position: absolute;
   z-index: 10;
   left: 0;
@@ -30,10 +29,7 @@ strong {
   margin: 10px;
   max-width: 400px;
 }
-
-.target {font-size:1.2em}
-
-#rediger-vegobjekt {
+.RedigerObjekt {
   position: absolute;
   z-index: 4;
   left: 0;
@@ -42,5 +38,4 @@ strong {
   top: 50px;
   margin: 10px;
   max-width: 500px;
-  display: none;
 }

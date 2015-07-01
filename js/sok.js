@@ -2,11 +2,10 @@ var React = require('react');
 var Typeahead = require('react-typeahead-component');
 
 var Fetch = require('./fetch.js');
-var Marker = require('./marker.js');
 var Indicator = require('./indicator.jsx');
 var OptionTemplate = require('./optiontemplate.jsx');
 
-module.exports.ObjektSok = React.createClass({
+let Sok = React.createClass({
   getInitialState: function() {
     return {
       inputValue: '',
@@ -17,21 +16,21 @@ module.exports.ObjektSok = React.createClass({
 
   render: function() {
     return (
-      <div>
-      <i className="material-icons search-icon">search</i>
-      <Typeahead
-      inputValue={this.state.inputValue}
-      options={this.state.options}
-      onChange={this.handleChange}
-      optionTemplate={OptionTemplate}
-      onOptionChange={this.handleOptionChange}
-      onOptionClick={this.handleOptionClick}
-      onKeyDown={this.handleKeyDown}
-      onComplete={this.handleComplete}
-      handleHint={this.handleHint}
-      />
-      {this.renderIndicator()}
-      {this.renderRemoveIcon()}
+      <div className="sok">
+        <i className="material-icons search-icon">search</i>
+        <Typeahead
+        inputValue={this.state.inputValue}
+        options={this.state.options}
+        onChange={this.handleChange}
+        optionTemplate={OptionTemplate}
+        onOptionChange={this.handleOptionChange}
+        onOptionClick={this.handleOptionClick}
+        onKeyDown={this.handleKeyDown}
+        onComplete={this.handleComplete}
+        handleHint={this.handleHint}
+        />
+        {this.renderIndicator()}
+        {this.renderRemoveIcon()}
       </div>
     );
   },
@@ -90,9 +89,11 @@ module.exports.ObjektSok = React.createClass({
   },
 
   setLoading: function (val) {
-    this.setState({
-      loading: val
-    })
+    if (this.state.inputValue) {
+      this.setState({
+        loading: val
+      });
+    }
   },
 
   handleHint: function(inputValue, options) {
@@ -101,7 +102,7 @@ module.exports.ObjektSok = React.createClass({
         return options[opt].label;
       }
     }
-    return "";
+    return '';
   },
 
   handleComplete: function (event, completedInputValue) {
@@ -109,14 +110,14 @@ module.exports.ObjektSok = React.createClass({
     this.getOptions(completedInputValue);
   },
 
-  handleKeyDown: function(event, optionData, selectedIndex) {
+  handleKeyDown: function(event, optionData) {
     if (event.keyCode === 13) {
       if (optionData.value) {
         this.executeSearch(optionData.value);
       } else {
         for (var opt in this.state.options) {
           var obj = this.state.options[opt];
-          if (obj.label.toLowerCase() == optionData.toLowerCase()) {
+          if (obj.label.toLowerCase() === optionData.toLowerCase()) {
             this.executeSearch(obj.value);
           }
         }
@@ -125,15 +126,18 @@ module.exports.ObjektSok = React.createClass({
   },
 
   executeSearch: function (id) {
+    app.setObjektID(null);
     var sok = this;
-    Marker.update(this.props.map.kart, id, function(){
+    this.props.updateMarkers(id, () => {
       sok.setLoading('false');
     });
     this.setLoading('true');
   },
 
   handleRemoveClick: function() {
-    this.setInputValue("");
+    this.setInputValue('');
     this.setOptions([]);
   }
 });
+
+module.exports = Sok;

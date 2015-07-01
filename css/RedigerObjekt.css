@@ -1,4 +1,5 @@
 /* Containers og meta */
+
 .RedigerObjekt-Card {
   height: 100%;
   text-align: center;
@@ -28,6 +29,14 @@
 }
 .RedigerObjekt-container.hidden {
   display: none !important;
+}
+.RedigerObjekt-lukk {
+  float: right;
+  margin-top: 5px;
+  cursor: pointer;
+}
+.RedigerObjekt-lukk i {
+  color: rgba(0, 0, 0, 0.5);
 }
 .RedigerObjekt-knapp-container {
   margin-top: 20px;
@@ -60,7 +69,7 @@
 .RedigerObjekt-beskrivelseTekst {
   font-size: 13px;
   line-height: 1.4em;
-  color: rgba(0,0,0,0.5);
+  color: rgba(0, 0, 0, 0.5);
 }
 .RedigerObjekt-tomKnapp {
   user-select: none;
@@ -77,7 +86,9 @@
 .RedigerObjekt-tomKnapp i {
   font-size: 18px;
 }
+
 /* Components */
+
 .RedigerObjekt-enum, .RedigerObjekt-tekst, .RedigerObjekt-tall, .RedigerObjekt-klokkeslett {
   position: relative;
   min-height: 100px;
@@ -123,8 +134,8 @@
   transform: perspective(1px) scale(0.75) translate3d(0, -18px, 0);
   transform-origin: left top;
 }
-.RedigerObjekt-permanentEtikett > label:first-child  {
-  color: rgba(0,0,0,0.5) !important;
+.RedigerObjekt-permanentEtikett > label:first-child {
+  color: rgba(0, 0, 0, 0.5) !important;
   transform: perspective(1px) scale(0.75) translate3d(0, -18px, 0) !important;
 }
 .RedigerObjekt-endretVerdi > hr:last-of-type {
