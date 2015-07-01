@@ -63,7 +63,7 @@ let RedigerObjekt = React.createClass({
     if (objektID) {
       if (this.state.objekt) {
         if (objektID !== this.state.objekt.objektId) {
-          this.setState({loaded: false});
+          this.replaceState(this.getInitialState());
           this.fetchData(objektID);
         }
       } else {
