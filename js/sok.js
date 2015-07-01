@@ -2,13 +2,15 @@ var React = require('react');
 var Typeahead = require('react-typeahead-component');
 
 var Fetch = require('./fetch.js');
+var Indicator = require('./indicator.jsx');
 var OptionTemplate = require('./optiontemplate.jsx');
 
 let Sok = React.createClass({
   getInitialState: function() {
     return {
       inputValue: '',
-      options: []
+      options: [],
+      loading: 'false'
     };
   },
 
@@ -27,6 +29,7 @@ let Sok = React.createClass({
         onComplete={this.handleComplete}
         handleHint={this.handleHint}
         />
+        {this.renderIndicator()}
         {this.renderRemoveIcon()}
       </div>
     );
@@ -40,7 +43,14 @@ let Sok = React.createClass({
         className="material-icons clear-icon">clear</i>
       );
     }
+  },
 
+  renderIndicator: function () {
+    return (
+      <Indicator
+      visible={this.state.loading}
+      />
+    );
   },
 
   handleChange: function(event) {

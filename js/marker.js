@@ -4,17 +4,17 @@ var Fetch = require('./fetch.js');
 
 var objektID = null;
 var markers = new L.MarkerClusterGroup({
-  maxClusterRadius: 50,
-  disableClusteringAtZoom:16 // Ved bunn av zoom, vil clustering slås av.
+  maxClusterRadius: 30
 });
 
 // Tar inn kart og objektID, fetcher objekter og viser på kart.
-function updateMarkers(kart, id) {
+function updateMarkers(kart, id, callback) {
   var mapbox = kart.getBounds();
 
   Fetch.fetchAPIObjekter(id, mapbox, function(data){
     clearMarkers();
     displayMarkers(kart, data.vegObjekter);
+    callback();
   });
 }
 
@@ -37,11 +37,11 @@ function clearMarkers() {
   markers.clearLayers();
 }
 
-module.exports.update = function (kart, id) {
+module.exports.update = function (kart, id, callback) {
   if (id) {
     objektID = id;
-    updateMarkers(kart, id);
+    updateMarkers(kart, id, callback);
   } else if (objektID) {
-    updateMarkers(kart, objektID);
+    updateMarkers(kart, objektID, callback);
   }
 }

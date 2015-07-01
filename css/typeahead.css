@@ -24,10 +24,9 @@
   text-overflow: ellipsis;
 }
 
-.search-icon, .clear-icon {
+.search-icon, .clear-icon, .indicator {
   position:absolute;
   z-index: 10;
-  height:100%;
   padding:6px;
   font-size:20px;
   color:#999;
@@ -37,6 +36,17 @@
   top:0;
   right:0;
   cursor:pointer;
+}
+
+.sok .indicator_container {
+  position:absolute;
+  top:-20px;
+  right:20px;
+  z-index:10;
+}
+
+.hidden {
+  visibility: hidden;
 }
 
 .react-typeahead-input-container input:focus {
