@@ -60,6 +60,10 @@ var kart = new L.map('kart', {
 new L.Control.Zoom( {position: 'bottomleft'}).addTo(kart);
 kart.locate({setView: true, maxZoom: 15});
 
+kart.on('locationfound', function(e) {
+  L.marker(e.latlng).addTo(kart);
+});
+
 kart.on('moveend', function() {
   Marker.update(kart);
 });
