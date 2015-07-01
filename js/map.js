@@ -58,8 +58,8 @@ let Kart = React.createClass({
     new L.Control.Zoom( {position: 'bottomleft'}).addTo(this.kartData);
     this.kartData.locate({setView: true, maxZoom: 15});
 
-kartData.on('locationfound', (e) => {
-  Marker.displayCurrentPosition(e, kart);
+this.kartData.on('locationfound', (e) => {
+  Marker.displayCurrentPosition(e, this.kartData);
 });
     this.kartData.on('moveend', () => {
       var sok = this.refs.sok;
@@ -70,45 +70,11 @@ kartData.on('locationfound', (e) => {
     });
 
     // Plassering av min poisisjon-knapp
-    L.easyButton('<i class="material-icons target">my_location</i>', function () {
+    L.easyButton('<i class="material-icons target">my_location</i>', () => {
       this.kartData.locate({setView: true, maxZoom: 15});
     }).addTo( this.kartData );
   },
 
-  componentWillUnmount: function() {
-    this.kartData = null;
-  },
-
-  updateMarkers: function (id, callback) {
-    Marker.update(this.kartData, id, callback);
-  },
-
-  render: function() {
-    return (
-      <div>
-        <Sok ref="sok" updateMarkers={this.updateMarkers} />
-        <div ref="kart" className="kart"></div>
-      </div>
-    );
-  }
-});
-  componentWillUnmount: function() {
-    this.kartData = null;
-  },
-
-  updateMarkers: function (id, callback) {
-    Marker.update(this.kartData, id, callback);
-  },
-
-  render: function() {
-    return (
-      <div>
-        <Sok ref="sok" updateMarkers={this.updateMarkers} />
-        <div ref="kart" className="kart"></div>
-      </div>
-    );
-  }
-});
   componentWillUnmount: function() {
     this.kartData = null;
   },
