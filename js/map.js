@@ -56,8 +56,11 @@ let Kart = React.createClass({
 
     // PLassering av zoom kontrollene
     new L.Control.Zoom( {position: 'bottomleft'}).addTo(this.kartData);
-    this.kartData.locate({setView: true, maxZoom: 14});
+    this.kartData.locate({setView: true, maxZoom: 15});
 
+this.kartData.on('locationfound', (e) => {
+  Marker.displayCurrentPosition(e, this.kartData);
+});
     this.kartData.on('moveend', () => {
       var sok = this.refs.sok;
       Marker.update(this.kartData, null, () => {
@@ -67,8 +70,8 @@ let Kart = React.createClass({
     });
 
     // Plassering av min poisisjon-knapp
-    L.easyButton('<i class="material-icons target">my_location</i>', function () {
-      this.kartData.locate({setView: true, maxZoom: 14});
+    L.easyButton('<i class="material-icons target">my_location</i>', () => {
+      this.kartData.locate({setView: true, maxZoom: 15});
     }).addTo( this.kartData );
   },
 
