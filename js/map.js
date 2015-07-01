@@ -61,7 +61,7 @@ new L.Control.Zoom( {position: 'bottomleft'}).addTo(kart);
 kart.locate({setView: true, maxZoom: 15});
 
 kart.on('locationfound', function(e) {
-  L.marker(e.latlng).addTo(kart);
+  Marker.displayCurrentPosition(e, kart);
 });
 
 kart.on('moveend', function() {

@@ -3,6 +3,7 @@ var omnivore = require('leaflet-omnivore');
 var Fetch = require('./fetch.js');
 
 var objektID = null;
+var curPosLayer = new L.FeatureGroup();
 var markers = new L.MarkerClusterGroup({
   maxClusterRadius: 30
 });
@@ -42,4 +43,10 @@ module.exports.update = function (kart, id, callback) {
   } else if (objektID) {
     updateMarkers(kart, objektID, callback);
   }
+}
+
+module.exports.displayCurrentPosition = function (pos, kart) {
+  curPosLayer.clearLayers();
+  curPosLayer.addLayer(L.marker(pos.latlng));
+  kart.addLayer(curPosLayer);
 }
