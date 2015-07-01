@@ -78,6 +78,14 @@ let Sok = React.createClass({
     });
   },
 
+  setLoading: function (val) {
+    if (this.state.inputValue) {
+      this.setState({
+        loading: val
+      });
+    }
+  },
+
   handleHint: function(inputValue, options) {
     for(var opt in options){
       if (new RegExp('^' + inputValue).test(options[opt].label)){
@@ -109,7 +117,11 @@ let Sok = React.createClass({
 
   executeSearch: function (id) {
     app.setObjektID(null);
-    this.props.updateMarkers(this, id);
+    var sok = this;
+    this.props.updateMarkers(id, () => {
+      sok.setLoading('false');
+    });
+    this.setLoading('true');
   },
 
   handleRemoveClick: function() {

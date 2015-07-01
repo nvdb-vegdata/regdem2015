@@ -58,8 +58,12 @@ let Kart = React.createClass({
     new L.Control.Zoom( {position: 'bottomleft'}).addTo(this.kartData);
     this.kartData.locate({setView: true, maxZoom: 14});
 
-    this.kartData.on('moveend', function() {
-      Marker.update(this);
+    this.kartData.on('moveend', () => {
+      var sok = this.refs.sok;
+      Marker.update(this.kartData, null, () => {
+        sok.setLoading('false');
+      });
+      sok.setLoading('true');
     });
 
     // Plassering av min poisisjon-knapp
@@ -72,14 +76,14 @@ let Kart = React.createClass({
     this.kartData = null;
   },
 
-  updateMarkers: function (sok, id) {
-    Marker.update(this.kartData, id);
+  updateMarkers: function (id, callback) {
+    Marker.update(this.kartData, id, callback);
   },
 
   render: function() {
     return (
       <div>
-        <Sok updateMarkers={this.updateMarkers} />
+        <Sok ref="sok" updateMarkers={this.updateMarkers} />
         <div ref="kart" className="kart"></div>
       </div>
     );
