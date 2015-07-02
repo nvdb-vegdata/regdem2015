@@ -1,0 +1,12 @@
+.lagNy-container {
+  position: absolute;
+  bottom: 40px;
+  right: 20px;
+  z-index: 999;
+}
+
+
+.add-icon {
+  height: 56px;
+  margin-top: 15px;
+}

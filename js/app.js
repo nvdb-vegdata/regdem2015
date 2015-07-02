@@ -1,6 +1,7 @@
 var React = require('react');
 var Kart = require('./map.js');
 var RedigerObjekt = require('./redigerObjekt.jsx');
+let LagNy = require('./lagNy.jsx');
 
 // For React developer tools
 window.React = React;
@@ -21,6 +22,7 @@ var App = React.createClass({
       <div>
         <RedigerObjekt objektID={this.state.objektID} />
         <Kart />
+        <LagNy />
       </div>
     );
   }
