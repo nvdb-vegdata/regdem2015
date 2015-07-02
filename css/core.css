@@ -7,7 +7,7 @@ html, body {
   font-family: 'Roboto', sans-serif;
 }
 strong {
-  font-weight: 700;
+  font-weight: 500;
 }
 .target {
   font-size: 1.2em
@@ -27,7 +27,7 @@ strong {
   right: 0;
   top: 0;
   margin: 10px;
-  max-width: 400px;
+  max-width: 500px;
 }
 .RedigerObjekt {
   position: absolute;
@@ -35,7 +35,7 @@ strong {
   left: 0;
   right: 0;
   bottom: 0;
-  top: 50px;
+  top: 62px;
   margin: 10px;
   max-width: 500px;
 }
