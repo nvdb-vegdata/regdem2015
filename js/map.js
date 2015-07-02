@@ -61,6 +61,7 @@ let Kart = React.createClass({
     this.kartData.on('locationfound', (e) => {
       Marker.displayCurrentPosition(e, this.kartData);
     });
+
     this.kartData.on('moveend', () => {
       var sok = this.refs.sok;
       Marker.update(this.kartData, null, () => {
