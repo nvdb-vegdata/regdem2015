@@ -54,6 +54,10 @@ let Sok = React.createClass({
     );
   },
 
+  setFocus: function () {
+    this.refs.typeahead.focus();
+  },
+
   handleInputClick: function(event) {
     if(this.state.inputValue === ''){
       this.handleChange(event);
