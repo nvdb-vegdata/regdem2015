@@ -59,43 +59,60 @@ let RedigerObjekt = React.createClass({
   },
 
   getNewData: function (objektID) {
-    // Ser om det er relevant å hente inn ny data
+    // Finnes det en ObjektID?
     if (objektID) {
-      if (this.state.objekt) {
-        if (objektID !== this.state.objekt.objektId) {
-          this.replaceState(this.getInitialState());
-          this.fetchData(objektID);
+      // Skal vi lage nytt objekt?
+      if (objektID === -1) {
+        this.replaceState(this.getInitialState());
+        // Har vi oppgitt
+        if (this.props.objektTypeID) {
+          // Kun hent ObjektType data, sett Objekt data til null
+          this.fetchObjekTypetData(null, this.props.objektTypeID);
         }
       } else {
-        this.fetchData(objektID);
+        // Finne det allerede et objekt i state, og er dette objektet det
+        // samme som det vi prøver å laste inn?
+        if (this.state.objekt && objektID !== this.state.objekt.objektId) {
+          this.replaceState(this.getInitialState());
+          this.fetchObjektData(objektID);
+        } else {
+          this.fetchObjektData(objektID);
+        }
       }
     }
   },
 
-  fetchData: function (objektID) {
+  fetchObjektData: function (objektID) {
     Fetch.fetchObjekt(objektID, (objektData) => {
       if (this.isMounted()) {
-        this.setState({objekt: objektData});
+        // Når du har hentet Objekt data må du hente ObjektTypeData. Sender ObjektData
+        // som parameter slik at fetchObjektTypeData kan oppdatere state.
+        this.fetchObjekTypetData(objektData, objektData.objektTypeId);
+      }
+    });
+  },
 
-        // Nå som vi har objektet, kan vi hente objekttype
-        Fetch.fetchObjektType(objektData.objektTypeId, (objektTypeData) => {
-          // Sorterer egenskaper til objekttype etter viktighet og sorteringsnummer
-          objektTypeData.egenskapsTyper.sort(function (a, b) {
-            let differanseMellomAogB = Helper.objektTypeViktighetTilNummer(a.viktighet) - Helper.objektTypeViktighetTilNummer(b.viktighet);
+  fetchObjekTypetData: function (objektData, objektTypeId) {
+    // Nå som vi har objektet, kan vi hente objekttype
+    Fetch.fetchObjektType(objektTypeId, (objektTypeData) => {
+      if (this.isMounted()) {
+        // Sorterer egenskaper til objekttype etter viktighet og sorteringsnummer
+        objektTypeData.egenskapsTyper.sort(function (a, b) {
+          let differanseMellomAogB = Helper.objektTypeViktighetTilNummer(a.viktighet) - Helper.objektTypeViktighetTilNummer(b.viktighet);
 
-            if (differanseMellomAogB === 0) {
-              // Sorter på sorteringsnummer, nivå 2
-              return a.sorteringsnummer - b.sorteringsnummer;
-            } else {
-              // Sorter på viktighet, nivå 1
-              return differanseMellomAogB;
-            }
-          });
+          if (differanseMellomAogB === 0) {
+            // Sorter på sorteringsnummer, nivå 2
+            return a.sorteringsnummer - b.sorteringsnummer;
+          } else {
+            // Sorter på viktighet, nivå 1
+            return differanseMellomAogB;
+          }
+        });
 
-          this.setState({
-            objektType: objektTypeData,
-            loaded: true
-          });
+        this.setState({
+          objekt: objektData,
+          objektType: objektTypeData,
+          loaded: true
         });
       }
     });
