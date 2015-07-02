@@ -40,7 +40,7 @@ let Sok = React.createClass({
     if(this.state.inputValue.length > 0) {
       return (
         <i
-        onClick={this.handleRemoveClick}
+        onTouchTap={this.handleRemoveClick}
         className="material-icons clear-icon">clear</i>
       );
     }

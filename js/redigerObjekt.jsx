@@ -198,7 +198,7 @@ let RedigerObjekt = React.createClass({
 
                 <CardActions className="RedigerObjekt-knapp-container">
                   <FlatButton label="Lagre" primary={true} />
-                  <FlatButton label="Avbryt" onClick={this.closeDialog} />
+                  <FlatButton label="Avbryt" onTouchTap={this.closeDialog} />
                 </CardActions>
 
               </div>
@@ -485,7 +485,7 @@ let RSkjema = {
 
       return (
         <div className={classNameTomKnapp}>
-          <i className="material-icons" onClick={this.props.tomFelt}>clear</i>
+          <i className="material-icons" onTouchTap={this.props.tomFelt}>clear</i>
         </div>
       );
     }
