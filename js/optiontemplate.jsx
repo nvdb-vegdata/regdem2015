@@ -3,7 +3,12 @@ var React = require('react');
 module.exports = React.createClass({
     render: function() {
         var optionData = this.props.data.label;
-        var input = this.props.userInputValue;
+        var input;
+        if(this.props.userInputValue){
+          input = this.props.userInputValue;
+        } else {
+          input = "";
+        }
 
         var pos1 = optionData.toLowerCase().indexOf(input.toLowerCase());
         var pos2 = pos1 + input.length;
