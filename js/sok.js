@@ -19,16 +19,17 @@ let Sok = React.createClass({
       <div className="sok">
         <i className="material-icons search-icon">search</i>
         <Typeahead
-        inputValue={this.state.inputValue}
-        options={this.state.options}
-        onChange={this.handleChange}
-        onInputClick={this.handleInputClick}
-        optionTemplate={OptionTemplate}
-        onOptionChange={this.handleOptionChange}
-        onOptionClick={this.handleOptionClick}
-        onKeyDown={this.handleKeyDown}
-        onComplete={this.handleComplete}
-        handleHint={this.handleHint}
+          inputValue={this.state.inputValue}
+          options={this.state.options}
+          onChange={this.handleChange}
+          onInputClick={this.handleInputClick}
+          optionTemplate={OptionTemplate}
+          onOptionChange={this.handleOptionChange}
+          onOptionClick={this.handleOptionClick}
+          onKeyDown={this.handleKeyDown}
+          onComplete={this.handleComplete}
+          handleHint={this.handleHint}
+          ref="typeahead"
         />
         {this.renderIndicator()}
         {this.renderRemoveIcon()}
@@ -40,7 +41,7 @@ let Sok = React.createClass({
     if(this.state.inputValue.length > 0) {
       return (
         <i
-        onClick={this.handleRemoveClick}
+        onTouchTap={this.handleRemoveClick}
         className="material-icons clear-icon">clear</i>
       );
     }
@@ -52,6 +53,10 @@ let Sok = React.createClass({
       visible={this.state.loading}
       />
     );
+  },
+
+  setFocus: function () {
+    this.refs.typeahead.focus();
   },
 
   handleInputClick: function(event) {
@@ -136,7 +141,8 @@ let Sok = React.createClass({
   },
 
   executeSearch: function (id) {
-    app.setObjektID(null);
+    app.setObjektAndObjektTypeID(null, id);
+
     var sok = this;
     this.props.updateMarkers(id, () => {
       sok.setLoading('false');
@@ -145,8 +151,9 @@ let Sok = React.createClass({
   },
 
   handleRemoveClick: function() {
-    this.setInputValue('');
-    this.setOptions([]);
+    app.setObjektAndObjektTypeID(null, null);
+    app.refs.mapAndSearch.clearMarkers();
+    this.replaceState(this.getInitialState());
   }
 });
 

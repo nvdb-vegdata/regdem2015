@@ -59,43 +59,60 @@ let RedigerObjekt = React.createClass({
   },
 
   getNewData: function (objektID) {
-    // Ser om det er relevant å hente inn ny data
+    // Finnes det en ObjektID?
     if (objektID) {
-      if (this.state.objekt) {
-        if (objektID !== this.state.objekt.objektId) {
-          this.replaceState(this.getInitialState());
-          this.fetchData(objektID);
+      // Skal vi lage nytt objekt?
+      if (objektID === -1) {
+        this.replaceState(this.getInitialState());
+        // Har vi oppgitt
+        if (this.props.objektTypeID) {
+          // Kun hent ObjektType data, sett Objekt data til null
+          this.fetchObjekTypetData(null, this.props.objektTypeID);
         }
       } else {
-        this.fetchData(objektID);
+        // Finne det allerede et objekt i state, og er dette objektet det
+        // samme som det vi prøver å laste inn?
+        if (this.state.objekt && objektID !== this.state.objekt.objektId) {
+          this.replaceState(this.getInitialState());
+          this.fetchObjektData(objektID);
+        } else {
+          this.fetchObjektData(objektID);
+        }
       }
     }
   },
 
-  fetchData: function (objektID) {
+  fetchObjektData: function (objektID) {
     Fetch.fetchObjekt(objektID, (objektData) => {
       if (this.isMounted()) {
-        this.setState({objekt: objektData});
+        // Når du har hentet Objekt data må du hente ObjektTypeData. Sender ObjektData
+        // som parameter slik at fetchObjektTypeData kan oppdatere state.
+        this.fetchObjekTypetData(objektData, objektData.objektTypeId);
+      }
+    });
+  },
 
-        // Nå som vi har objektet, kan vi hente objekttype
-        Fetch.fetchObjektType(objektData.objektTypeId, (objektTypeData) => {
-          // Sorterer egenskaper til objekttype etter viktighet og sorteringsnummer
-          objektTypeData.egenskapsTyper.sort(function (a, b) {
-            let differanseMellomAogB = Helper.objektTypeViktighetTilNummer(a.viktighet) - Helper.objektTypeViktighetTilNummer(b.viktighet);
+  fetchObjekTypetData: function (objektData, objektTypeId) {
+    // Nå som vi har objektet, kan vi hente objekttype
+    Fetch.fetchObjektType(objektTypeId, (objektTypeData) => {
+      if (this.isMounted()) {
+        // Sorterer egenskaper til objekttype etter viktighet og sorteringsnummer
+        objektTypeData.egenskapsTyper.sort(function (a, b) {
+          let differanseMellomAogB = Helper.objektTypeViktighetTilNummer(a.viktighet) - Helper.objektTypeViktighetTilNummer(b.viktighet);
 
-            if (differanseMellomAogB === 0) {
-              // Sorter på sorteringsnummer, nivå 2
-              return a.sorteringsnummer - b.sorteringsnummer;
-            } else {
-              // Sorter på viktighet, nivå 1
-              return differanseMellomAogB;
-            }
-          });
+          if (differanseMellomAogB === 0) {
+            // Sorter på sorteringsnummer, nivå 2
+            return a.sorteringsnummer - b.sorteringsnummer;
+          } else {
+            // Sorter på viktighet, nivå 1
+            return differanseMellomAogB;
+          }
+        });
 
-          this.setState({
-            objektType: objektTypeData,
-            loaded: true
-          });
+        this.setState({
+          objekt: objektData,
+          objektType: objektTypeData,
+          loaded: true
         });
       }
     });
@@ -111,14 +128,6 @@ let RedigerObjekt = React.createClass({
     let vegreferanse = this.state.objekt ? Helper.vegReferanseString(this.state.objekt.lokasjon.vegReferanser[0]) : '';
     let egenskapsTyper = this.state.objektType ? this.state.objektType.egenskapsTyper : [];
     let objekt = this.state.objekt ? this.state.objekt : [];
-
-    // Stilendring for å vise innlasting
-    let containerStyles = 'RedigerObjekt-container hidden';
-    let cardLoaderStyles = 'RedigerObjekt-loader visible';
-    if (this.state.loaded) {
-      containerStyles = 'RedigerObjekt-container visible';
-      cardLoaderStyles = 'RedigerObjekt-loader hidden';
-    }
 
     // Finner verdien til egenskapen til objektet. Brukes til å pre-populate egenskapene
     let finnVerdi = function (egenskap, returFunksjon) {
@@ -142,16 +151,29 @@ let RedigerObjekt = React.createClass({
       return finnVerdi(egenskap, function (obj) { return obj.verdi; });
     };
 
+    // Hvis ingen objektID er satt skal ikke skjemaet vises.
     if (!this.props.objektID) {
       return null;
+    } else if (!this.state.loaded) {
+      return (
+        <div className="RedigerObjekt">
+          <Card className="RedigerObjekt-Card">
+            <ClearFix>
+              <div className="RedigerObjekt-container">
+                <CardActions className="RedigerObjekt-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
+                <CircularProgress mode="indeterminate" className="RedigerObjekt-loader" />
+              </div>
+            </ClearFix>
+          </Card>
+        </div>
+      );
     } else {
       return (
         <div className="RedigerObjekt">
           <Card className="RedigerObjekt-Card">
             <ClearFix>
-              <CircularProgress mode="indeterminate" className={cardLoaderStyles} />
-              <div className={containerStyles}>
-                <CardActions className="RedigerObjekt-lukk"><i className="material-icons" onClick={this.closeDialog}>clear</i></CardActions>
+              <div className="RedigerObjekt-container">
+                <CardActions className="RedigerObjekt-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
                 <CardTitle title={objektTypeNavn} subtitle={['Objektid: ', objektId, <br />, 'Vegreferanse: ', vegreferanse]} />
                 <CardText>
                 {
@@ -176,7 +198,7 @@ let RedigerObjekt = React.createClass({
 
                 <CardActions className="RedigerObjekt-knapp-container">
                   <FlatButton label="Lagre" primary={true} />
-                  <FlatButton label="Avbryt" onClick={this.closeDialog} />
+                  <FlatButton label="Avbryt" onTouchTap={this.closeDialog} />
                 </CardActions>
 
               </div>
@@ -463,7 +485,7 @@ let RSkjema = {
 
       return (
         <div className={classNameTomKnapp}>
-          <i className="material-icons" onClick={this.props.tomFelt}>clear</i>
+          <i className="material-icons" onTouchTap={this.props.tomFelt}>clear</i>
         </div>
       );
     }

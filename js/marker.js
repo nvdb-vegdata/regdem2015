@@ -42,7 +42,7 @@ function updateMarkers(kart, id, callback) {
   });
 }
 
-module.exports.update = function (kart, id, callback) {
+let update = function (kart, id, callback) {
   if (id) {
     objektID = id;
     updateMarkers(kart, id, callback);
@@ -51,8 +51,14 @@ module.exports.update = function (kart, id, callback) {
   }
 };
 
-module.exports.displayCurrentPosition = function (pos, kart) {
+let displayCurrentPosition = function (pos, kart) {
   curPosLayer.clearLayers();
   curPosLayer.addLayer(L.marker(pos.latlng));
   kart.addLayer(curPosLayer);
 };
+
+module.exports = {
+  clearMarkers: clearMarkers,
+  update: update,
+  displayCurrentPosition: displayCurrentPosition
+}
