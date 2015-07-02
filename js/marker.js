@@ -12,9 +12,11 @@ var markers = new L.MarkerClusterGroup({
 function updateMarkers(kart, id, callback) {
   var mapbox = kart.getBounds();
 
-  Fetch.fetchAPIObjekter(id, mapbox, function(data){
+  Fetch.fetchAPIObjekter(id, mapbox, function(data) {
     clearMarkers();
-    displayMarkers(kart, data.vegObjekter);
+    if (data.totaltAntallReturnert > 0) {
+      displayMarkers(kart, data.resultater[0].vegObjekter);
+    }
     callback();
   });
 }
@@ -24,9 +26,11 @@ function displayMarkers(kart, objekter) {
   objekter.forEach(function (vegObjekt) {
     var posisjon = vegObjekt.lokasjon.geometriWgs84;
     var marker = omnivore.wkt.parse(posisjon);
+
     marker.on('click', () => {
       app.setObjektID(vegObjekt.objektId);
     });
+
     markers.addLayer(marker);
   });
 

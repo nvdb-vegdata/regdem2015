@@ -122,7 +122,10 @@ let RedigerObjekt = React.createClass({
 
     // Finner verdien til egenskapen til objektet. Brukes til å pre-populate egenskapene
     let finnVerdi = function (egenskap, returFunksjon) {
-      let dataTilEgenskap = objekt.egenskaper.filter((objektEgenskap) => { return objektEgenskap.id === egenskap.id; });
+      let dataTilEgenskap = [];
+      if (objekt.egenskaper) {
+        dataTilEgenskap = objekt.egenskaper.filter((objektEgenskap) => { return objektEgenskap.id === egenskap.id; });
+      }
 
       if (dataTilEgenskap.length > 0) {
         return returFunksjon(dataTilEgenskap[0]);
