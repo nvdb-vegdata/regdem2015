@@ -1,14 +1,16 @@
-var React = require('react');
-var Kart = require('./map.js');
-var RedigerObjekt = require('./redigerObjekt.jsx');
+let React = require('react');
+let Kart = require('./map.js');
+let RedigerObjekt = require('./redigerObjekt.jsx');
+let LagNy = require('./lagNy.jsx');
 
 // For React developer tools
 window.React = React;
 
-var App = React.createClass({
+let App = React.createClass({
   getInitialState: function() {
     return {
-      objektID: null
+      objektID: null,
+      objektTypeID: null
     };
   },
 
@@ -16,11 +18,23 @@ var App = React.createClass({
     this.setState({objektID: id});
   },
 
+  setObjektTypeID: function (id) {
+    this.setState({objektTypeID: id});
+  },
+
+  setObjektAndObjektTypeID: function (objektID, objektTypeID) {
+    this.setState({
+      objektID: objektID,
+      objektTypeID: objektTypeID
+    });
+  },
+
   render: function() {
     return (
       <div>
-        <RedigerObjekt objektID={this.state.objektID} />
-        <Kart />
+        <RedigerObjekt objektID={this.state.objektID} objektTypeID={this.state.objektTypeID} />
+        <Kart ref="mapAndSearch" />
+        <LagNy />
       </div>
     );
   }

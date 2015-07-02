@@ -3,6 +3,8 @@
 @import (inline) 'easy-button.css';
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
 @import (inline) 'RedigerObjekt.css';
+@import (inline) 'lag-ny.css';
+
 html, body {
   font-family: 'Roboto', sans-serif;
 }
