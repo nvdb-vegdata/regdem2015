@@ -136,7 +136,8 @@ let Sok = React.createClass({
   },
 
   executeSearch: function (id) {
-    app.setObjektID(null);
+    app.setObjektAndObjektTypeID(null, id);
+
     var sok = this;
     this.props.updateMarkers(id, () => {
       sok.setLoading('false');
@@ -145,8 +146,9 @@ let Sok = React.createClass({
   },
 
   handleRemoveClick: function() {
-    this.setInputValue('');
-    this.setOptions([]);
+    app.setObjektAndObjektTypeID(null, null);
+    app.refs.mapAndSearch.clearMarkers();
+    this.replaceState(this.getInitialState());
   }
 });
 
