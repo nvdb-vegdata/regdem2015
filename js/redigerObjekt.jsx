@@ -112,14 +112,6 @@ let RedigerObjekt = React.createClass({
     let egenskapsTyper = this.state.objektType ? this.state.objektType.egenskapsTyper : [];
     let objekt = this.state.objekt ? this.state.objekt : [];
 
-    // Stilendring for å vise innlasting
-    let containerStyles = 'RedigerObjekt-container hidden';
-    let cardLoaderStyles = 'RedigerObjekt-loader visible';
-    if (this.state.loaded) {
-      containerStyles = 'RedigerObjekt-container visible';
-      cardLoaderStyles = 'RedigerObjekt-loader hidden';
-    }
-
     // Finner verdien til egenskapen til objektet. Brukes til å pre-populate egenskapene
     let finnVerdi = function (egenskap, returFunksjon) {
       let dataTilEgenskap = [];
@@ -142,16 +134,29 @@ let RedigerObjekt = React.createClass({
       return finnVerdi(egenskap, function (obj) { return obj.verdi; });
     };
 
+    // Hvis ingen objektID er satt skal ikke skjemaet vises.
     if (!this.props.objektID) {
       return null;
+    } else if (!this.state.loaded) {
+      return (
+        <div className="RedigerObjekt">
+          <Card className="RedigerObjekt-Card">
+            <ClearFix>
+              <div className="RedigerObjekt-container">
+                <CardActions className="RedigerObjekt-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
+                <CircularProgress mode="indeterminate" className="RedigerObjekt-loader" />
+              </div>
+            </ClearFix>
+          </Card>
+        </div>
+      );
     } else {
       return (
         <div className="RedigerObjekt">
           <Card className="RedigerObjekt-Card">
             <ClearFix>
-              <CircularProgress mode="indeterminate" className={cardLoaderStyles} />
-              <div className={containerStyles}>
-                <CardActions className="RedigerObjekt-lukk"><i className="material-icons" onClick={this.closeDialog}>clear</i></CardActions>
+              <div className="RedigerObjekt-container">
+                <CardActions className="RedigerObjekt-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
                 <CardTitle title={objektTypeNavn} subtitle={['Objektid: ', objektId, <br />, 'Vegreferanse: ', vegreferanse]} />
                 <CardText>
                 {
