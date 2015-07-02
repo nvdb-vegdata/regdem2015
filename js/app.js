@@ -1,12 +1,12 @@
-var React = require('react');
-var Kart = require('./map.js');
-var RedigerObjekt = require('./redigerObjekt.jsx');
+let React = require('react');
+let Kart = require('./map.js');
+let RedigerObjekt = require('./redigerObjekt.jsx');
 let LagNy = require('./lagNy.jsx');
 
 // For React developer tools
 window.React = React;
 
-var App = React.createClass({
+let App = React.createClass({
   getInitialState: function() {
     return {
       objektID: null
