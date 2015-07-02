@@ -79,6 +79,10 @@ let Kart = React.createClass({
     }).addTo( this.kartData );
   },
 
+  clearMarkers: function () {
+    Marker.clearMarkers();
+  },
+
   componentWillUnmount: function() {
     this.kartData = null;
   },
