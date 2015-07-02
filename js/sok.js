@@ -19,16 +19,17 @@ let Sok = React.createClass({
       <div className="sok">
         <i className="material-icons search-icon">search</i>
         <Typeahead
-        inputValue={this.state.inputValue}
-        options={this.state.options}
-        onChange={this.handleChange}
-        onInputClick={this.handleInputClick}
-        optionTemplate={OptionTemplate}
-        onOptionChange={this.handleOptionChange}
-        onOptionClick={this.handleOptionClick}
-        onKeyDown={this.handleKeyDown}
-        onComplete={this.handleComplete}
-        handleHint={this.handleHint}
+          inputValue={this.state.inputValue}
+          options={this.state.options}
+          onChange={this.handleChange}
+          onInputClick={this.handleInputClick}
+          optionTemplate={OptionTemplate}
+          onOptionChange={this.handleOptionChange}
+          onOptionClick={this.handleOptionClick}
+          onKeyDown={this.handleKeyDown}
+          onComplete={this.handleComplete}
+          handleHint={this.handleHint}
+          ref="typeahead"
         />
         {this.renderIndicator()}
         {this.renderRemoveIcon()}
