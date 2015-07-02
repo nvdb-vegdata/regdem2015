@@ -38,6 +38,10 @@ module.exports = React.createClass({
         return (
           <i className="material-icons">trending_up</i>
         );
+      } else {
+        return (
+          <i className="material-icons">layers</i>
+        );
       }
     }
 });
