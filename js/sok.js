@@ -22,6 +22,7 @@ let Sok = React.createClass({
         inputValue={this.state.inputValue}
         options={this.state.options}
         onChange={this.handleChange}
+        onInputClick={this.handleInputClick}
         optionTemplate={OptionTemplate}
         onOptionChange={this.handleOptionChange}
         onOptionClick={this.handleOptionClick}
@@ -51,6 +52,12 @@ let Sok = React.createClass({
       visible={this.state.loading}
       />
     );
+  },
+
+  handleInputClick: function(event) {
+    if(this.state.inputValue === ''){
+      this.handleChange(event);
+    }
   },
 
   handleChange: function(event) {
@@ -97,10 +104,12 @@ let Sok = React.createClass({
   },
 
   handleHint: function(inputValue, options) {
-    var expression = new RegExp('^' + inputValue.toLowerCase());
-    for(var opt in options){
-      if (expression.test(options[opt].label.toLowerCase())){
-        return inputValue + options[opt].label.slice(inputValue.length);
+    if (inputValue) {
+      var expression = new RegExp('^' + inputValue.toLowerCase());
+      for(var opt in options){
+        if (expression.test(options[opt].label.toLowerCase())){
+          return inputValue + options[opt].label.slice(inputValue.length);
+        }
       }
     }
     return '';
