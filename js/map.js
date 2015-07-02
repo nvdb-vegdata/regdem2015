@@ -42,7 +42,7 @@ let Kart = React.createClass({
       attribution: 'Registratordemonstrator'
     });
 
-    let kartData = this.kartData = L.map(React.findDOMNode(this.refs.kart), {
+    let kartData = this.kartData = L.map(React.findDOMNode(this.refs.map), {
       crs: crs,
       continuousWorld: true,
       worldCopyJump: false,
@@ -63,11 +63,14 @@ let Kart = React.createClass({
     });
 
     this.kartData.on('moveend', () => {
-      var sok = this.refs.sok;
-      Marker.update(this.kartData, null, () => {
-        sok.setLoading('false');
-      });
-      sok.setLoading('true');
+      if (app.state.objektTypeID) {
+        var sok = this.refs.search;
+
+        Marker.update(this.kartData, null, () => {
+          sok.setLoading('false');
+        });
+        sok.setLoading('true');
+      }
     });
 
     // Plassering av min poisisjon-knapp
@@ -87,8 +90,8 @@ let Kart = React.createClass({
   render: function() {
     return (
       <div>
-      <Sok ref="sok" updateMarkers={this.updateMarkers} />
-      <div ref="kart" className="kart"></div>
+      <Sok ref="search" updateMarkers={this.updateMarkers} />
+      <div ref="map" className="kart"></div>
       </div>
     );
   }
