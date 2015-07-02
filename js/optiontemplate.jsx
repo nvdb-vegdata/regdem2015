@@ -7,7 +7,7 @@ module.exports = React.createClass({
         if(this.props.userInputValue){
           input = this.props.userInputValue;
         } else {
-          input = "";
+          input = '';
         }
 
         var pos1 = optionData.toLowerCase().indexOf(input.toLowerCase());
@@ -21,8 +21,8 @@ module.exports = React.createClass({
             <div className={selected}>
                 <p>{this.renderGeomIcon()}</p>
                 <p>
-                  {optionData.slice(0,pos1)}
-                  <strong>{optionData.slice(pos1,pos2)}</strong>
+                  {optionData.slice(0, pos1)}
+                  <strong>{optionData.slice(pos1, pos2)}</strong>
                   {optionData.slice(pos2)}
                 </p>
             </div>
@@ -30,11 +30,11 @@ module.exports = React.createClass({
     },
 
     renderGeomIcon: function() {
-      if (this.props.data.geom == 'PUNKT') {
+      if (this.props.data.geom === 'PUNKT') {
         return (
           <i className="material-icons">place</i>
         );
-      } else if (this.props.data.geom == 'LINJE') {
+      } else if (this.props.data.geom === 'LINJE') {
         return (
           <i className="material-icons">trending_up</i>
         );

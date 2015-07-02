@@ -28,7 +28,7 @@ let requestHTTP = function (url, callback) {
   var r = new XMLHttpRequest();
   r.open('GET', url, true);
   r.onreadystatechange = () => {
-    if (r.readyState != 4 || r.status != 200) {
+    if (r.readyState !== 4 || r.status !== 200) {
       return;
     }
 
@@ -75,16 +75,16 @@ module.exports.fetchAPIObjekter = function(objectID, box, callback) {
   var swlat = box._southWest.lat;
   var swlng = box._southWest.lng;
 
-  var kriterie  = {
+  var kriterie = {
     lokasjon: {
-      bbox: nelng + ','+ nelat +','+ swlng + ',' + swlat,
+      bbox: nelng + ',' + nelat + ',' + swlng + ',' + swlat,
       srid: 'WGS84'
     },
     objektTyper: [
       {id: objectID,
       antall: 2000}
     ]
-  }
+  };
 
   var select = 'objektId,objektTypeId,vegObjektLokasjon/geometriWgs84';
 
