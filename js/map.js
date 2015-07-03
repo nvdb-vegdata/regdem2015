@@ -98,6 +98,7 @@ let Kart = React.createClass({
 
     Fetch.fetchAPIObjekter (id, mapbox, function(data) {
       Marker.update(kart, data, callback);
+      app.refs.list.setObjekter(data);
     });
   },
 
