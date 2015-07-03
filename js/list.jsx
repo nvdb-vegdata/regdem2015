@@ -49,7 +49,6 @@ let List = React.createClass({
       return null;
     } else {
       var elements = objekter.resultater[0].vegObjekter;
-      console.log(elements);
       return (
         <div className="list">
         <Card className="list-card">
@@ -77,7 +76,13 @@ let List = React.createClass({
 
 let ListElement = React.createClass({
   render: function () {
-    var vegref = Helper.vegReferanseString(this.props.objekt.lokasjon.vegReferanser[0]);
+    console.log(this.props.objekt);
+    var vegref;
+    if(this.props.objekt.lokasjon.vegReferanser){
+      vegref = Helper.vegReferanseString(this.props.objekt.lokasjon.vegReferanser[0]);
+    } else {
+      vegref = "--";
+    }
     return (
       <div className='list-element'>{vegref}</div>
     );
