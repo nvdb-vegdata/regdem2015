@@ -1,12 +1,3 @@
-
-#yt-typeahead, h1 {
-  font-family: Roboto,arial,sans-serif;
-}
-
-#yt-typeahead {
-  width: 583px
-}
-
 .react-typeahead-input-container input {
   border: 1px solid transparent;
   border-radius: 2px;
