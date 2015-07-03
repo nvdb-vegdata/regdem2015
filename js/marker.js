@@ -6,6 +6,11 @@ var markers = new L.MarkerClusterGroup({
   maxClusterRadius: 30
 });
 
+// Fjerner alle markører på kartet.
+function clearMarkers() {
+  markers.clearLayers();
+}
+
 // Viser listen av objekter på kartet som enten punkt, linje eller flate.
 function displayMarkers(kart, objekter) {
   objekter.forEach(function (vegObjekt) {
@@ -22,24 +27,18 @@ function displayMarkers(kart, objekter) {
   kart.addLayer(markers);
 }
 
-// Fjerner alle markører på kartet.
-let clearMarkers = function () {
-  markers.clearLayers();
-}
-
 let update = function (kart, data, callback) {
   clearMarkers();
   if (data.totaltAntallReturnert > 0) {
     displayMarkers(kart, data.resultater[0].vegObjekter);
   }
-  callback();
-}
+};
 
 let displayCurrentPosition = function (pos, kart) {
   curPosLayer.clearLayers();
   curPosLayer.addLayer(L.marker(pos.latlng));
   kart.addLayer(curPosLayer);
-}
+};
 
 module.exports = {
   clearMarkers: clearMarkers,

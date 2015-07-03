@@ -19,6 +19,9 @@
   max-width: 500px;
   box-sizing: border-box;
 }
+.RedigerObjekt-container-loader {
+  text-align: center;
+}
 .RedigerObjekt-lukk {
   float: right;
   margin-top: 5px;
@@ -26,6 +29,7 @@
 }
 .RedigerObjekt-lukk i {
   color: rgba(0, 0, 0, 0.5);
+  margin-right: 0 !important;
 }
 .RedigerObjekt-knapp-container {
   margin-top: 20px;

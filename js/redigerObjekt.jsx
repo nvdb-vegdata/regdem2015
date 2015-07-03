@@ -151,6 +151,26 @@ let RedigerObjekt = React.createClass({
       return finnVerdi(egenskap, function (obj) { return obj.verdi; });
     };
 
+    // Skjemanavn
+    let formName = 'Rediger objekt';
+
+    // Subtitle
+    let subtitle = (
+      <div style={{fontSize: '16px'}}>
+        <div style={{fontWeight: 'bold'}}>{objektTypeNavn}</div>
+        <div>Objektid: {objektId}</div>
+        <div>Vegreferanse: {vegreferanse}</div>
+      </div>
+    );
+
+    if (this.props.objektID === -1) {
+      formName = 'Lag nytt objekt';
+      subtitle = (
+          <div style={{fontWeight: 'bold', fontSize: '16px'}}>{objektTypeNavn}</div>
+      );
+
+    }
+
     // Hvis ingen objektID er satt skal ikke skjemaet vises.
     if (!this.props.objektID) {
       return null;
@@ -159,7 +179,7 @@ let RedigerObjekt = React.createClass({
         <div className="RedigerObjekt">
           <Card className="RedigerObjekt-Card">
             <ClearFix>
-              <div className="RedigerObjekt-container">
+              <div className="RedigerObjekt-container RedigerObjekt-container-loader">
                 <CardActions className="RedigerObjekt-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
                 <CircularProgress mode="indeterminate" className="RedigerObjekt-loader" />
               </div>
@@ -174,7 +194,7 @@ let RedigerObjekt = React.createClass({
             <ClearFix>
               <div className="RedigerObjekt-container">
                 <CardActions className="RedigerObjekt-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
-                <CardTitle title={objektTypeNavn} subtitle={['Objektid: ', objektId, <br />, 'Vegreferanse: ', vegreferanse]} />
+                <CardTitle title={formName} subtitle={subtitle} />
                 <CardText>
                 {
                     egenskapsTyper.map(function (egenskap) {
