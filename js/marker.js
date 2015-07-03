@@ -32,6 +32,8 @@ let update = function (kart, data, callback) {
   if (data.totaltAntallReturnert > 0) {
     displayMarkers(kart, data.resultater[0].vegObjekter);
   }
+
+  callback();
 };
 
 let displayCurrentPosition = function (pos, kart) {
