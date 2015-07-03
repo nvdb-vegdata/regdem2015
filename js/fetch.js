@@ -1,5 +1,6 @@
 var stub = '';
 var objektListe = null;
+var prevSingleConnection = null;
 
 var containsInput = function(obj) {
   var string = obj.label.toLowerCase();
@@ -24,8 +25,16 @@ var comparator = function (a, b) {
   return 0;
 };
 
-let requestHTTP = function (url, callback) {
+let requestHTTP = function (url, callback, onlyOneConnection) {
+  if (onlyOneConnection && prevSingleConnection) {
+    if (prevSingleConnection.readyState !== 4) {
+      prevSingleConnection.abort();
+    }
+    prevSingleConnection = null;
+  }
+
   var r = new XMLHttpRequest();
+
   r.open('GET', url, true);
   r.onreadystatechange = () => {
     if (r.readyState !== 4 || r.status !== 200) {
@@ -36,6 +45,10 @@ let requestHTTP = function (url, callback) {
   };
 
   r.send();
+
+  if (onlyOneConnection) {
+    prevSingleConnection = r;
+  }
 };
 
 module.exports.fetch = function(input, callback) {
@@ -89,5 +102,5 @@ module.exports.fetchAPIObjekter = function(objectID, box, callback) {
   var select = 'objektId,objektTypeId,vegObjektLokasjon/geometriWgs84';
 
   var url = 'https://www.vegvesen.no/nvdb/api/sok?kriterie=' + encodeURIComponent(JSON.stringify(kriterie)) + '&select=' + encodeURIComponent(select);
-  requestHTTP(url, callback);
+  requestHTTP(url, callback, true);
 };
