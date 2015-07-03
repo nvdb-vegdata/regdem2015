@@ -40,33 +40,39 @@ let List = React.createClass({
     })
   },
 
+  closeDialog: function () {
+    this.setObjekter([]);
+  },
+
   render: function() {
-    let objektTypeNavn = this.state.objektType ? this.state.objektType.navn : '';
+    let objektTypeID = this.state.objektTypeID ? this.state.objektTypeID : '';
     let objekter = this.state.objekter ? this.state.objekter : [];
 
     // Hvis ingen objektID er satt skal ikke skjemaet vises.
-    if (objekter.length == 0) {
+    if (objekter.length == 0 ) {
       return null;
     } else {
       var elements = objekter.resultater[0].vegObjekter;
+      var size = elements.length;
       return (
         <div className="list">
-        <Card className="list-card">
-        <ClearFix>
-        <div className="list-container">
-        <CardActions className="list-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
-        <CardText>
-        {
-          elements.map(function (objekt) {
-            return (
-              <ListElement objekt={objekt}/>
-            );
-          })
-        }
-        </CardText>
-        </div>
-        </ClearFix>
-        </Card>
+          <Card className="list-card">
+            <ClearFix>
+            <div className="list-container">
+              <CardActions className="list-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
+              <CardTitle title="Liste" subtitle={size + " elementer"} />
+              <CardText>
+                {
+                  elements.map(function (objekt) {
+                    return (
+                      <ListElement objekt={objekt}/>
+                    );
+                  })
+                }
+              </CardText>
+            </div>
+            </ClearFix>
+          </Card>
         </div>
       );
     }
@@ -76,7 +82,6 @@ let List = React.createClass({
 
 let ListElement = React.createClass({
   render: function () {
-    console.log(this.props.objekt);
     var vegref;
     if(this.props.objekt.lokasjon.vegReferanser){
       vegref = Helper.vegReferanseString(this.props.objekt.lokasjon.vegReferanser[0]);
