@@ -25,7 +25,8 @@ let RedigerObjekt = React.createClass({
     return {
       objekt: null,
       objektType: null,
-      loaded: false
+      loaded: false,
+      expanded: false
     };
   },
 
@@ -122,6 +123,14 @@ let RedigerObjekt = React.createClass({
     app.setObjektID(null);
   },
 
+  expandForm: function () {
+    if (!this.state.expanded) {
+      this.setState({
+        expanded: true
+      });
+    }
+  },
+
   render: function() {
     let objektTypeNavn = this.state.objektType ? this.state.objektType.navn : '';
     let objektId = this.state.objekt ? this.state.objekt.objektId : '';
@@ -171,12 +180,23 @@ let RedigerObjekt = React.createClass({
 
     }
 
+    let redigerObjektClassName = 'RedigerObjekt';
+    let formFieldsAndButtonsClassName = 'formFieldsAndButtons';
+    if (!this.state.expanded) {
+      if (this.props.objektID === -1) {
+        redigerObjektClassName += ' RedigerObjekt-small-new RedigerObjekt-pointer';
+      } else {
+        redigerObjektClassName += ' RedigerObjekt-small-edit RedigerObjekt-pointer';
+      }
+      formFieldsAndButtonsClassName += ' formFieldsAndButtons-hidden';
+    }
+
     // Hvis ingen objektID er satt skal ikke skjemaet vises.
     if (!this.props.objektID) {
       return null;
     } else if (!this.state.loaded) {
       return (
-        <div className="RedigerObjekt">
+        <div className={redigerObjektClassName}>
           <Card className="RedigerObjekt-Card">
             <ClearFix>
               <div className="RedigerObjekt-container RedigerObjekt-container-loader">
@@ -189,38 +209,39 @@ let RedigerObjekt = React.createClass({
       );
     } else {
       return (
-        <div className="RedigerObjekt">
-          <Card className="RedigerObjekt-Card">
+        <div className={redigerObjektClassName}>
+          <Card className="RedigerObjekt-Card" onTouchTap={this.expandForm}>
             <ClearFix>
               <div className="RedigerObjekt-container">
                 <CardActions className="RedigerObjekt-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
-                <CardTitle title={formName} subtitle={subtitle} />
-                <CardText>
-                {
-                    egenskapsTyper.map(function (egenskap) {
-                      switch (egenskap.type) {
-                        case 'ENUM':
-                          return (<RSkjema.ENUM verdi={finnENUMVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                        case 'Tekst':
-                          return (<RSkjema.Tekst verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                        case 'Tall':
-                          return (<RSkjema.Tall verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                        case 'Klokkeslett':
-                          return (<RSkjema.Klokkeslett verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                        case 'Dato':
-                          return (<RSkjema.Dato verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
-                        default:
-                          break;
-                      }
-                    })
-                }
-                </CardText>
+                <CardTitle title={formName} subtitle={subtitle}  />
+                <div className={formFieldsAndButtonsClassName}>
+                  <CardText>
+                  {
+                      egenskapsTyper.map(function (egenskap) {
+                        switch (egenskap.type) {
+                          case 'ENUM':
+                            return (<RSkjema.ENUM verdi={finnENUMVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                          case 'Tekst':
+                            return (<RSkjema.Tekst verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                          case 'Tall':
+                            return (<RSkjema.Tall verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                          case 'Klokkeslett':
+                            return (<RSkjema.Klokkeslett verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                          case 'Dato':
+                            return (<RSkjema.Dato verdi={finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                          default:
+                            break;
+                        }
+                      })
+                  }
+                  </CardText>
 
-                <CardActions className="RedigerObjekt-knapp-container">
-                  <FlatButton label="Lagre" primary={true} />
-                  <FlatButton label="Avbryt" onTouchTap={this.closeDialog} />
-                </CardActions>
-
+                  <CardActions className="RedigerObjekt-knapp-container">
+                    <FlatButton label="Lagre" primary={true} />
+                    <FlatButton label="Avbryt" onTouchTap={this.closeDialog} />
+                  </CardActions>
+                </div>
               </div>
             </ClearFix>
           </Card>
