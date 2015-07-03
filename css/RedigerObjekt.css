@@ -42,9 +42,6 @@
   color: rgba(0, 0, 0, 0.5);
   margin-right: 0 !important;
 }
-.formFieldsAndButtons-hidden {
-  display: none;
-}
 .RedigerObjekt-knapp-container {
   margin-top: 20px;
   text-align: right;
