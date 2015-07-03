@@ -86,7 +86,7 @@ module.exports.fetchAPIObjekter = function(objectID, box, callback) {
     ]
   }
 
-  var select = 'objektId,objektTypeId,vegObjektLokasjon/geometriWgs84';
+  var select = 'objektId,objektTypeId,vegObjektLokasjon/vegReferanser,vegObjektLokasjon/geometriWgs84';
 
   var url = 'https://www.vegvesen.no/nvdb/api/sok?kriterie=' + encodeURIComponent(JSON.stringify(kriterie)) + '&select=' + encodeURIComponent(select);
   requestHTTP(url, callback);
