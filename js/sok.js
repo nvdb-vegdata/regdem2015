@@ -144,7 +144,7 @@ let Sok = React.createClass({
     app.setObjektAndObjektTypeID(null, id);
 
     var sok = this;
-    this.props.updateMarkers(id, () => {
+    this.props.fetchObjekter(id, () => {
       sok.setLoading('false');
     });
     this.setLoading('true');
