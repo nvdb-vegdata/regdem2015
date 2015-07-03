@@ -33,7 +33,7 @@ let App = React.createClass({
     return (
       <div>
         <RedigerObjekt objektID={this.state.objektID} objektTypeID={this.state.objektTypeID} />
-        <Kart ref="mapAndSearch" />
+        <Kart ref="mapAndSearch" objektID={this.state.objektID} objektTypeID={this.state.objektTypeID} />
         <LagNy />
       </div>
     );

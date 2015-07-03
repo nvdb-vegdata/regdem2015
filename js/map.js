@@ -94,7 +94,7 @@ let Kart = React.createClass({
   render: function() {
     return (
       <div>
-      <Sok ref="search" updateMarkers={this.updateMarkers} />
+      <Sok ref="search" updateMarkers={this.updateMarkers} {...this.props} />
       <div ref="map" className="kart"></div>
       </div>
     );
