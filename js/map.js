@@ -1,6 +1,9 @@
 var React = require('react');
 let Marker = require('./marker.js');
 var Sok = require('./sok.js');
+var Fetch = require('./fetch.js');
+
+var objektID = null;
 
 let Kart = React.createClass({
   componentDidMount: function() {
@@ -66,7 +69,7 @@ let Kart = React.createClass({
       if (app.state.objektTypeID) {
         var sok = this.refs.search;
 
-        Marker.update(this.kartData, null, () => {
+        this.fetchObjekter(null, () => {
           sok.setLoading('false');
         });
         sok.setLoading('true');
@@ -87,14 +90,22 @@ let Kart = React.createClass({
     this.kartData = null;
   },
 
-  updateMarkers: function (id, callback) {
-    Marker.update(this.kartData, id, callback);
+  fetchObjekter: function (id, callback) {
+    id = id || app.state.objektTypeID;
+
+    var kart = this.kartData;
+    var mapbox = kart.getBounds();
+
+    Fetch.fetchAPIObjekter (id, mapbox, function(data) {
+      Marker.update(kart, data, callback);
+      app.refs.list.setObjekter(data);
+    });
   },
 
   render: function() {
     return (
       <div>
-      <Sok ref="search" updateMarkers={this.updateMarkers} />
+      <Sok ref="search" fetchObjekter={this.fetchObjekter} />
       <div ref="map" className="kart"></div>
       </div>
     );

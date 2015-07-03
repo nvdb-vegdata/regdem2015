@@ -1,0 +1,39 @@
+/* Containers og meta */
+
+.list-card {
+  height: 100%;
+  text-align: center;
+}
+.list-loader {
+  margin-top: 100px !important;
+  display: inherit;
+}
+.list-container {
+  text-align: left;
+  padding: 5px;
+  overflow: auto !important;
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  max-width: 350px;
+  box-sizing: border-box;
+}
+.list-lukk {
+  float: right;
+  margin-top: 5px;
+  cursor: pointer;
+}
+.list-lukk i {
+  color: rgba(0, 0, 0, 0.5);
+}
+.list-knapp-container {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.list-element {
+  position: relative;
+  padding:8px 0 7px;
+  border-bottom: 1px solid #e6e6e6;
+}
