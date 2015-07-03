@@ -1,6 +1,6 @@
 let React = require('react');
 let mui = require('material-ui');
-let { FloatingActionButton, FontIcon, Dialog, FlatButton } = require('material-ui');
+let { FloatingActionButton, FontIcon, Snackbar } = require('material-ui');
 
 //Needed for onTouchTap
 //Can go away when react 1.0 release
@@ -32,47 +32,27 @@ let LagNy = React.createClass({
 
   handleTap: function () {
     if (!app.state.objektTypeID) {
-      this.refs.noObjectTypeSetDialog.show();
+      this.refs.snackbar.show();
     } else {
       app.setObjektID(-1);
     }
   },
 
-  handleCancel: function () {
-    this.refs.noObjectTypeSetDialog.dismiss();
-  },
-
-  handleOk: function () {
-    this.refs.noObjectTypeSetDialog.dismiss();
-    app.refs.mapAndSearch.refs.search.setFocus();
+  handleAction: function () {
+    this.refs.snackbar.dismiss();
   },
 
   render: function() {
-    let actions = [
-      <FlatButton
-        key={1}
-        label="Avbryt"
-        secondary={true}
-        onTouchTap={this.handleCancel} />,
-      <FlatButton
-        key={2}
-        label="Ok"
-        primary={true}
-        onTouchTap={this.handleOk}
-        ref="okButton" />
-    ];
-
     return (
       <div className="lagNy-container">
         <FloatingActionButton onTouchTap={this.handleTap}>
           <FontIcon className="material-icons add-icon" color={Colors.white}>add</FontIcon>
         </FloatingActionButton>
-        <Dialog
-          ref="noObjectTypeSetDialog"
-          title="Du må velge objekttype"
-          actions={actions}>
-          For å kunne lage et nytt objekt må du først velge en objekt type fra søkefeltet. Trykk OK for å gå til søkefeltet.
-        </Dialog>
+        <Snackbar
+          ref="snackbar"
+          message="Du må først velge en objekttype fra søkefeltet"
+          action="Ok"
+          onActionTouchTap={this.handleAction} />
       </div>
     );
   }

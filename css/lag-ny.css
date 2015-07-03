@@ -10,3 +10,27 @@
   height: 56px;
   margin-top: 15px;
 }
+
+.lagNy-container > span {
+  font-size: 14px !important;
+  font-weight: 300;
+}
+
+@media (max-width: 450px) {
+
+  .lagNy-container > span {
+    font-size: 14px !important;
+    font-weight: 300;
+    height: auto !important;
+    margin: 10px !important;
+    bottom: 0 !important;
+    line-height: 30px !important;
+    text-align: center;
+  }
+
+  .lagNy-container > span > button {
+    float: none !important;
+    margin: 0 !important;
+  }
+
+}
