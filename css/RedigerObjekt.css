@@ -1,11 +1,22 @@
 /* Containers og meta */
-
+.RedigerObjekt-small-edit {
+  max-height: 140px;
+}
+.RedigerObjekt-small-new {
+  max-height: 100px;
+}
+.RedigerObjekt-pointer {
+  cursor: pointer;
+}
 .RedigerObjekt-Card {
   height: 100%;
   text-align: center;
 }
+.RedigerObjekt-small-new .RedigerObjekt-loader {
+  margin-top: 5px !important;
+}
 .RedigerObjekt-loader {
-  margin-top: 100px !important;
+  margin-top: 30px !important;
   display: inherit;
 }
 .RedigerObjekt-container {
