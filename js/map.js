@@ -105,8 +105,8 @@ let Kart = React.createClass({
   render: function() {
     return (
       <div>
-      <Sok ref="search" fetchObjekter={this.fetchObjekter} />
-      <div ref="map" className="kart"></div>
+        <Sok ref="search" fetchObjekter={this.fetchObjekter}  {...this.props} />
+        <div ref="map" className="kart"></div>
       </div>
     );
   }

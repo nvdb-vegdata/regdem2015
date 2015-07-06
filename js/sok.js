@@ -38,7 +38,7 @@ let Sok = React.createClass({
   },
 
   renderRemoveIcon: function() {
-    if(this.state.inputValue.length > 0) {
+    if (this.state.inputValue.length > 0 || this.props.objektTypeID !== null) {
       return (
         <i
         onTouchTap={this.handleRemoveClick}
