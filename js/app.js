@@ -1,6 +1,7 @@
 let React = require('react');
 let Kart = require('./map.js');
 let RedigerObjekt = require('./redigerObjekt.jsx');
+let List = require('./list.jsx');
 let LagNy = require('./lagNy.jsx');
 
 // For React developer tools
@@ -34,6 +35,7 @@ let App = React.createClass({
       <div>
         <RedigerObjekt objektID={this.state.objektID} objektTypeID={this.state.objektTypeID} />
         <Kart ref="mapAndSearch" objektID={this.state.objektID} objektTypeID={this.state.objektTypeID} />
+        <List ref="list" objektTypeID={this.state.objektTypeID} />
         <LagNy />
       </div>
     );
