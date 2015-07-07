@@ -1,6 +1,6 @@
 var keyMirror = require('keymirror');
 
-module.exports = keyMirror({
+module.exports.actions = keyMirror({
   REGDEM_SET_OBJEKT_ID: null,
   REGDEM_CLOSE_EDITOR: null,
   REGDEM_EXPAND_EDITOR: null,

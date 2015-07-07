@@ -217,57 +217,57 @@ AppDispatcher.register(function(action) {
   let id, inputMapData, objektType, inputValue, objektTypeID;
 
   switch(action.actionType) {
-    case RegDemConstants.REGDEM_SET_OBJEKT_ID:
+    case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
       id = action.id;
       setObjektID(id);
       break;
 
-    case RegDemConstants.REGDEM_CLOSE_EDITOR:
+    case RegDemConstants.actions.REGDEM_CLOSE_EDITOR:
       closeEditor();
       RegDemStore.emitChange();
       break;
 
-    case RegDemConstants.REGDEM_EXPAND_EDITOR:
+    case RegDemConstants.actions.REGDEM_EXPAND_EDITOR:
       expandEditor();
       RegDemStore.emitChange();
       break;
 
-    case RegDemConstants.REGDEM_FETCH_OBJEKT_POSITIONS:
+    case RegDemConstants.actions.REGDEM_FETCH_OBJEKT_POSITIONS:
       id = action.id;
       fetchObjektPositions(id);
       break;
 
-    case RegDemConstants.REGDEM_FETCH_OBJEKT_TYPES:
+    case RegDemConstants.actions.REGDEM_FETCH_OBJEKT_TYPES:
       objektType = action.objektType;
       fetchObjektTypes(objektType);
       break;
 
-    case RegDemConstants.REGDEM_SET_INPUT_VALUE:
+    case RegDemConstants.actions.REGDEM_SET_INPUT_VALUE:
       inputValue = action.inputValue;
       setInputValue(inputValue);
       break;
 
-    case RegDemConstants.REGDEM_EXECUTE_SEARCH:
+    case RegDemConstants.actions.REGDEM_EXECUTE_SEARCH:
       objektTypeID = action.objektTypeID;
       executeSearch(objektTypeID);
       break;
 
-    case RegDemConstants.REGDEM_ADD_MAPDATA_AS_REFERENCE:
+    case RegDemConstants.actions.REGDEM_ADD_MAPDATA_AS_REFERENCE:
       inputMapData = action.mapData;
       addMapDataAsReference(inputMapData);
       break;
 
-    case RegDemConstants.REGDEM_RESET_APP:
+    case RegDemConstants.actions.REGDEM_RESET_APP:
       resetApp();
       RegDemStore.emitChange();
       break;
 
-    case RegDemConstants.REGDEM_CLOSE_LIST:
+    case RegDemConstants.actions.REGDEM_CLOSE_LIST:
       closeList();
       RegDemStore.emitChange();
       break;
 
-    case RegDemConstants.REGDEM_SHOW_LIST:
+    case RegDemConstants.actions.REGDEM_SHOW_LIST:
       showList();
       RegDemStore.emitChange();
       break;
