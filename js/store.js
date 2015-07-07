@@ -178,6 +178,7 @@ let fetchObjekTypetData = function (objektData, objektTypeId) {
     _state.objekt = objektData;
     _state.objektType = objektTypeData;
     _state.editor.loading = false;
+    _state.editor.expanded = false;
 
     RegDemStore.emitChange();
   });
