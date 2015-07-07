@@ -11,5 +11,6 @@ module.exports = keyMirror({
   REGDEM_ADD_MAPDATA_AS_REFERENCE: null,
   REGDEM_RESET_APP: null,
   REGDEM_CLOSE_LIST: null,
-  REGDEM_SHOW_LIST: null
+  REGDEM_SHOW_LIST: null,
+  HIGHLIGHT_MARKER: null
 });

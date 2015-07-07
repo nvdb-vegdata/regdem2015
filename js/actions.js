@@ -62,6 +62,12 @@ var RegDemActions = {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.REGDEM_SHOW_LIST
     });
+  },
+  highlightMarker: function (id) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.REGDEM_HIGHLIGHT_MARKER,
+      id: id
+    });
   }
 };
 

@@ -36,7 +36,8 @@ let _state = {
   },
 
   list: {
-    open: false
+    open: false,
+    highlighted: null
   }
 };
 
@@ -127,6 +128,10 @@ let closeList = function () {
 let showList = function () {
   _state.list.open = true;
 };
+
+let highlightMarker = function (id) {
+  _state.list.highlighted = id;
+}
 
 // Get editor data
 
@@ -269,6 +274,12 @@ AppDispatcher.register(function(action) {
 
     case RegDemConstants.REGDEM_SHOW_LIST:
       showList();
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.REGDEM_HIGHLIGHT_MARKER:
+      id = action.id;
+      highlightMarker(id);
       RegDemStore.emitChange();
       break;
 
