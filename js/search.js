@@ -30,7 +30,7 @@ let Sok = React.createClass({
   },
 
   renderRemoveIcon: function() {
-    if (this.props.data.search.inputValue.length > 0 || this.props.objektTypeID !== null) {
+    if (this.props.data.search.inputValue.length > 0 || this.props.data.objektTypeID !== null) {
       return (
         <i
         onTouchTap={this.handleRemoveClick}
