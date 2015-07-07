@@ -13,3 +13,7 @@ module.exports.actions = keyMirror({
   REGDEM_CLOSE_LIST: null,
   REGDEM_SHOW_LIST: null
 });
+
+module.exports.values = {
+  REGDEM_SIZE_DESKTOP: 800
+};
