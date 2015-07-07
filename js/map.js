@@ -34,12 +34,10 @@ let Map = React.createClass({
 
     // Oppsett av bakgrunnskartet
     let bakgrunnskart = new L.tileLayer(kartcache, {
-      maxZoom: 17,
-      maxNativeZoom: 16,
+      maxZoom: 16,
       minZoom: 3,
       subdomains: '123456789',
       continuousWorld: true,
-      detectRetina: true,
       attribution: 'Registratordemonstrator'
     });
 
