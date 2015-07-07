@@ -3,7 +3,7 @@ let RegDemActions = require('./actions');
 
 var curPosLayer = new L.FeatureGroup();
 var markers = new L.MarkerClusterGroup({
-  maxClusterRadius: 30
+  maxClusterRadius: 50
 });
 
 // Fjerner alle markører på kartet.
