@@ -1,4 +1,5 @@
 let React = require('react');
+let RegDemActions = require('./actions.js');
 let mui = require('material-ui');
 let { FloatingActionButton, FontIcon, Snackbar } = require('material-ui');
 
@@ -12,7 +13,7 @@ injectTapEventPlugin();
 let ThemeManager = new mui.Styles.ThemeManager();
 let Colors = mui.Styles.Colors;
 
-let LagNy = React.createClass({
+let Buttons = React.createClass({
 
   childContextTypes: {
     muiTheme: React.PropTypes.object
@@ -31,10 +32,10 @@ let LagNy = React.createClass({
   },
 
   handleTap: function () {
-    if (!app.state.objektTypeID) {
+    if (!this.props.data.objektTypeID) {
       this.refs.snackbar.show();
     } else {
-      app.setObjektID(-1);
+      RegDemActions.setObjektID(-1);
     }
   },
 
@@ -44,7 +45,7 @@ let LagNy = React.createClass({
 
   render: function() {
     return (
-      <div className="lagNy-container">
+      <div className="buttons-container">
         <FloatingActionButton onTouchTap={this.handleTap}>
           <FontIcon className="material-icons add-icon" color={Colors.white}>add</FontIcon>
         </FloatingActionButton>
@@ -58,4 +59,4 @@ let LagNy = React.createClass({
   }
 });
 
-module.exports = LagNy;
+module.exports = Buttons;

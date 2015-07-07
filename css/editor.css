@@ -1,25 +1,25 @@
 /* Containers og meta */
-.RedigerObjekt-small-edit {
+.Editor-small-edit {
   max-height: 140px;
 }
-.RedigerObjekt-small-new {
+.Editor-small-new {
   max-height: 100px;
 }
-.RedigerObjekt-pointer {
+.Editor-pointer {
   cursor: pointer;
 }
-.RedigerObjekt-Card {
+.Editor-Card {
   height: 100%;
   text-align: center;
 }
-.RedigerObjekt-small-new .RedigerObjekt-loader {
+.Editor-small-new .Editor-loader {
   margin-top: 5px !important;
 }
-.RedigerObjekt-loader {
+.Editor-loader {
   margin-top: 30px !important;
   display: inherit;
 }
-.RedigerObjekt-container {
+.Editor-container {
   text-align: left;
   padding: 5px;
   overflow: auto !important;
@@ -30,52 +30,52 @@
   max-width: 500px;
   box-sizing: border-box;
 }
-.RedigerObjekt-container-loader {
+.Editor-container-loader {
   text-align: center;
 }
-.RedigerObjekt-lukk {
+.Editor-lukk {
   float: right;
   margin-top: 5px;
   cursor: pointer;
 }
-.RedigerObjekt-lukk i {
+.Editor-lukk i {
   color: rgba(0, 0, 0, 0.5);
   margin-right: 0 !important;
 }
-.RedigerObjekt-knapp-container {
+.Editor-knapp-container {
   margin-top: 20px;
   text-align: right;
 }
-.RedigerObjekt-viktighetContainer {
+.Editor-viktighetContainer {
   display: inline-block;
   position: absolute;
   right: 0px;
   top: 15px;
 }
-.RedigerObjekt-viktighet {
+.Editor-viktighet {
   font-size: 10px;
   float: right;
   margin: 8px;
   letter-spacing: 1px;
 }
-.RedigerObjekt-viktighet-1, .RedigerObjekt-viktighet-2 {
+.Editor-viktighet-1, .Editor-viktighet-2 {
   color: #D0021B;
 }
-.RedigerObjekt-viktighet-3 {
+.Editor-viktighet-3 {
   color: orange;
 }
-.RedigerObjekt-viktighet-4 {
+.Editor-viktighet-4 {
   color: blue;
 }
-.RedigerObjekt-beskrivelse {
+.Editor-beskrivelse {
   color: #999;
 }
-.RedigerObjekt-beskrivelseTekst {
+.Editor-beskrivelseTekst {
   font-size: 13px;
   line-height: 1.4em;
   color: rgba(0, 0, 0, 0.5);
 }
-.RedigerObjekt-tomKnapp {
+.Editor-tomKnapp {
   user-select: none;
   cursor: pointer;
   display: inline-block;
@@ -84,28 +84,28 @@
   right: 8px;
   top: 39px;
 }
-.RedigerObjekt-tomKnappSkjul {
+.Editor-tomKnappSkjul {
   display: none;
 }
-.RedigerObjekt-tomKnapp i {
+.Editor-tomKnapp i {
   font-size: 18px;
 }
 
 /* Components */
 
-.RedigerObjekt-enum, .RedigerObjekt-tekst, .RedigerObjekt-tall, .RedigerObjekt-klokkeslett {
+.Editor-enum, .Editor-tekst, .Editor-tall, .Editor-klokkeslett {
   position: relative;
   min-height: 100px;
   margin-bottom: 30px;
 }
-.RedigerObjekt-klokkeslett {
+.Editor-klokkeslett {
   box-sizing: content-box;
 }
-.RedigerObjekt-timePicker {
+.Editor-timePicker {
   width: 100% !important;
   margin-top: 22px;
 }
-.RedigerObjekt-datePickerContainer, .RedigerObjekt-timePickerContainer {
+.Editor-datePickerContainer, .Editor-timePickerContainer {
   font-size: 16px;
   line-height: 24px;
   width: 100%;
@@ -115,7 +115,7 @@
   font-family: Roboto, sans-serif;
   transition: height 200ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
 }
-.RedigerObjekt-datePicker {
+.Editor-datePicker {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   position: relative;
   width: 100% !important;
@@ -128,7 +128,7 @@
   box-sizing: border-box;
   margin-top: 23px;
 }
-.RedigerObjekt-etikett {
+.Editor-etikett {
   position: absolute;
   line-height: 48px;
   opacity: 1;
@@ -138,14 +138,14 @@
   transform: perspective(1px) scale(0.75) translate3d(0, -18px, 0);
   transform-origin: left top;
 }
-.RedigerObjekt-permanentEtikett > label:first-child {
+.Editor-permanentEtikett > label:first-child {
   color: rgba(0, 0, 0, 0.5) !important;
   transform: perspective(1px) scale(0.75) translate3d(0, -18px, 0) !important;
 }
-.RedigerObjekt-endretVerdi > hr:last-of-type {
+.Editor-endretVerdi > hr:last-of-type {
   transform: scaleX(1) !important;
 }
-.RedigerObjekt-feilmelding > div:last-of-type {
+.Editor-feilmelding > div:last-of-type {
   position: relative !important;
   bottom: 2px !important;
 }

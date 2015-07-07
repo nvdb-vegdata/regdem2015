@@ -1,8 +1,8 @@
 let React = require('react/addons');
 let mui = require('material-ui');
-let Fetch = require('./fetch.js');
 let Helper = require('./helper.js');
-let { Mixins, Card, ClearFix, CardActions, FlatButton, CardTitle, CardText, CircularProgress } = require('material-ui');
+let RegDemActions = require('./actions.js');
+let { Mixins, Card, ClearFix, CardActions, CardTitle, CardText } = require('material-ui');
 
 //Needed for onTouchTap
 //Can go away when react 1.0 release
@@ -12,17 +12,8 @@ var injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
 let ThemeManager = new mui.Styles.ThemeManager();
-let Colors = mui.Styles.Colors;
-
-let { StyleResizable } = Mixins;
 
 let List = React.createClass({
-  getInitialState: function() {
-    return {
-      objektTypeID: null,
-      objekter: []
-    };
-  },
 
   childContextTypes: {
     muiTheme: React.PropTypes.object
@@ -34,33 +25,24 @@ let List = React.createClass({
     };
   },
 
-  setObjekter: function (objekter) {
-    this.setState({
-      objekter: objekter
-    })
-  },
-
-  closeDialog: function () {
-    this.setObjekter([]);
+  closeList: function () {
+    RegDemActions.closeList();
   },
 
   render: function() {
-    let objektTypeID = this.state.objektTypeID ? this.state.objektTypeID : '';
-    let objekter = this.state.objekter ? this.state.objekter : [];
-
     // Hvis ingen objektID er satt skal ikke skjemaet vises.
-    if (objekter.length == 0 ) {
+    if (!this.props.data.list.open ) {
       return null;
     } else {
-      var elements = objekter.resultater[0].vegObjekter;
+      var elements = this.props.data.searchResults.resultater[0].vegObjekter;
       var size = elements.length;
       return (
         <div className="list">
           <Card className="list-card">
             <ClearFix>
             <div className="list-container">
-              <CardActions className="list-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
-              <CardTitle title="Liste" subtitle={size + " elementer"} />
+              <CardActions className="list-lukk"><i className="material-icons" onTouchTap={this.closeList}>clear</i></CardActions>
+              <CardTitle title="Liste" subtitle={size + ' elementer'} />
               <CardText>
                 {
                   elements.map(function (objekt) {
@@ -86,10 +68,10 @@ let ListElement = React.createClass({
     if(this.props.objekt.lokasjon.vegReferanser){
       vegref = Helper.vegReferanseString(this.props.objekt.lokasjon.vegReferanser[0]);
     } else {
-      vegref = "--";
+      vegref = '--';
     }
     return (
-      <div className='list-element'>{vegref}</div>
+      <div className="list-element">{vegref}</div>
     );
   }
 

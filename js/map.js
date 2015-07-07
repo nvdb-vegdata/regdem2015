@@ -1,11 +1,9 @@
-var React = require('react');
-let Marker = require('./marker.js');
-var Sok = require('./sok.js');
-var Fetch = require('./fetch.js');
+let React = require('react');
+let Marker = require('./marker');
+let RegDemActions = require('./actions');
+let mapData = null;
 
-var objektID = null;
-
-let Kart = React.createClass({
+let Map = React.createClass({
   componentDidMount: function() {
     // Spesifisering av vegkartets projeksjon
     let crs = new L.Proj.CRS('EPSG:25833', '+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs ',
@@ -45,7 +43,7 @@ let Kart = React.createClass({
       attribution: 'Registratordemonstrator'
     });
 
-    let kartData = this.kartData = L.map(React.findDOMNode(this.refs.map), {
+    this.mapData = L.map(React.findDOMNode(this.refs.map), {
       crs: crs,
       continuousWorld: true,
       worldCopyJump: false,
@@ -58,58 +56,45 @@ let Kart = React.createClass({
     });
 
     // PLassering av zoom kontrollene
-    new L.Control.Zoom( {position: 'bottomleft'}).addTo(this.kartData);
-    this.kartData.locate({setView: true, maxZoom: 15});
+    new L.Control.Zoom( {position: 'bottomleft'}).addTo(this.mapData);
+    this.mapData.locate({setView: true, maxZoom: 15});
 
-    this.kartData.on('locationfound', (e) => {
-      Marker.displayCurrentPosition(e, this.kartData);
-    });
-
-    this.kartData.on('moveend', () => {
-      if (app.state.objektTypeID) {
-        var sok = this.refs.search;
-
-        this.fetchObjekter(null, () => {
-          sok.setLoading('false');
-        });
-        sok.setLoading('true');
-      }
+    this.mapData.on('locationfound', (e) => {
+      Marker.displayCurrentPosition(e, this.mapData);
     });
 
     // Plassering av min poisisjon-knapp
     L.easyButton('<i class="material-icons target">my_location</i>', () => {
-      this.kartData.locate({setView: true, maxZoom: 15});
-    }).addTo( this.kartData );
+      this.mapData.locate({setView: true, maxZoom: 15});
+    }).addTo( this.mapData );
+
+    // Legg mapData inn som referanse i store
+    RegDemActions.addMapDataAsReference(this.mapData);
+
+    this.mapData.on('moveend', () => {
+      if (this.props.data.objektTypeID) {
+        RegDemActions.fetchObjektPositions(null);
+      }
+    });
   },
 
-  clearMarkers: function () {
-    Marker.clearMarkers();
+  componentWillReceiveProps: function (nextProps) {
+    if (this.props.data.searchResults !== nextProps.data.searchResults && nextProps.data.searchResults == null) {
+      Marker.clearMarkers();
+    } else if (this.props.data.searchResults !== nextProps.data.searchResults) {
+      Marker.update(this.mapData, nextProps.data.searchResults);
+    }
   },
 
   componentWillUnmount: function() {
-    this.kartData = null;
-  },
-
-  fetchObjekter: function (id, callback) {
-    id = id || app.state.objektTypeID;
-
-    var kart = this.kartData;
-    var mapbox = kart.getBounds();
-
-    Fetch.fetchAPIObjekter (id, mapbox, function(data) {
-      Marker.update(kart, data, callback);
-      app.refs.list.setObjekter(data);
-    });
+    this.mapData = null;
   },
 
   render: function() {
     return (
-      <div>
-        <Sok ref="search" fetchObjekter={this.fetchObjekter}  {...this.props} />
-        <div ref="map" className="kart"></div>
-      </div>
+      <div ref="map" className="kart"></div>
     );
   }
 });
 
-module.exports = Kart;
+module.exports = Map;

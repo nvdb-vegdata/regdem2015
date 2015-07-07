@@ -1,45 +1,48 @@
 let React = require('react');
-let Kart = require('./map.js');
-let RedigerObjekt = require('./redigerObjekt.jsx');
+
+let Map = require('./map.js');
+let Editor = require('./editor.jsx');
 let List = require('./list.jsx');
-let LagNy = require('./lagNy.jsx');
+let Search = require('./search.js');
+let Buttons = require('./buttons.jsx');
+let RegDemStore = require('./store');
 
 // For React developer tools
 window.React = React;
 
-let App = React.createClass({
+// Get current App state
+let getRegDemState = function () {
+  return RegDemStore.getAll();
+};
+
+let RegDemApp = React.createClass({
   getInitialState: function() {
-    return {
-      objektID: null,
-      objektTypeID: null
-    };
+    return getRegDemState();
   },
 
-  setObjektID: function (id) {
-    this.setState({objektID: id});
+  componentDidMount: function () {
+    RegDemStore.addChangeListener(this._onChange);
   },
 
-  setObjektTypeID: function (id) {
-    this.setState({objektTypeID: id});
-  },
-
-  setObjektAndObjektTypeID: function (objektID, objektTypeID) {
-    this.setState({
-      objektID: objektID,
-      objektTypeID: objektTypeID
-    });
+  componentWillUnmount: function () {
+    RegDemStore.removeChangeListener(this._onChange);
   },
 
   render: function() {
     return (
       <div>
-        <RedigerObjekt objektID={this.state.objektID} objektTypeID={this.state.objektTypeID} />
-        <Kart ref="mapAndSearch" objektID={this.state.objektID} objektTypeID={this.state.objektTypeID} />
-        <List ref="list" objektTypeID={this.state.objektTypeID} />
-        <LagNy />
+        <Editor data={this.state} />
+        <Map data={this.state} />
+        <Search data={this.state} />
+        <List data={this.state} />
+        <Buttons data={this.state} />
       </div>
     );
+  },
+
+  _onChange: function() {
+    this.setState(getRegDemState());
   }
 });
 
-window.app = React.render(<App />, document.body);
+React.render(<RegDemApp />, document.body);

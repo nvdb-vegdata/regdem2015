@@ -16,20 +16,18 @@ module.exports = React.createClass({
   },
 
   render: function () {
-    var style;
-    if (this.props.visible === 'true') {
-      style = 'indicator';
-    } else {
-      style = 'indicator hidden';
+    var style = 'indicator';
+    if (!this.props.visible) {
+      style += ' hidden';
     }
     return (
       <div className="indicator_container">
-      <CircularProgress
-      mode="indeterminate"
-      size={0.25}
-      className={style}
-      />
+        <CircularProgress
+          mode="indeterminate"
+          size={0.25}
+          className={style}
+        />
       </div>
     );
-  },
+  }
 });

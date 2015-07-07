@@ -1,26 +1,19 @@
 var React = require('react');
 var Typeahead = require('react-typeahead-component');
 
-var Fetch = require('./fetch.js');
 var Indicator = require('./indicator.jsx');
 var OptionTemplate = require('./optiontemplate.jsx');
 
-let Sok = React.createClass({
-  getInitialState: function() {
-    return {
-      inputValue: '',
-      options: [],
-      loading: 'false'
-    };
-  },
+let RegDemActions = require('./actions');
 
+let Sok = React.createClass({
   render: function() {
     return (
       <div className="sok">
         <i className="material-icons search-icon">search</i>
         <Typeahead
-          inputValue={this.state.inputValue}
-          options={this.state.options}
+          inputValue={this.props.data.search.inputValue}
+          options={this.props.data.search.options}
           onChange={this.handleChange}
           onInputClick={this.handleInputClick}
           optionTemplate={OptionTemplate}
@@ -29,7 +22,6 @@ let Sok = React.createClass({
           onKeyDown={this.handleKeyDown}
           onComplete={this.handleComplete}
           handleHint={this.handleHint}
-          ref="typeahead"
         />
         {this.renderIndicator()}
         {this.renderRemoveIcon()}
@@ -38,7 +30,7 @@ let Sok = React.createClass({
   },
 
   renderRemoveIcon: function() {
-    if (this.state.inputValue.length > 0 || this.props.objektTypeID !== null) {
+    if (this.props.data.search.inputValue.length > 0 || this.props.objektTypeID !== null) {
       return (
         <i
         onTouchTap={this.handleRemoveClick}
@@ -50,13 +42,13 @@ let Sok = React.createClass({
   renderIndicator: function () {
     return (
       <Indicator
-      visible={this.state.loading}
+        visible={this.props.data.search.loading}
       />
     );
   },
 
   handleInputClick: function(event) {
-    if(this.state.inputValue === ''){
+    if(this.props.data.search.inputValue === ''){
       this.handleChange(event);
     }
   },
@@ -68,11 +60,7 @@ let Sok = React.createClass({
   },
 
   getOptions: function(input) {
-    var that = this;
-    Fetch.fetch( input, function(data) {
-      that.setOptions(data);
-    });
-
+    RegDemActions.fetchObjektTypes(input);
   },
 
   handleOptionChange: function(event, option) {
@@ -85,19 +73,11 @@ let Sok = React.createClass({
   },
 
   setInputValue: function(value) {
-    this.setState({
-      inputValue: value
-    });
-  },
-
-  setOptions: function(options) {
-    this.setState({
-      options: options
-    });
+    RegDemActions.setInputValue(value);
   },
 
   setLoading: function (val) {
-    if (this.state.inputValue) {
+    if (this.props.data.search.inputValue) {
       this.setState({
         loading: val
       });
@@ -126,8 +106,8 @@ let Sok = React.createClass({
       if (optionData.value) {
         this.executeSearch(optionData.value);
       } else {
-        for (var opt in this.state.options) {
-          var obj = this.state.options[opt];
+        for (var opt in this.props.data.search.options) {
+          var obj = this.props.data.search.options[opt];
           if (obj.label.toLowerCase() === optionData.toLowerCase()) {
             this.executeSearch(obj.value);
           }
@@ -136,20 +116,12 @@ let Sok = React.createClass({
     }
   },
 
-  executeSearch: function (id) {
-    app.setObjektAndObjektTypeID(null, id);
-
-    var sok = this;
-    this.props.fetchObjekter(id, () => {
-      sok.setLoading('false');
-    });
-    this.setLoading('true');
+  executeSearch: function (objektTypeID) {
+    RegDemActions.executeSearch(objektTypeID);
   },
 
   handleRemoveClick: function() {
-    app.setObjektAndObjektTypeID(null, null);
-    app.refs.mapAndSearch.clearMarkers();
-    this.replaceState(this.getInitialState());
+    RegDemActions.resetApp();
   }
 });
 

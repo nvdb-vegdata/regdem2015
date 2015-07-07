@@ -144,16 +144,16 @@ L.Control.EasyButton = L.Control.extend({
     }
 
     // curate and move user's states into
-    // the _states for internal use
-    this._states = [];
+    // the _state for internal use
+    this._state = [];
 
     for(var i = 0; i < this.options.states.length; i++){
-      this._states.push( new State(this.options.states[i], this) );
+      this._state.push( new State(this.options.states[i], this) );
     }
 
     this._buildButton();
 
-    this._activateState(this._states[0]);
+    this._activateState(this._state[0]);
 
   },
 
@@ -183,8 +183,8 @@ L.Control.EasyButton = L.Control.extend({
     if(this.options.type == 'replace'){
       this.button.appendChild(this._currentState.icon);
     } else {
-      for(var i=0;i<this._states.length;i++){
-        this.button.appendChild(this._states[i].icon);
+      for(var i=0;i<this._state.length;i++){
+        this.button.appendChild(this._state[i].icon);
       }
     }
   },
@@ -198,7 +198,7 @@ L.Control.EasyButton = L.Control.extend({
 
 
 
-  _states: null, // populated on init
+  _state: null, // populated on init
 
 
 
@@ -212,7 +212,7 @@ L.Control.EasyButton = L.Control.extend({
     // activate by index
     } else if (typeof newState == 'number'){
 
-      this._activateState(this._states[newState]);
+      this._activateState(this._state[newState]);
     }
 
     return this;
@@ -220,9 +220,9 @@ L.Control.EasyButton = L.Control.extend({
 
 
   _activateStateNamed: function(stateName){
-    for(var i = 0; i < this._states.length; i++){
-      if( this._states[i].stateName == stateName ){
-        this._activateState( this._states[i] );
+    for(var i = 0; i < this._state.length; i++){
+      if( this._state[i].stateName == stateName ){
+        this._activateState( this._state[i] );
       }
     }
   },
@@ -249,9 +249,9 @@ L.Control.EasyButton = L.Control.extend({
       }
 
       // update classes for animations
-      for(var i=0;i<this._states.length;i++){
-        L.DomUtil.removeClass(this._states[i].icon, this._currentState.stateName + '-active');
-        L.DomUtil.addClass(this._states[i].icon, newState.stateName + '-active');
+      for(var i=0;i<this._state.length;i++){
+        L.DomUtil.removeClass(this._state[i].icon, this._currentState.stateName + '-active');
+        L.DomUtil.addClass(this._state[i].icon, newState.stateName + '-active');
       }
 
       // update classes for animations
