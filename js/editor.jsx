@@ -1,7 +1,8 @@
 let React = require('react/addons');
 let mui = require('material-ui');
-let Fetch = require('./fetch.js');
+let RegDemActions = require('./actions');
 let Helper = require('./helper.js');
+
 let { Mixins, SelectField, TextField, TimePicker, DatePicker, Card,
   ClearFix, CardActions, FlatButton, CardTitle, CardText, CircularProgress } = require('material-ui');
 
@@ -17,18 +18,9 @@ let Colors = mui.Styles.Colors;
 
 let { StyleResizable } = Mixins;
 
-let RedigerObjekt = React.createClass({
+let Editor = React.createClass({
   // Mixins, for linked state
   mixins: [StyleResizable, React.addons.LinkedStateMixin],
-
-  getInitialState: function() {
-    return {
-      objekt: null,
-      objektType: null,
-      loaded: false,
-      expanded: false
-    };
-  },
 
   childContextTypes: {
     muiTheme: React.PropTypes.object
@@ -46,101 +38,27 @@ let RedigerObjekt = React.createClass({
     });
   },
 
-  componentDidMount: function () {
-    // Hent data på objektet
-    this.getNewData(this.props.objektID);
-  },
-
-  componentWillReceiveProps: function (nextProps) {
-    if (nextProps.objektID) {
-      this.getNewData(nextProps.objektID);
-    } else {
-      this.replaceState(this.getInitialState());
-    }
-  },
-
-  getNewData: function (objektID) {
-    // Finnes det en ObjektID?
-    if (objektID) {
-      // Skal vi lage nytt objekt?
-      if (objektID === -1) {
-        this.replaceState(this.getInitialState());
-        // Har vi oppgitt
-        if (this.props.objektTypeID) {
-          // Kun hent ObjektType data, sett Objekt data til null
-          this.fetchObjekTypetData(null, this.props.objektTypeID);
-        }
-      } else {
-        // Finne det allerede et objekt i state, og er dette objektet det
-        // samme som det vi prøver å laste inn?
-        if (this.state.objekt && objektID !== this.state.objekt.objektId) {
-          this.replaceState(this.getInitialState());
-          this.fetchObjektData(objektID);
-        } else {
-          this.fetchObjektData(objektID);
-        }
-      }
-    }
-  },
-
-  fetchObjektData: function (objektID) {
-    Fetch.fetchObjekt(objektID, (objektData) => {
-      if (this.isMounted()) {
-        // Når du har hentet Objekt data må du hente ObjektTypeData. Sender ObjektData
-        // som parameter slik at fetchObjektTypeData kan oppdatere state.
-        this.fetchObjekTypetData(objektData, objektData.objektTypeId);
-      }
-    });
-  },
-
-  fetchObjekTypetData: function (objektData, objektTypeId) {
-    // Nå som vi har objektet, kan vi hente objekttype
-    Fetch.fetchObjektType(objektTypeId, (objektTypeData) => {
-      if (this.isMounted()) {
-        // Sorterer egenskaper til objekttype etter viktighet og sorteringsnummer
-        objektTypeData.egenskapsTyper.sort(function (a, b) {
-          let differanseMellomAogB = Helper.objektTypeViktighetTilNummer(a.viktighet) - Helper.objektTypeViktighetTilNummer(b.viktighet);
-
-          if (differanseMellomAogB === 0) {
-            // Sorter på sorteringsnummer, nivå 2
-            return a.sorteringsnummer - b.sorteringsnummer;
-          } else {
-            // Sorter på viktighet, nivå 1
-            return differanseMellomAogB;
-          }
-        });
-
-        this.setState({
-          objekt: objektData,
-          objektType: objektTypeData,
-          loaded: true
-        });
-      }
-    });
-  },
-
   closeDialog: function () {
-    app.setObjektID(null);
+    RegDemActions.closeEditor();
   },
 
   expandForm: function () {
-    if (!this.state.expanded) {
-      this.setState({
-        expanded: true
-      });
+    if (!this.props.data.editor.expanded) {
+      RegDemActions.expandEditor();
     }
   },
 
   render: function() {
-    let objektTypeNavn = this.state.objektType ? this.state.objektType.navn : '';
-    let objektId = this.state.objekt ? this.state.objekt.objektId : '';
-    let vegreferanse = this.state.objekt ? Helper.vegReferanseString(this.state.objekt.lokasjon.vegReferanser[0]) : '';
-    let egenskapsTyper = this.state.objektType ? this.state.objektType.egenskapsTyper : [];
-    let objekt = this.state.objekt ? this.state.objekt : [];
+    let objektTypeNavn = this.props.data.objektType ? this.props.data.objektType.navn : '';
+    let objektId = this.props.data.objekt ? this.props.data.objekt.objektId : '';
+    let vegreferanse = this.props.data.objekt ? Helper.vegReferanseString(this.props.data.objekt.lokasjon.vegReferanser[0]) : '';
+    let egenskapsTyper = this.props.data.objektType ? this.props.data.objektType.egenskapsTyper : [];
+    let objekt = this.props.data.objekt ? this.props.data.objekt : [];
 
     // Finner verdien til egenskapen til objektet. Brukes til å pre-populate egenskapene
     let finnVerdi = function (egenskap, returFunksjon) {
       let dataTilEgenskap = [];
+
       if (objekt.egenskaper) {
         dataTilEgenskap = objekt.egenskaper.filter((objektEgenskap) => { return objektEgenskap.id === egenskap.id; });
       }
@@ -172,7 +90,7 @@ let RedigerObjekt = React.createClass({
       </div>
     );
 
-    if (this.props.objektID === -1) {
+    if (this.props.data.objektID === -1) {
       formName = 'Lag nytt objekt';
       subtitle = (
           <div style={{fontWeight: 'bold', fontSize: '16px'}}>{objektTypeNavn}</div>
@@ -180,15 +98,15 @@ let RedigerObjekt = React.createClass({
 
     }
 
-    let redigerObjektClassName = 'RedigerObjekt';
+    let EditorClassName = 'Editor';
     let formFieldsAndButtons = (<div></div>);
 
     // Hvis state skal være minimized
-    if (!this.state.expanded) {
-      if (this.props.objektID === -1) {
-        redigerObjektClassName += ' RedigerObjekt-small-new RedigerObjekt-pointer';
+    if (!this.props.data.editor.expanded) {
+      if (this.props.data.objektID === -1) {
+        EditorClassName += ' Editor-small-new Editor-pointer';
       } else {
-        redigerObjektClassName += ' RedigerObjekt-small-edit RedigerObjekt-pointer';
+        EditorClassName += ' Editor-small-edit Editor-pointer';
       }
     } else {
       formFieldsAndButtons = (
@@ -214,7 +132,7 @@ let RedigerObjekt = React.createClass({
           }
           </CardText>
 
-          <CardActions className="RedigerObjekt-knapp-container">
+          <CardActions className="Editor-knapp-container">
             <FlatButton label="Lagre" primary={true} />
             <FlatButton label="Avbryt" onTouchTap={this.closeDialog} />
           </CardActions>
@@ -223,16 +141,16 @@ let RedigerObjekt = React.createClass({
     }
 
     // Hvis ingen objektID er satt skal ikke skjemaet vises.
-    if (!this.props.objektID) {
+    if (!this.props.data.objektID) {
       return null;
-    } else if (!this.state.loaded) {
+    } else if (this.props.data.editor.loading) {
       return (
-        <div className={redigerObjektClassName}>
-          <Card className="RedigerObjekt-Card">
+        <div className={EditorClassName}>
+          <Card className="Editor-Card">
             <ClearFix>
-              <div className="RedigerObjekt-container RedigerObjekt-container-loader">
-                <CardActions className="RedigerObjekt-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
-                <CircularProgress mode="indeterminate" className="RedigerObjekt-loader" />
+              <div className="Editor-container Editor-container-loader">
+                <CardActions className="Editor-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
+                <CircularProgress mode="indeterminate" className="Editor-loader" />
               </div>
             </ClearFix>
           </Card>
@@ -240,12 +158,12 @@ let RedigerObjekt = React.createClass({
       );
     } else {
       return (
-        <div className={redigerObjektClassName}>
-          <Card className="RedigerObjekt-Card" onTouchTap={this.expandForm}>
+        <div className={EditorClassName}>
+          <Card className="Editor-Card" onTouchTap={this.expandForm}>
             <ClearFix>
-              <div className="RedigerObjekt-container">
-                <CardActions className="RedigerObjekt-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
-                <CardTitle title={formName} subtitle={subtitle}  />
+              <div className="Editor-container">
+                <CardActions className="Editor-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
+                <CardTitle title={formName} subtitle={subtitle} />
                 {formFieldsAndButtons}
               </div>
             </ClearFix>
@@ -283,13 +201,13 @@ let RSkjema = {
         return enumListeTilMenuItems;
       };
 
-      let SelectFieldClassName = 'RedigerObjekt-selectField RedigerObjekt-permanentEtikett';
+      let SelectFieldClassName = 'Editor-selectField Editor-permanentEtikett';
       if (this.state.selectLinkValue !== '') {
-        SelectFieldClassName += ' RedigerObjekt-endretVerdi';
+        SelectFieldClassName += ' Editor-endretVerdi';
       }
 
       return (
-          <div className="RedigerObjekt-enum">
+          <div className="Editor-enum">
             <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
             <SelectField
               valueLink={this.linkState('selectLinkValue')}
@@ -315,13 +233,13 @@ let RSkjema = {
     render: function() {
       let egenskaper = this.props.egenskaper;
 
-      let TextFieldClassName = 'RedigerObjekt-permanentEtikett';
+      let TextFieldClassName = 'Editor-permanentEtikett';
       if (this.state.textLinkValue !== '') {
-        TextFieldClassName += ' RedigerObjekt-endretVerdi';
+        TextFieldClassName += ' Editor-endretVerdi';
       }
 
       return (
-        <div className="RedigerObjekt-tekst">
+        <div className="Editor-tekst">
           <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
           <TextField
             floatingLabelText={egenskaper.navn}
@@ -370,16 +288,16 @@ let RSkjema = {
     render: function() {
       let egenskaper = this.props.egenskaper;
 
-      let NumberFieldClassName = 'RedigerObjekt-permanentEtikett';
+      let NumberFieldClassName = 'Editor-permanentEtikett';
       if (this.state.numberValue !== '') {
-        NumberFieldClassName += ' RedigerObjekt-endretVerdi';
+        NumberFieldClassName += ' Editor-endretVerdi';
       }
       if (this.state.numberValueErrorText !== '') {
-        NumberFieldClassName += ' RedigerObjekt-feilmelding';
+        NumberFieldClassName += ' Editor-feilmelding';
       }
 
       return (
-        <div className="RedigerObjekt-tall">
+        <div className="Editor-tall">
           <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
           <TextField
             floatingLabelText={egenskaper.navn}
@@ -430,18 +348,18 @@ let RSkjema = {
       let egenskaper = this.props.egenskaper;
 
       // Setter klassenavn
-      let classNameLabelText = 'RedigerObjekt-etikett';
+      let classNameLabelText = 'Editor-etikett';
 
-      let TimePickerClassName = 'RedigerObjekt-timePicker';
+      let TimePickerClassName = 'Editor-timePicker';
       if (this.state.klokkeVerdi !== '') {
-        TimePickerClassName += ' RedigerObjekt-endretVerdi';
+        TimePickerClassName += ' Editor-endretVerdi';
       }
 
       return (
-        <div className="RedigerObjekt-klokkeslett" >
+        <div className="Editor-klokkeslett" >
           <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
 
-          <div className="RedigerObjekt-timePickerContainer">
+          <div className="Editor-timePickerContainer">
             <div className={classNameLabelText}>{egenskaper.navn}</div>
 
             <TimePicker
@@ -478,7 +396,7 @@ let RSkjema = {
 
     componentDidMount: function () {
       if (this.refs.datovelger) {
-        if (this.state.datoVerdi.length > 0) {
+        if (this.state.datoVerdi.length !== 0) {
           let datoObjekt = new Date();
           datoObjekt.setYear((this.state.datoVerdi).substr(0, 4));
           datoObjekt.setMonth((this.state.datoVerdi).substr(4, 2));
@@ -492,18 +410,18 @@ let RSkjema = {
       let egenskaper = this.props.egenskaper;
 
       // Setter klassenavn
-      let classNameLabelText = 'RedigerObjekt-etikett';
+      let classNameLabelText = 'Editor-etikett';
 
-      let DatePickerClassName = 'RedigerObjekt-datePicker';
+      let DatePickerClassName = 'Editor-datePicker';
       if (this.state.datoVerdi !== '') {
-        DatePickerClassName += ' RedigerObjekt-endretVerdi';
+        DatePickerClassName += ' Editor-endretVerdi';
       }
 
       return (
-        <div className="RedigerObjekt-klokkeslett">
+        <div className="Editor-klokkeslett">
           <RSkjema.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
 
-          <div className="RedigerObjekt-datePickerContainer">
+          <div className="Editor-datePickerContainer">
             <div className={classNameLabelText}>{egenskaper.navn}</div>
 
             <DatePicker
@@ -524,9 +442,9 @@ let RSkjema = {
   TomFelt: React.createClass({
     render: function() {
       // Setter klassenavn
-      let classNameTomKnapp = 'RedigerObjekt-tomKnapp';
+      let classNameTomKnapp = 'Editor-tomKnapp';
       if (this.props.tomt) {
-        classNameTomKnapp += ' RedigerObjekt-tomKnappSkjul';
+        classNameTomKnapp += ' Editor-tomKnappSkjul';
       }
 
       return (
@@ -541,8 +459,8 @@ let RSkjema = {
   Beskrivelse: React.createClass({
     render: function() {
       return (
-        <div className="RedigerObjekt-beskrivelse">
-          <div className="RedigerObjekt-beskrivelseTekst">{this.props.beskrivelse}</div>
+        <div className="Editor-beskrivelse">
+          <div className="Editor-beskrivelseTekst">{this.props.beskrivelse}</div>
         </div>
       );
     }
@@ -553,10 +471,10 @@ let RSkjema = {
     render: function() {
       // Setter klassenavn
       let viktighetTall = Helper.objektTypeViktighetTilNummer(this.props.viktighet);
-      let classNameViktighet = 'RedigerObjekt-viktighet RedigerObjekt-viktighet-' + viktighetTall;
+      let classNameViktighet = 'Editor-viktighet Editor-viktighet-' + viktighetTall;
 
       return (
-        <div className="RedigerObjekt-viktighetContainer">
+        <div className="Editor-viktighetContainer">
           <div className={classNameViktighet}>{this.props.viktighet}</div>
         </div>
       );
@@ -566,4 +484,4 @@ let RSkjema = {
 
 };
 
-module.exports = RedigerObjekt;
+module.exports = Editor;

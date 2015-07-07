@@ -1,4 +1,4 @@
-.lagNy-container {
+.buttons-container {
   position: absolute;
   bottom: 40px;
   right: 20px;
@@ -11,14 +11,14 @@
   margin-top: 15px;
 }
 
-.lagNy-container > span {
+.buttons-container > span {
   font-size: 14px !important;
   font-weight: 300;
 }
 
 @media (max-width: 450px) {
 
-  .lagNy-container > span {
+  .buttons-container > span {
     font-size: 14px !important;
     font-weight: 300;
     height: auto !important;
@@ -28,7 +28,7 @@
     text-align: center;
   }
 
-  .lagNy-container > span > button {
+  .buttons-container > span > button {
     float: none !important;
     margin: 0 !important;
   }

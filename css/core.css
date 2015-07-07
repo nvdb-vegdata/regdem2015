@@ -1,10 +1,9 @@
 @import (inline) 'reset.css';
 @import (inline) 'typeahead.css';
 @import (inline) 'easy-button.css';
-@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
-@import (inline) 'RedigerObjekt.css';
+@import (inline) 'editor.css';
 @import (inline) 'list.css';
-@import (inline) 'lag-ny.css';
+@import (inline) 'buttons.css';
 
 html, body {
   font-family: 'Roboto', sans-serif;
@@ -32,7 +31,7 @@ strong {
   margin: 10px;
   max-width: 500px;
 }
-.RedigerObjekt {
+.Editor {
   position: absolute;
   z-index: 4;
   left: 0;
