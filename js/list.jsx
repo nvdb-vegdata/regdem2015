@@ -63,7 +63,14 @@ let List = React.createClass({
 });
 
 let ListElement = React.createClass({
+
+  handleMouseOver: function (event) {
+    let id = event.target.attributes.data.value;
+    RegDemActions.highlightMarker(id);
+  },
+
   render: function () {
+    var objektID = this.props.objekt.objektId;
     var vegref;
     if(this.props.objekt.lokasjon.vegReferanser){
       vegref = Helper.vegReferanseString(this.props.objekt.lokasjon.vegReferanser[0]);
@@ -71,7 +78,7 @@ let ListElement = React.createClass({
       vegref = '--';
     }
     return (
-      <div className="list-element">{vegref}</div>
+      <div className="list-element" onMouseOver={this.handleMouseOver} data={objektID}>{vegref}</div>
     );
   }
 
