@@ -12,6 +12,7 @@ module.exports.actions = keyMirror({
   REGDEM_RESET_APP: null,
   REGDEM_CLOSE_LIST: null,
   REGDEM_SHOW_LIST: null,
+  REGDEM_HIGHLIGHT_MARKER: null,
   REGDEM_GET_CURRENT_LOCATION: null,
   REGDEM_LOCATION_HAS_BEEN_SET: null
 });
