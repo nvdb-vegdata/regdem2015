@@ -1,6 +1,6 @@
 var keyMirror = require('keymirror');
 
-module.exports = keyMirror({
+module.exports.actions = keyMirror({
   REGDEM_SET_OBJEKT_ID: null,
   REGDEM_CLOSE_EDITOR: null,
   REGDEM_EXPAND_EDITOR: null,
@@ -13,3 +13,7 @@ module.exports = keyMirror({
   REGDEM_CLOSE_LIST: null,
   REGDEM_SHOW_LIST: null
 });
+
+module.exports.values = {
+  REGDEM_SIZE_DESKTOP: 800
+};
