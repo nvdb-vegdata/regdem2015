@@ -49,6 +49,11 @@ let highlight = function (id) {
 
 }
 
+let redIcon = L.icon({
+  iconUrl: 'marker-icon-red.png',
+  shadowUrl: 'marker-shadow.png',
+})
+
 module.exports = {
   clearMarkers: clearMarkers,
   update: update,
