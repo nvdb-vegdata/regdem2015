@@ -10,27 +10,9 @@ let { FloatingActionButton, FontIcon, Snackbar } = require('material-ui');
 var injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
-let ThemeManager = new mui.Styles.ThemeManager();
 let Colors = mui.Styles.Colors;
 
 let Buttons = React.createClass({
-
-  childContextTypes: {
-    muiTheme: React.PropTypes.object
-  },
-
-  getChildContext: function() {
-    return {
-      muiTheme: ThemeManager.getCurrentTheme()
-    };
-  },
-
-  componentWillMount: function() {
-    ThemeManager.setPalette({
-      accent1Color: Colors.deepOrange500
-    });
-  },
-
   handleTap: function () {
     if (!this.props.data.objektTypeID) {
       this.refs.snackbar.show();

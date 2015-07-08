@@ -11,19 +11,8 @@ let { Mixins, Card, ClearFix, CardActions, CardTitle, CardText } = require('mate
 var injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
-let ThemeManager = new mui.Styles.ThemeManager();
 
 let List = React.createClass({
-
-  childContextTypes: {
-    muiTheme: React.PropTypes.object
-  },
-
-  getChildContext: function() {
-    return {
-      muiTheme: ThemeManager.getCurrentTheme()
-    };
-  },
 
   closeList: function () {
     RegDemActions.closeList();

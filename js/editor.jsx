@@ -16,30 +16,11 @@ let { Mixins, SelectField, TextField, TimePicker, DatePicker, Card,
 var injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
-let ThemeManager = new mui.Styles.ThemeManager();
 let Colors = mui.Styles.Colors;
-
-let { StyleResizable } = Mixins;
 
 let Editor = React.createClass({
   // Mixins, for linked state
-  mixins: [StyleResizable, React.addons.LinkedStateMixin],
-
-  childContextTypes: {
-    muiTheme: React.PropTypes.object
-  },
-
-  getChildContext: function() {
-    return {
-      muiTheme: ThemeManager.getCurrentTheme()
-    };
-  },
-
-  componentWillMount: function() {
-    ThemeManager.setPalette({
-      accent1Color: Colors.deepOrange500
-    });
-  },
+  mixins: [React.addons.LinkedStateMixin],
 
   closeDialog: function () {
     RegDemActions.closeEditor();
