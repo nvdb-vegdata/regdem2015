@@ -45,15 +45,19 @@ let Buttons = React.createClass({
     let myLocationButton = this.props.data.map.myLocation ? loadingLocationButton : passiveLocationButton;
 
 
+    let addButton = (<FloatingActionButton onTouchTap={this.handleAdd}>
+                      <FontIcon className="material-icons buttons-add-icon" color={Colors.white}>add</FontIcon>
+                    </FloatingActionButton>);
+
+    addButton = this.props.data.objektType ? addButton : null;
+
     return (
       <div className="buttons-container">
         <div className="buttons-button">
           {myLocationButton}
         </div>
         <div className="buttons-button">
-          <FloatingActionButton onTouchTap={this.handleAdd}>
-            <FontIcon className="material-icons buttons-add-icon" color={Colors.white}>add</FontIcon>
-          </FloatingActionButton>
+          {addButton}
         </div>
         <Snackbar
           ref="snackbar"
