@@ -40,7 +40,7 @@ let update = function (kart, data) {
 
 let displayCurrentPosition = function (pos, kart) {
   curPosLayer.clearLayers();
-  curPosLayer.addLayer(L.marker(pos.latlng));
+  curPosLayer.addLayer(L.marker(pos.latlng, {icon: redIcon}));
   kart.addLayer(curPosLayer);
 };
 
