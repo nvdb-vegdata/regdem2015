@@ -14,7 +14,7 @@
 }
 .Editor-Card {
   overflow: auto !important;
-  max-height: 100%;
+  max-height: 1px;
   text-align: left;
   padding: 5px;
   box-sizing: border-box;
@@ -26,7 +26,10 @@
   flex-wrap: nowrap;
 }
 .Editor-Card-loader {
+  max-height: 300px;
 }
+.Editor-Card-loaded {
+  max-height: 100%;
 }
 .Editor-loader {
   margin: 50px auto !important;
