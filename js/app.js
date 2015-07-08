@@ -1,4 +1,8 @@
 let React = require('react');
+let mui = require('material-ui');
+
+var ThemeManager = new mui.Styles.ThemeManager();
+let Colors = mui.Styles.Colors;
 
 let Map = require('./map.js');
 let Editor = require('./editor.jsx');
@@ -18,6 +22,21 @@ let getRegDemState = function () {
 let RegDemApp = React.createClass({
   getInitialState: function() {
     return getRegDemState();
+  },
+
+  getChildContext() {
+    return {
+      muiTheme: ThemeManager.getCurrentTheme()
+    };
+  },
+
+  componentWillMount: function() {
+    ThemeManager.setPalette({
+      primary1Color: Colors.orange500,
+      primary2Color: Colors.orange700,
+      primary3Color: Colors.orange100,
+      accent1Color: Colors.orange500
+    });
   },
 
   componentDidMount: function () {
@@ -44,5 +63,9 @@ let RegDemApp = React.createClass({
     this.setState(getRegDemState());
   }
 });
+
+RegDemApp.childContextTypes = {
+  muiTheme: React.PropTypes.object
+};
 
 React.render(<RegDemApp />, document.body);

@@ -13,14 +13,11 @@ let { Mixins, SelectField, TextField, TimePicker, DatePicker, Card,
 var injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
-let ThemeManager = new mui.Styles.ThemeManager();
 let Colors = mui.Styles.Colors;
-
-let { StyleResizable } = Mixins;
 
 let Fields = {
   ENUM: React.createClass({
-    mixins: [StyleResizable, React.addons.LinkedStateMixin],
+    mixins: [React.addons.LinkedStateMixin],
 
     getInitialState: function() {
       return {selectLinkValue: this.props.verdi};
@@ -66,7 +63,7 @@ let Fields = {
   }),
 
   Tekst: React.createClass({
-    mixins: [StyleResizable, React.addons.LinkedStateMixin],
+    mixins: [React.addons.LinkedStateMixin],
 
     getInitialState: function() {
       return { textLinkValue: this.props.verdi };
@@ -97,8 +94,6 @@ let Fields = {
   }),
 
   Tall: React.createClass({
-    mixins: [StyleResizable],
-
     getInitialState: function() {
       return {
         numberValue: this.props.verdi,
@@ -157,8 +152,6 @@ let Fields = {
   }),
 
   Klokkeslett: React.createClass({
-    mixins: [StyleResizable],
-
     getInitialState: function() {
       return {klokkeVerdi: ''};
     },
@@ -220,8 +213,6 @@ let Fields = {
   }),
 
   Dato: React.createClass({
-    mixins: [StyleResizable],
-
     getInitialState: function() {
       return {datoVerdi: this.props.verdi};
     },
