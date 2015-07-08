@@ -47,15 +47,18 @@ let List = React.createClass({
         </div>
       );
     }
-
   }
 });
 
 let ListElement = React.createClass({
 
-  handleMouseOver: function (event) {
+  handleMouseEnter: function (event) {
     let id = event.target.attributes.data.value;
     RegDemActions.highlightMarker(id);
+  },
+
+  handleMouseLeave: function () {
+    RegDemActions.highlightMarker(null);
   },
 
   render: function () {
@@ -67,7 +70,7 @@ let ListElement = React.createClass({
       vegref = '--';
     }
     return (
-      <div className="list-element" onMouseOver={this.handleMouseOver} data={objektID}>{vegref}</div>
+      <div className="list-element" onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} data={objektID} key={objektID}>{vegref} -- {objektID}</div>
     );
   }
 
