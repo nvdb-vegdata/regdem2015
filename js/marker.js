@@ -5,9 +5,12 @@ var curPosLayer = new L.FeatureGroup();
 var markers = new L.MarkerClusterGroup({
   maxClusterRadius: 50
 });
+//Brukes for å mappe markers til deres IDer.
+var markerList = {};
 
 // Fjerner alle markører på kartet.
 let clearMarkers = function () {
+  markerList = {};
   markers.clearLayers();
 };
 
@@ -21,9 +24,10 @@ let displayMarkers = function (kart, objekter) {
       RegDemActions.setObjektID(vegObjekt.objektId);
     });
 
+    markerList[vegObjekt.objektId] = marker;
     markers.addLayer(marker);
-  });
 
+  });
   kart.addLayer(markers);
 };
 
@@ -40,8 +44,14 @@ let displayCurrentPosition = function (pos, kart) {
   kart.addLayer(curPosLayer);
 };
 
+let highlight = function (id) {
+  console.log(markerList[id]);
+
+}
+
 module.exports = {
   clearMarkers: clearMarkers,
   update: update,
-  displayCurrentPosition: displayCurrentPosition
+  displayCurrentPosition: displayCurrentPosition,
+  highlight: highlight
 };
