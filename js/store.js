@@ -113,6 +113,8 @@ let executeSearch = function (objektTypeID) {
   _state.objektTypeID = objektTypeID;
   _state.objektType = null;
 
+  fetchObjekTypetData(null, objektTypeID);
+
   fetchObjektPositions(objektTypeID);
 };
 
@@ -165,9 +167,18 @@ let getNewData = function (objektID) {
 
 let fetchObjektData = function (objektID) {
   Fetch.fetchObjekt(objektID, (objektData) => {
-    // Når du har hentet Objekt data må du hente ObjektTypeData. Sender ObjektData
-    // som parameter slik at fetchObjektTypeData kan oppdatere state.
-    fetchObjekTypetData(objektData, objektData.objektTypeId);
+    // Siden vi henter ObjektType ved søk trenger vi som oftest ikke å hente denne også
+    if (_state.objektType.id === objektData.objektTypeId) {
+      _state.objekt = objektData;
+      _state.editor.loading = false;
+      _state.editor.expanded = false;
+
+      RegDemStore.emitChange();
+    } else {
+      // Når du har hentet Objekt data må du hente ObjektTypeData. Sender ObjektData
+      // som parameter slik at fetchObjektTypeData kan oppdatere state.
+      fetchObjekTypetData(objektData, objektData.objektTypeId);
+    }
   });
 };
 
