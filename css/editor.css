@@ -9,6 +9,9 @@
   max-width: 500px;
   pointer-events: none;
 }
+.Editor-Visible-Hidden {
+  visibility: hidden;
+}
 .Editor-Card {
   overflow: auto !important;
   max-height: 100%;
@@ -17,12 +20,25 @@
   box-sizing: border-box;
   pointer-events: auto;
 }
+.Editor-Card, .Editor-Card > div:first-child {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
 .Editor-Card-loader {
-  text-align: center;
+}
 }
 .Editor-loader {
-  margin: 30px !important;
+  margin: 50px auto !important;
   display: inherit;
+}
+.Editor-CardTitle, .Editor-knapp-container {
+  flex-shrink: 0;
+}
+.Editor-CardText {
+  flex-grow: 1;
+  overflow: auto;
+  min-height: 2em;
 }
 .Editor-hidden {
   display: none !important;
@@ -31,16 +47,19 @@
   cursor: pointer;
 }
 .Editor-lukk {
-  float: right;
   margin-top: 5px;
   cursor: pointer;
+  position: absolute;
+  right: 6px;
+  background-color: white;
+  z-index: 2;
 }
 .Editor-lukk i {
   color: rgba(0, 0, 0, 0.5);
   margin-right: 0 !important;
 }
 .Editor-knapp-container {
-  margin-top: 20px;
+  margin-top: 5px;
   text-align: right;
 }
 .Editor-viktighetContainer {
