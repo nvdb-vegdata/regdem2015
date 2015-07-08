@@ -7,11 +7,13 @@ var markers = new L.MarkerClusterGroup({
 });
 //Brukes for å mappe markers til deres IDer.
 var markerList = {};
+var highlightedMarker = null;
 
 // Fjerner alle markører på kartet.
 let clearMarkers = function () {
   markerList = {};
   markers.clearLayers();
+  highlightedMarker = null;
 };
 
 // Viser listen av objekter på kartet som enten punkt, linje eller flate.
@@ -44,19 +46,29 @@ let displayCurrentPosition = function (pos, kart) {
   kart.addLayer(curPosLayer);
 };
 
-let highlight = function (id) {
-  console.log(markerList[id]);
-
-}
+let colorize = function (id) {
+  if(highlightedMarker){
+    highlightedMarker.setIcon(blueIcon);
+  }
+  if (markerList[id]) {
+    highlightedMarker = markerList[id].getLayers()[0];
+    highlightedMarker.setIcon(redIcon);
+  }
+};
 
 let redIcon = L.icon({
-  iconUrl: 'marker-icon-red.png',
-  shadowUrl: 'marker-shadow.png',
-})
+  iconUrl: 'libs/leaflet-0.7.3/images/marker-icon-red.png',
+  shadowUrl: 'libs/leaflet-0.7.3/images/marker-shadow.png',
+});
+
+let blueIcon = L.icon({
+  iconUrl: 'libs/leaflet-0.7.3/images/marker-icon.png',
+  shadowUrl: 'libs/leaflet-0.7.3/images/marker-shadow.png',
+});
 
 module.exports = {
   clearMarkers: clearMarkers,
   update: update,
   displayCurrentPosition: displayCurrentPosition,
-  highlight: highlight
+  colorize: colorize
 };

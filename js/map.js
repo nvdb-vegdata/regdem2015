@@ -87,8 +87,9 @@ let Map = React.createClass({
     }
 
     if(nextProps.data.list.highlighted && nextProps.data.list.higlighted !== was_highlighted) {
-      Marker.highlight(nextProps.data.list.highlighted);
+      Marker.colorize(nextProps.data.list.highlighted);
     }
+
     if (nextProps.data.map.myLocation) {
       this.mapData.locate({setView: true, maxZoom: 15});
     }
