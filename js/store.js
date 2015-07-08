@@ -36,13 +36,7 @@ let _state = {
   },
 
   list: {
-    open: false
-    highlighted: null
-  },
-
-  map: {
-    myLocation: true
-    open: false
+    open: false,
     highlighted: null
   },
 
@@ -295,9 +289,12 @@ AppDispatcher.register(function(action) {
       RegDemStore.emitChange();
       break;
 
-    case RegDemConstants.REGDEM_HIGHLIGHT_MARKER:
+    case RegDemConstants.actions.REGDEM_HIGHLIGHT_MARKER:
       id = action.id;
       highlightMarker(id);
+      RegDemStore.emitChange();
+      break;
+
     case RegDemConstants.actions.REGDEM_GET_CURRENT_LOCATION:
       getCurrentLocation();
       RegDemStore.emitChange();
