@@ -5,10 +5,28 @@
   z-index: 999;
 }
 
+.buttons-button {
+  display: block !important;
+  margin-top: 10px;
+}
 
-.add-icon {
+.buttons-button-my-location {
+  background-color: white !important;
+}
+
+.buttons-add-icon {
   height: 56px;
   margin-top: 15px;
+}
+
+.buttons-my-location {
+  height: 56px;
+  margin-top: 15px;
+}
+
+.buttons-my-location-loading {
+  margin-top: -5px !important;
+  margin-left: -10px !important;
 }
 
 .buttons-container > span {

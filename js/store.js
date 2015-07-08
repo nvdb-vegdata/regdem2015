@@ -37,6 +37,10 @@ let _state = {
 
   list: {
     open: false
+  },
+
+  map: {
+    myLocation: true
   }
 };
 
@@ -126,6 +130,14 @@ let closeList = function () {
 
 let showList = function () {
   _state.list.open = true;
+};
+
+let getCurrentLocation = function () {
+  _state.map.myLocation = true;
+};
+
+let locationHasBeenSet = function () {
+  _state.map.myLocation = false;
 };
 
 // Get editor data
@@ -270,6 +282,16 @@ AppDispatcher.register(function(action) {
 
     case RegDemConstants.actions.REGDEM_SHOW_LIST:
       showList();
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_GET_CURRENT_LOCATION:
+      getCurrentLocation();
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_LOCATION_HAS_BEEN_SET:
+      locationHasBeenSet();
       RegDemStore.emitChange();
       break;
 

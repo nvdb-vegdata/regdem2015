@@ -1,7 +1,7 @@
 let React = require('react');
 let RegDemActions = require('./actions.js');
 let mui = require('material-ui');
-let { FloatingActionButton, FontIcon, Snackbar } = require('material-ui');
+let { FloatingActionButton, FontIcon, Snackbar, CircularProgress } = require('material-ui');
 
 //Needed for onTouchTap
 //Can go away when react 1.0 release
@@ -13,7 +13,7 @@ injectTapEventPlugin();
 let Colors = mui.Styles.Colors;
 
 let Buttons = React.createClass({
-  handleTap: function () {
+  handleAdd: function () {
     if (!this.props.data.objektTypeID) {
       this.refs.snackbar.show();
     } else {
@@ -25,12 +25,36 @@ let Buttons = React.createClass({
     this.refs.snackbar.dismiss();
   },
 
+  handleChangeMyLocation: function () {
+    RegDemActions.getCurrentLocation();
+  },
+
   render: function() {
+    let loadingLocationButton = (<FloatingActionButton className="buttons-button-my-location">
+                                    <CircularProgress
+                                      mode="indeterminate"
+                                      size={0.4}
+                                      className="buttons-my-location-loading"
+                                    />
+                                </FloatingActionButton>);
+
+    let passiveLocationButton = (<FloatingActionButton onTouchTap={this.handleChangeMyLocation} className="buttons-button-my-location">
+                                    <FontIcon className="material-icons buttons-my-location" color={Colors.orange700}>my_location</FontIcon>
+                                </FloatingActionButton>);
+
+    let myLocationButton = this.props.data.map.myLocation ? loadingLocationButton : passiveLocationButton;
+
+
     return (
       <div className="buttons-container">
-        <FloatingActionButton onTouchTap={this.handleTap}>
-          <FontIcon className="material-icons add-icon" color={Colors.white}>add</FontIcon>
-        </FloatingActionButton>
+        <div className="buttons-button">
+          {myLocationButton}
+        </div>
+        <div className="buttons-button">
+          <FloatingActionButton onTouchTap={this.handleAdd}>
+            <FontIcon className="material-icons buttons-add-icon" color={Colors.white}>add</FontIcon>
+          </FloatingActionButton>
+        </div>
         <Snackbar
           ref="snackbar"
           message="Du må først velge en objekttype fra søkefeltet"

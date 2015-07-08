@@ -55,16 +55,17 @@ let Map = React.createClass({
 
     // PLassering av zoom kontrollene
     new L.Control.Zoom( {position: 'bottomleft'}).addTo(this.mapData);
+
     this.mapData.locate({setView: true, maxZoom: 15});
 
     this.mapData.on('locationfound', (e) => {
       Marker.displayCurrentPosition(e, this.mapData);
+      RegDemActions.locationHasBeenSet();
     });
 
-    // Plassering av min poisisjon-knapp
-    L.easyButton('<i class="material-icons target">my_location</i>', () => {
-      this.mapData.locate({setView: true, maxZoom: 15});
-    }).addTo( this.mapData );
+    this.mapData.on('locationerror', (e) => {
+      RegDemActions.locationHasBeenSet();
+    });
 
     // Legg mapData inn som referanse i store
     RegDemActions.addMapDataAsReference(this.mapData);
@@ -81,6 +82,10 @@ let Map = React.createClass({
       Marker.clearMarkers();
     } else if (this.props.data.searchResults !== nextProps.data.searchResults) {
       Marker.update(this.mapData, nextProps.data.searchResults);
+    }
+
+    if (nextProps.data.map.myLocation) {
+      this.mapData.locate({setView: true, maxZoom: 15});
     }
   },
 

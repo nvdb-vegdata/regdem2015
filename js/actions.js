@@ -62,6 +62,16 @@ var RegDemActions = {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_SHOW_LIST
     });
+  },
+  getCurrentLocation: function () {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_GET_CURRENT_LOCATION
+    });
+  },
+  locationHasBeenSet: function () {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_LOCATION_HAS_BEEN_SET
+    });
   }
 };
 
