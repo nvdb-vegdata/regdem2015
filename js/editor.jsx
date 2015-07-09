@@ -87,6 +87,7 @@ let Editor = React.createClass({
     // CSS Styles
     let EditorClassName = 'Editor Editor-Visible-Hidden';
     let EditorCardClassName = 'Editor-Card';
+    let EditorCloseClassName = 'Editor-lukk Editor-lukk-hidden';
     let CircularProgressClassName = 'Editor-loader Editor-hidden';
     let CardTitleClassName = 'Editor-hidden';
     let CardTextClassName = 'Editor-hidden';
@@ -96,6 +97,7 @@ let Editor = React.createClass({
     if (this.props.data.editor.loading) {
       EditorClassName = 'Editor';
       EditorCardClassName = 'Editor-Card Editor-Card-loader';
+      EditorCloseClassName = 'Editor-lukk';
       CircularProgressClassName = 'Editor-loader';
       CardTitleClassName = 'Editor-hidden';
       CardTextClassName = 'Editor-hidden';
@@ -105,6 +107,7 @@ let Editor = React.createClass({
     // Når objektet er hentet og ikke laster lenger
     if (this.props.data.objekt && !this.props.data.editor.loading) {
       EditorClassName = 'Editor';
+      EditorCloseClassName = 'Editor-lukk';
       EditorCardClassName = 'Editor-Card Editor-Card-loaded';
       CircularProgressClassName = 'Editor-loader Editor-hidden';
       CardTitleClassName = 'Editor-CardTitle';
@@ -138,7 +141,7 @@ let Editor = React.createClass({
     return (
       <div className={EditorClassName}>
         <Card className={EditorCardClassName} onTouchTap={this.expandForm}>
-            <CardActions className="Editor-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
+            <CardActions className={EditorCloseClassName}><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
             <CircularProgress mode="indeterminate" className={CircularProgressClassName} />
 
             <CardTitle title={formName} subtitle={subtitle} className={CardTitleClassName} />
