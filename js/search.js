@@ -21,7 +21,7 @@ let Sok = React.createClass({
 
     if (this.state.objektTypeSelected) {
       leftMostIcon = (<i className="material-icons search-field-go-back" onTouchTap={this.handleGoBack}>arrow_back</i>);
-      rightMostIcon = (<i className="material-icons search-field-list-icon">list</i>);
+      rightMostIcon = (<i className="material-icons search-field-list-icon" onTouchTap={this.handleOpenList}>list</i>);
       searcFieldClassName = 'search-field search-field-objekttype-selected';
     }
 
@@ -154,6 +154,10 @@ let Sok = React.createClass({
 
   handleRemoveClick: function() {
     RegDemActions.resetApp();
+  },
+
+  handleOpenList: function() {
+    RegDemActions.showList();
   },
 
   handleGoBack: function() {

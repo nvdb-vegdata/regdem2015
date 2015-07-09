@@ -2,7 +2,7 @@ var Helper = {
 
   // Tar imot et vegReferanse objekt og lager en streng
   vegReferanseString: function (vegReferanse) {
-    return vegReferanse.fylke + ('0' + vegReferanse.kommune).slice(-2) + ' ' + vegReferanse.kategori + vegReferanse.status + ' HP' + vegReferanse.hp + ' m' + vegReferanse.fraMeter;
+    return vegReferanse.fylke + ('0' + vegReferanse.kommune).slice(-2) + ' ' + vegReferanse.kategori + vegReferanse.status + vegReferanse.nummer + ' HP' + vegReferanse.hp + ' m' + vegReferanse.fraMeter;
   },
 
   // Et vegobjekt har egenskaper med ulike viktighet. Denne funskjonen mapper

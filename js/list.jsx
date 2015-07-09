@@ -60,6 +60,12 @@ let ListElement = React.createClass({
     RegDemActions.highlightMarker(null);
   },
 
+  handleClick: function (event) {
+    let id = event.target.attributes.data.value;
+    RegDemActions.setObjektID(id);
+    RegDemActions.closeList();
+  },
+
   render: function () {
     var objektID = this.props.objekt.objektId;
     var vegref;
@@ -69,7 +75,14 @@ let ListElement = React.createClass({
       vegref = '--';
     }
     return (
-      <div className="list-element" onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} data={objektID} key={objektID}>{vegref} -- {objektID}</div>
+      <div
+        className="list-element"
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}
+        onTouchTap={this.handleClick}
+        data={objektID}
+        key={objektID}
+      >{vegref}</div>
     );
   }
 
