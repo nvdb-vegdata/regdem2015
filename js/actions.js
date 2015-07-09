@@ -72,6 +72,12 @@ var RegDemActions = {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_LOCATION_HAS_BEEN_SET
     });
+  },
+  goBackAndReset: function (userInput) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_GO_BACK_AND_RESET,
+      userInput: userInput
+    });
   }
 };
 

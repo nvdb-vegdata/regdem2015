@@ -1,5 +1,5 @@
 @import (inline) 'reset.css';
-@import (inline) 'typeahead.css';
+@import (inline) 'search.css';
 @import (inline) 'editor.css';
 @import (inline) 'list.css';
 @import (inline) 'buttons.css';
@@ -21,15 +21,6 @@ strong {
   bottom: 0;
   z-index: 1;
 }
-.sok {
-  position: absolute;
-  z-index: 10;
-  left: 0;
-  right: 0;
-  top: 0;
-  margin: 10px;
-  max-width: 500px;
-}
 .Editor {
   position: absolute;
   z-index: 4;
@@ -40,7 +31,6 @@ strong {
   margin: 10px;
   max-width: 500px;
 }
-
 .list {
   position: absolute;
   z-index: 4;

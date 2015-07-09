@@ -7,34 +7,52 @@ var OptionTemplate = require('./optiontemplate.jsx');
 let RegDemActions = require('./actions');
 
 let Sok = React.createClass({
+  getInitialState: function() {
+    return {
+      objektTypeSelected: false,
+      prevSelectedIndex: null
+    };
+  },
+
   render: function() {
-    return (
-      <div className="sok">
-        <i className="material-icons search-icon">search</i>
-        <Typeahead
-          inputValue={this.props.data.search.inputValue}
-          options={this.props.data.search.options}
-          onChange={this.handleChange}
-          onInputClick={this.handleInputClick}
-          optionTemplate={OptionTemplate}
-          onOptionChange={this.handleOptionChange}
-          onOptionClick={this.handleOptionClick}
-          onKeyDown={this.handleKeyDown}
-          onComplete={this.handleComplete}
-          handleHint={this.handleHint}
-        />
-        {this.renderIndicator()}
-        {this.renderRemoveIcon()}
-      </div>
-    );
+    let leftMostIcon = (<i className="material-icons search-field-search-icon">search</i>);
+    let rightMostIcon = this.renderRemoveIcon();
+    let searcFieldClassName = 'search-field';
+
+    if (this.state.objektTypeSelected) {
+      leftMostIcon = (<i className="material-icons search-field-go-back" onTouchTap={this.handleGoBack}>arrow_back</i>);
+      rightMostIcon = (<i className="material-icons search-field-list-icon">list</i>);
+      searcFieldClassName = 'search-field search-field-objekttype-selected';
+    }
+
+    return (<div className={searcFieldClassName}>
+              {leftMostIcon}
+              <Typeahead
+                inputValue={this.props.data.search.inputValue}
+                options={this.props.data.search.options}
+                onChange={this.handleChange}
+                onInputClick={this.handleInputClick}
+                optionTemplate={OptionTemplate}
+                onOptionChange={this.handleOptionChange}
+                onOptionClick={this.handleOptionClick}
+                onKeyDown={this.handleKeyDown}
+                onComplete={this.handleComplete}
+                handleHint={this.handleHint}
+                onFocus={this.handleFocus}
+                autoFocus={this.props.data.search.inputValue ? true : false}
+                ref="typeahead"
+              />
+              {this.renderIndicator()}
+              {rightMostIcon}
+            </div>);
   },
 
   renderRemoveIcon: function() {
-    if (this.props.data.search.inputValue.length > 0 || this.props.data.objektTypeID !== null) {
+    if ((this.props.data.search.inputValue && this.props.data.search.inputValue.length > 0) || this.props.data.objektTypeID !== null) {
       return (
         <i
         onTouchTap={this.handleRemoveClick}
-        className="material-icons clear-icon">clear</i>
+        className="material-icons search-field-clear-icon">clear</i>
       );
     }
   },
@@ -45,6 +63,13 @@ let Sok = React.createClass({
         visible={this.props.data.search.loading}
       />
     );
+  },
+
+  componentDidUpdate: function (prevProps, prevState) {
+    if (prevState.objektTypeSelected && !this.state.objektTypeSelected) {
+      this.refs.typeahead.showDropdown();
+      this.refs.typeahead.focus();
+    }
   },
 
   handleInputClick: function(event) {
@@ -98,10 +123,12 @@ let Sok = React.createClass({
 
   handleComplete: function (event, completedInputValue) {
     this.setInputValue(completedInputValue);
-    this.getOptions(completedInputValue);
   },
 
-  handleKeyDown: function(event, optionData) {
+  handleKeyDown: function(event, optionData, selectedIndex) {
+    if (selectedIndex === -1 && this.state.prevSelectedIndex !== selectedIndex) {
+      this.setInputValue(optionData);
+    }
     if (event.keyCode === 13) {
       if (optionData.value) {
         this.executeSearch(optionData.value);
@@ -114,14 +141,27 @@ let Sok = React.createClass({
         }
       }
     }
+    this.state.prevSelectedIndex = selectedIndex;
   },
 
   executeSearch: function (objektTypeID) {
+    this.setState({
+      objektTypeSelected: true
+    });
     RegDemActions.executeSearch(objektTypeID);
+    this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').setAttribute('disabled', 'disabled');
   },
 
   handleRemoveClick: function() {
     RegDemActions.resetApp();
+  },
+
+  handleGoBack: function() {
+    this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
+    this.setState({
+      objektTypeSelected: false
+    });
+    RegDemActions.goBackAndReset(this.refs.typeahead.userInputValue);
   }
 });
 

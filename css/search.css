@@ -1,0 +1,112 @@
+.search-field, .objekttype-selected {
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  top: 0;
+  margin: 10px;
+  max-width: 500px;
+}
+
+.search-field-go-back, .search-field-search-icon, .search-field-clear-icon, .search-field-list-icon, .search-field-indicator {
+  position:absolute;
+  z-index: 10;
+  padding:14px;
+  font-size:24px;
+  color:#999;
+}
+
+.search-field-go-back {
+  cursor:pointer;
+}
+
+.search-field-clear-icon, .search-field-list-icon {
+  top:0;
+  right:0;
+  cursor:pointer;
+}
+
+.search-field-indicator-container {
+  position:absolute;
+  top:-18px;
+  right:25px;
+  z-index:10;
+  pointer-events: none;
+}
+
+.search-field-indicator-hidden {
+  visibility: hidden;
+}
+
+.react-typeahead-input-container input, .objekttype-selected input {
+  border: 1px solid transparent;
+  border-radius: 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  width: 100%;
+  height: 52px;
+  outline: none;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+  background-color: #fff;
+  font-family: Roboto;
+  font-size: 16px;
+  font-weight: 300;
+  padding: 0 11px 0 52px;
+  text-overflow: ellipsis;
+}
+
+.react-typeahead-input-container input:focus, .react-typeahead-input-container input:focus + input {
+  border-bottom: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.search-field-objekttype-selected .search-field-list-icon, .search-field-objekttype-selected .search-field-go-back  {
+  color: #fff;
+}
+
+.search-field-objekttype-selected input {
+  background-color: #008ec2;
+  color: #fff;
+}
+
+.search-field-objekttype-selected .search-field-indicator-container circle {
+  stroke: #fff !important;
+}
+
+.react-typeahead-options {
+  z-index: 2;
+  font-size:14px;
+  font-weight:300;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  border-top: 0;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.12);
+  max-height: 700px;
+  overflow-y: scroll;
+}
+
+.optionElement {
+  padding:15px 0 16px;
+  border-top: 1px solid #e6e6e6;
+  cursor:pointer;
+}
+
+.optionElement p {
+  display:inline-block;
+}
+
+.optionElement .material-icons {
+  font-size:22px;
+  padding:0 15px;
+  color:#999;
+  vertical-align:bottom;
+}
+
+.selected {
+  background-color: #ebf2fe;
+}
+.selected .material-icons {
+  color:rgb(240, 65, 73);
+}

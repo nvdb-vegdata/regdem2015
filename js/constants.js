@@ -13,7 +13,8 @@ module.exports.actions = keyMirror({
   REGDEM_CLOSE_LIST: null,
   REGDEM_SHOW_LIST: null,
   REGDEM_GET_CURRENT_LOCATION: null,
-  REGDEM_LOCATION_HAS_BEEN_SET: null
+  REGDEM_LOCATION_HAS_BEEN_SET: null,
+  REGDEM_GO_BACK_AND_RESET: null
 });
 
 module.exports.values = {
