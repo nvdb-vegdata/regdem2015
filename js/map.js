@@ -1,6 +1,7 @@
 let React = require('react');
 let Marker = require('./marker');
 let RegDemActions = require('./actions');
+let Editable = require('leaflet-editable');
 
 let MapComponent = React.createClass({
   componentDidMount: function() {
@@ -52,7 +53,8 @@ let MapComponent = React.createClass({
       ],
       center: [63.43, 10.40],
       zoom: 13,
-      zoomControl: false
+      zoomControl: false,
+      editable: true
     });
 
     // PLassering av zoom kontrollene
