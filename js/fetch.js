@@ -4,7 +4,7 @@ var prevSingleConnection = null;
 
 var containsInput = function(obj) {
   var string = obj.label.toLowerCase();
-  return string.includes(stub.toLowerCase());
+  return (string.indexOf(stub.toLowerCase()) >= 0);
 };
 
 var convert = function(list) {
