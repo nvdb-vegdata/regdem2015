@@ -1,13 +1,27 @@
-var omnivore = require('leaflet-omnivore');
+let omnivore = require('leaflet-omnivore');
 let RegDemActions = require('./actions');
 
-var curPosLayer = new L.FeatureGroup();
-var markers = new L.MarkerClusterGroup({
+let L = window.L || {};
+
+let curPosLayer = new L.FeatureGroup();
+let markers = new L.MarkerClusterGroup({
   maxClusterRadius: 50
 });
+
 //Brukes for å mappe markers til deres IDer.
-var markerList = {};
-var highlightedMarker = null;
+let markerList = {};
+let highlightedMarker = null;
+
+// Definerer ikon
+let redIcon = L.icon({
+  iconUrl: 'libs/leaflet-0.7.3/images/marker-icon-red.png',
+  shadowUrl: 'libs/leaflet-0.7.3/images/marker-shadow.png'
+});
+
+let blueIcon = L.icon({
+  iconUrl: 'libs/leaflet-0.7.3/images/marker-icon.png',
+  shadowUrl: 'libs/leaflet-0.7.3/images/marker-shadow.png'
+});
 
 // Fjerner alle markører på kartet.
 let clearMarkers = function () {
@@ -19,8 +33,8 @@ let clearMarkers = function () {
 // Viser listen av objekter på kartet som enten punkt, linje eller flate.
 let displayMarkers = function (kart, objekter) {
   objekter.forEach(function (vegObjekt) {
-    var posisjon = vegObjekt.lokasjon.geometriWgs84;
-    var marker = omnivore.wkt.parse(posisjon);
+    let posisjon = vegObjekt.lokasjon.geometriWgs84;
+    let marker = omnivore.wkt.parse(posisjon);
 
     marker.on('click', () => {
       RegDemActions.setObjektID(vegObjekt.objektId);
@@ -55,16 +69,6 @@ let colorize = function (id) {
     highlightedMarker.setIcon(redIcon);
   }
 };
-
-let redIcon = L.icon({
-  iconUrl: 'libs/leaflet-0.7.3/images/marker-icon-red.png',
-  shadowUrl: 'libs/leaflet-0.7.3/images/marker-shadow.png',
-});
-
-let blueIcon = L.icon({
-  iconUrl: 'libs/leaflet-0.7.3/images/marker-icon.png',
-  shadowUrl: 'libs/leaflet-0.7.3/images/marker-shadow.png',
-});
 
 module.exports = {
   clearMarkers: clearMarkers,

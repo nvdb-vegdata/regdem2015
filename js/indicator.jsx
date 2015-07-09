@@ -1,5 +1,4 @@
 var React = require('react');
-var mui = require('material-ui');
 let { CircularProgress } = require('material-ui');
 
 module.exports = React.createClass({

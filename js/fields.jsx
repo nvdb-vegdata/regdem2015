@@ -1,10 +1,7 @@
 let React = require('react/addons');
-let mui = require('material-ui');
-let RegDemActions = require('./actions');
 let Helper = require('./helper.js');
 
-let { Mixins, SelectField, TextField, TimePicker, DatePicker, Card,
-  ClearFix, CardActions, FlatButton, CardTitle, CardText, CircularProgress } = require('material-ui');
+let { SelectField, TextField, TimePicker, DatePicker } = require('material-ui');
 
 //Needed for onTouchTap
 //Can go away when react 1.0 release
@@ -12,8 +9,6 @@ let { Mixins, SelectField, TextField, TimePicker, DatePicker, Card,
 //https://github.com/zilverline/react-tap-event-plugin
 var injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
-
-let Colors = mui.Styles.Colors;
 
 let Fields = {
   ENUM: React.createClass({

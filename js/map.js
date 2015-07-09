@@ -1,10 +1,12 @@
 let React = require('react');
 let Marker = require('./marker');
 let RegDemActions = require('./actions');
-let mapData = null;
 
-let Map = React.createClass({
+let MapComponent = React.createClass({
   componentDidMount: function() {
+
+    let L = window.L || {};
+
     // Spesifisering av vegkartets projeksjon
     let crs = new L.Proj.CRS('EPSG:25833', '+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs ',
     {
@@ -63,7 +65,7 @@ let Map = React.createClass({
       RegDemActions.locationHasBeenSet();
     });
 
-    this.mapData.on('locationerror', (e) => {
+    this.mapData.on('locationerror', () => {
       RegDemActions.locationHasBeenSet();
     });
 
@@ -78,7 +80,7 @@ let Map = React.createClass({
   },
 
   componentWillReceiveProps: function (nextProps) {
-    var was_highlighted = this.props.data.list.highlighted;
+    var wasHighlighted = this.props.data.list.highlighted;
 
     if (this.props.data.searchResults !== nextProps.data.searchResults && nextProps.data.searchResults == null) {
       Marker.clearMarkers();
@@ -86,7 +88,7 @@ let Map = React.createClass({
       Marker.update(this.mapData, nextProps.data.searchResults);
     }
 
-    if(nextProps.data.list.highlighted && nextProps.data.list.higlighted !== was_highlighted) {
+    if(nextProps.data.list.highlighted && nextProps.data.list.higlighted !== wasHighlighted) {
       Marker.colorize(nextProps.data.list.highlighted);
     }
 
@@ -106,4 +108,4 @@ let Map = React.createClass({
   }
 });
 
-module.exports = Map;
+module.exports = MapComponent;
