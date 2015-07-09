@@ -12,11 +12,11 @@
   text-align: left;
   padding: 5px;
   overflow: auto !important;
+  top: 0;
   bottom: 0;
   position: absolute;
   width: 100%;
-  top: 0;
-  max-width: 350px;
+  max-width: 500px;
   box-sizing: border-box;
 }
 .list-lukk {
@@ -25,6 +25,7 @@
   cursor: pointer;
 }
 .list-lukk i {
+  margin-right: 0 !important;
   color: rgba(0, 0, 0, 0.5);
 }
 .list-knapp-container {
@@ -34,7 +35,7 @@
 
 .list-element {
   position: relative;
-  padding:8px 0 7px;
+  padding:10px 0 9px;
   border-bottom: 1px solid #e6e6e6;
 }
 
