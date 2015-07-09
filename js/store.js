@@ -239,6 +239,10 @@ let highlightMarker = function (id) {
   _state.list.highlighted = id;
 };
 
+let placeMarker = function () {
+  mapData.editTools.startMarker();
+}
+
 let getCurrentLocation = function () {
   _state.map.myLocation = true;
 };
@@ -311,6 +315,10 @@ AppDispatcher.register(function(action) {
       id = action.id;
       highlightMarker(id);
       RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_PLACE_MARKER:
+      placeMarker();
       break;
 
     case RegDemConstants.actions.REGDEM_GET_CURRENT_LOCATION:

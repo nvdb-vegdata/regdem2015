@@ -84,6 +84,11 @@ var RegDemActions = {
       actionType: RegDemConstants.actions.REGDEM_HIGHLIGHT_MARKER,
       id: id
     });
+  },
+  placeMarker: function () {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_PLACE_MARKER
+    });
   }
 };
 
