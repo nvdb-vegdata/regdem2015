@@ -3,6 +3,7 @@ let RegDemActions = require('./actions');
 var RegDemConstants = require('./constants');
 let Helper = require('./helper.js');
 
+let Geometry = require('./geometry.jsx');
 let Fields = require('./fields.jsx');
 
 let { Card, CardActions, FlatButton, CardTitle, CardText, CircularProgress } = require('material-ui');
@@ -141,6 +142,7 @@ let Editor = React.createClass({
 
             <CardTitle title={formName} subtitle={subtitle} className={CardTitleClassName} />
             <CardText className={CardTextClassName}>
+              <Geometry.Marker />
               {EditorFields}
             </CardText>
             <CardActions className={CardActionsClassName}>
