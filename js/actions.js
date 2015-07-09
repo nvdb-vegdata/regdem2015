@@ -8,7 +8,7 @@ var RegDemActions = {
       id: id
     });
   },
-  closeEditor: function(id) {
+  closeEditor: function() {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_CLOSE_EDITOR
     });

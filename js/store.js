@@ -53,137 +53,37 @@ let _initialState = simpleDeepCopy(_state);
 
 let mapData = null;
 
-let setObjektID = function (objektID) {
-  if (objektID) {
-    _state.objektID = objektID;
-    getNewData();
+let RegDemStore = assign({}, EventEmitter.prototype, {
+  /**
+   * Get the entire collection of TODOs.
+   * @return {object}
+   */
+  getAll: function() {
+    return _state;
+  },
+
+  emitChange: function() {
+    this.emit(CHANGE_EVENT);
+  },
+
+  /**
+   * @param {function} callback
+   */
+  addChangeListener: function(callback) {
+    this.on(CHANGE_EVENT, callback);
+  },
+
+  /**
+   * @param {function} callback
+   */
+  removeChangeListener: function(callback) {
+    this.removeListener(CHANGE_EVENT, callback);
   }
-};
+});
 
-let closeEditor = function () {
-  _state.objektID = null;
-  _state.objekt = null;
-  _state.editor.loading = false;
-  _state.editor.expanded = false;
-};
+/* Helpers for actions */
 
-let expandEditor = function () {
-  _state.editor.expanded = true;
-};
-
-let fetchObjektPositions = function (id) {
-  _state.search.loading = true;
-  RegDemStore.emitChange();
-
-  id = id || _state.objektTypeID;
-
-  if (mapData) {
-    var mapbox = mapData.getBounds();
-
-    Fetch.fetchAPIObjekter(id, mapbox, (data) => {
-      _state.list.open = true;
-      _state.searchResults = data;
-      _state.search.loading = false;
-      RegDemStore.emitChange();
-    });
-  }
-};
-
-let fetchObjektTypes = function (objektType) {
-  _state.search.loading = true;
-  RegDemStore.emitChange();
-
-  Fetch.fetch( objektType, function(data) {
-    _state.search.options = data;
-    _state.search.loading = false;
-    RegDemStore.emitChange();
-  });
-};
-
-let setInputValue = function (inputValue) {
-  _state.search.inputValue = inputValue;
-  RegDemStore.emitChange();
-};
-
-let executeSearch = function (objektTypeID) {
-  _state.objektID = null;
-  _state.objekt = null;
-
-  _state.objektTypeID = objektTypeID;
-  _state.objektType = null;
-
-  fetchObjekTypetData();
-
-  fetchObjektPositions();
-};
-
-let addMapDataAsReference = function (inputMapData) {
-  mapData = inputMapData;
-};
-
-let resetApp = function () {
-  _state = simpleDeepCopy(_initialState);
-};
-
-let goBackAndReset = function (userInput) {
-  let oldState = simpleDeepCopy(_state);
-  resetApp();
-  _state.search = oldState.search;
-  _state.search.inputValue = userInput;
-};
-
-let closeList = function () {
-  _state.list.open = false;
-};
-
-let showList = function () {
-  _state.list.open = true;
-};
-
-let highlightMarker = function (id) {
-  _state.list.highlighted = id;
-}
-let getCurrentLocation = function () {
-  _state.map.myLocation = true;
-};
-
-let locationHasBeenSet = function () {
-  _state.map.myLocation = false;
-};
-
-// Get editor data
-
-let getNewData = function () {
-  // Skal vi lage nytt objekt?
-  if (_state.objektID === -1) {
-    // Har vi oppgitt
-    if (_state.objektTypeID) {
-      // Kun hent ObjektType data, sett Objekt data til null
-      _state.editor.loading = true;
-      RegDemStore.emitChange();
-
-      fetchObjekTypetData();
-    }
-  } else {
-    if (!_state.objekt || _state.objektID !== _state.objekt.objektId) {
-      _state.editor.loading = true;
-      RegDemStore.emitChange();
-
-      fetchObjektData();
-    }
-  }
-};
-
-let fetchObjektData = function () {
-  Fetch.fetchObjekt(_state.objektID, (objektData) => {
-    // Siden vi henter ObjektType ved søk trenger vi som oftest ikke å hente denne også
-    _state.objekt = objektData;
-
-    fetchObjekTypetData();
-  });
-};
-
-let fetchObjekTypetData = function () {
+let fetchObjektTypeData = function () {
   // Hvis objektType allerede er lastet, trenger vi ikke hente den igjen
   if (_state.objektTypeID && _state.objektType && _state.objektType.id === _state.objektTypeID) {
     _state.editor.loading = false;
@@ -215,33 +115,135 @@ let fetchObjekTypetData = function () {
   }
 };
 
-let RegDemStore = assign({}, EventEmitter.prototype, {
-  /**
-   * Get the entire collection of TODOs.
-   * @return {object}
-   */
-  getAll: function() {
-    return _state;
-  },
+let fetchObjektData = function () {
+  Fetch.fetchObjekt(_state.objektID, (objektData) => {
+    // Siden vi henter ObjektType ved søk trenger vi som oftest ikke å hente denne også
+    _state.objekt = objektData;
 
-  emitChange: function() {
-    this.emit(CHANGE_EVENT);
-  },
+    fetchObjektTypeData();
+  });
+};
 
-  /**
-   * @param {function} callback
-   */
-  addChangeListener: function(callback) {
-    this.on(CHANGE_EVENT, callback);
-  },
+let getNewData = function () {
+  // Skal vi lage nytt objekt?
+  if (_state.objektID === -1) {
+    // Har vi oppgitt
+    if (_state.objektTypeID) {
+      // Kun hent ObjektType data, sett Objekt data til null
+      _state.editor.loading = true;
+      RegDemStore.emitChange();
 
-  /**
-   * @param {function} callback
-   */
-  removeChangeListener: function(callback) {
-    this.removeListener(CHANGE_EVENT, callback);
+      fetchObjektTypeData();
+    }
+  } else {
+    if (!_state.objekt || _state.objektID !== _state.objekt.objektId) {
+      _state.editor.loading = true;
+      RegDemStore.emitChange();
+
+      fetchObjektData();
+    }
   }
-});
+};
+
+/* Funksjoner for actions */
+
+let setObjektID = function (objektID) {
+  if (objektID) {
+    _state.objektID = objektID;
+    getNewData();
+  }
+};
+
+let closeEditor = function () {
+  _state.objektID = null;
+  _state.objekt = null;
+  _state.editor.loading = false;
+  _state.editor.expanded = false;
+};
+
+let expandEditor = function () {
+  _state.editor.expanded = true;
+};
+
+let fetchObjektPositions = function (id) {
+  _state.search.loading = true;
+  RegDemStore.emitChange();
+
+  id = id || _state.objektTypeID;
+
+  if (mapData) {
+    var mapbox = mapData.getBounds();
+
+    Fetch.fetchAPIObjekter(id, mapbox, (data) => {
+      _state.searchResults = data;
+      _state.search.loading = false;
+      RegDemStore.emitChange();
+    });
+  }
+};
+
+let fetchObjektTypes = function (objektType) {
+  _state.search.loading = true;
+  RegDemStore.emitChange();
+
+  Fetch.fetch( objektType, function(data) {
+    _state.search.options = data;
+    _state.search.loading = false;
+    RegDemStore.emitChange();
+  });
+};
+
+let setInputValue = function (inputValue) {
+  _state.search.inputValue = inputValue;
+  RegDemStore.emitChange();
+};
+
+let executeSearch = function (objektTypeID) {
+  _state.objektID = null;
+  _state.objekt = null;
+
+  _state.objektTypeID = objektTypeID;
+  _state.objektType = null;
+
+  fetchObjektTypeData();
+
+  fetchObjektPositions();
+};
+
+let addMapDataAsReference = function (inputMapData) {
+  mapData = inputMapData;
+};
+
+let resetApp = function () {
+  _state = simpleDeepCopy(_initialState);
+};
+
+let goBackAndReset = function (userInput) {
+  let oldState = simpleDeepCopy(_state);
+  resetApp();
+  _state.search = oldState.search;
+  _state.search.inputValue = userInput;
+};
+
+let closeList = function () {
+  _state.list.open = false;
+};
+
+let showList = function () {
+  _state.list.open = true;
+};
+
+let highlightMarker = function (id) {
+  _state.list.highlighted = id;
+};
+
+let getCurrentLocation = function () {
+  _state.map.myLocation = true;
+};
+
+let locationHasBeenSet = function () {
+  _state.map.myLocation = false;
+};
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {

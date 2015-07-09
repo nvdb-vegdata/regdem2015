@@ -1,8 +1,7 @@
 let React = require('react/addons');
-let mui = require('material-ui');
 let Helper = require('./helper.js');
 let RegDemActions = require('./actions.js');
-let { Mixins, Card, ClearFix, CardActions, CardTitle, CardText } = require('material-ui');
+let { Card, ClearFix, CardActions, CardTitle, CardText } = require('material-ui');
 
 //Needed for onTouchTap
 //Can go away when react 1.0 release

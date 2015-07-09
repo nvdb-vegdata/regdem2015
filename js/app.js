@@ -4,7 +4,7 @@ let mui = require('material-ui');
 var ThemeManager = new mui.Styles.ThemeManager();
 let Colors = mui.Styles.Colors;
 
-let Map = require('./map.js');
+let MapComponent = require('./map.js');
 let Editor = require('./editor.jsx');
 let List = require('./list.jsx');
 let Search = require('./search.js');
@@ -51,7 +51,7 @@ let RegDemApp = React.createClass({
     return (
       <div>
         <Editor data={this.state} />
-        <Map data={this.state} />
+        <MapComponent data={this.state} />
         <Search data={this.state} />
         <List data={this.state} />
         <Buttons data={this.state} />
