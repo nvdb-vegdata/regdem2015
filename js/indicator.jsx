@@ -5,15 +5,15 @@ let { CircularProgress } = require('material-ui');
 module.exports = React.createClass({
 
   render: function () {
-    var style = 'indicator';
+    var style = 'search-field-indicator';
     if (!this.props.visible) {
-      style += ' hidden';
+      style += ' search-field-indicator-hidden';
     }
     return (
-      <div className="indicator_container">
+      <div className="search-field-indicator-container">
         <CircularProgress
           mode="indeterminate"
-          size={0.25}
+          size={0.35}
           className={style}
         />
       </div>

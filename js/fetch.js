@@ -68,7 +68,7 @@ module.exports.fetch = function(input, callback) {
     requestHTTP(url, (responseData) => {
       this.objektListe = responseData;
       filterCallback(this.objektListe);
-    });
+    }, true);
   }
 };
 
