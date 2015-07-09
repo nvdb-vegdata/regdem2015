@@ -216,6 +216,7 @@ let addMapDataAsReference = function (inputMapData) {
 
 let resetApp = function () {
   _state = simpleDeepCopy(_initialState);
+  _state.map.myLocation = false;
 };
 
 let goBackAndReset = function (userInput) {
