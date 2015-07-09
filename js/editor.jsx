@@ -85,7 +85,7 @@ let Editor = React.createClass({
     let EditorFields = null;
 
     // CSS Styles
-    let EditorClassName = 'Editor';
+    let EditorClassName = 'Editor Editor-Visible-Hidden';
     let EditorCardClassName = 'Editor-Card';
     let CircularProgressClassName = 'Editor-loader Editor-hidden';
     let CardTitleClassName = 'Editor-hidden';
@@ -94,6 +94,7 @@ let Editor = React.createClass({
 
     // Hvis state er loading
     if (this.props.data.editor.loading) {
+      EditorClassName = 'Editor';
       EditorCardClassName = 'Editor-Card Editor-Card-loader';
       CircularProgressClassName = 'Editor-loader';
       CardTitleClassName = 'Editor-hidden';
@@ -104,13 +105,13 @@ let Editor = React.createClass({
     // Når objektet er hentet og ikke laster lenger
     if (this.props.data.objekt && !this.props.data.editor.loading) {
       EditorClassName = 'Editor';
-      EditorCardClassName = 'Editor-Card';
+      EditorCardClassName = 'Editor-Card Editor-Card-loaded';
       CircularProgressClassName = 'Editor-loader Editor-hidden';
-      CardTitleClassName = '';
+      CardTitleClassName = 'Editor-CardTitle';
 
       // Bare vis resten hvis den er expanded
       if (this.props.data.editor.expanded || window.matchMedia('(min-width: ' + RegDemConstants.values.REGDEM_SIZE_DESKTOP + 'px)').matches) {
-        CardTextClassName = '';
+        CardTextClassName = 'Editor-CardText';
         CardActionsClassName = 'Editor-knapp-container';
 
         EditorFields = egenskapsTyper.map((egenskap) => {
@@ -134,27 +135,24 @@ let Editor = React.createClass({
       }
     }
 
-    // Hvis ingen objektID er satt skal ikke skjemaet vises.
-    if (!this.props.data.objektID) {
-      return null;
-    } else {
-      return (
-        <div className={EditorClassName}>
-          <Card className={EditorCardClassName} onTouchTap={this.expandForm}>
-              <CardActions className="Editor-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
-              <CircularProgress mode="indeterminate" className={CircularProgressClassName} />
-              <CardTitle title={formName} subtitle={subtitle} className={CardTitleClassName} />
-              <CardText className={CardTextClassName}>
-                {EditorFields}
-              </CardText>
-              <CardActions className={CardActionsClassName}>
-                <FlatButton label="Lagre" primary={true} />
-                <FlatButton label="Avbryt" onTouchTap={this.closeDialog} />
-              </CardActions>
-          </Card>
-        </div>
-      );
-    }
+    return (
+      <div className={EditorClassName}>
+        <Card className={EditorCardClassName} onTouchTap={this.expandForm}>
+            <CardActions className="Editor-lukk"><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
+            <CircularProgress mode="indeterminate" className={CircularProgressClassName} />
+
+            <CardTitle title={formName} subtitle={subtitle} className={CardTitleClassName} />
+            <CardText className={CardTextClassName}>
+              {EditorFields}
+            </CardText>
+            <CardActions className={CardActionsClassName}>
+              <FlatButton label="Lagre" primary={true} />
+              <FlatButton label="Avbryt" onTouchTap={this.closeDialog} />
+            </CardActions>
+        </Card>
+      </div>
+    );
+
 
   }
 

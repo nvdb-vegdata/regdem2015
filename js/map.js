@@ -78,10 +78,16 @@ let Map = React.createClass({
   },
 
   componentWillReceiveProps: function (nextProps) {
+    var was_highlighted = this.props.data.list.highlighted;
+
     if (this.props.data.searchResults !== nextProps.data.searchResults && nextProps.data.searchResults == null) {
       Marker.clearMarkers();
     } else if (this.props.data.searchResults !== nextProps.data.searchResults) {
       Marker.update(this.mapData, nextProps.data.searchResults);
+    }
+
+    if(nextProps.data.list.highlighted && nextProps.data.list.higlighted !== was_highlighted) {
+      Marker.colorize(nextProps.data.list.highlighted);
     }
 
     if (nextProps.data.map.myLocation) {

@@ -36,7 +36,8 @@ let _state = {
   },
 
   list: {
-    open: false
+    open: false,
+    highlighted: null
   },
 
   map: {
@@ -80,7 +81,7 @@ let fetchObjektPositions = function (id) {
     var mapbox = mapData.getBounds();
 
     Fetch.fetchAPIObjekter(id, mapbox, (data) => {
-      // _state.list.open = true;
+      _state.list.open = true;
       _state.searchResults = data;
       _state.search.loading = false;
       RegDemStore.emitChange();
@@ -139,6 +140,9 @@ let showList = function () {
   _state.list.open = true;
 };
 
+let highlightMarker = function (id) {
+  _state.list.highlighted = id;
+}
 let getCurrentLocation = function () {
   _state.map.myLocation = true;
 };
@@ -296,6 +300,12 @@ AppDispatcher.register(function(action) {
 
     case RegDemConstants.actions.REGDEM_SHOW_LIST:
       showList();
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_HIGHLIGHT_MARKER:
+      id = action.id;
+      highlightMarker(id);
       RegDemStore.emitChange();
       break;
 
