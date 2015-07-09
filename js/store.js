@@ -130,6 +130,7 @@ let getNewData = function () {
     // Har vi oppgitt
     if (_state.objektTypeID) {
       // Kun hent ObjektType data, sett Objekt data til null
+      _state.objekt = null;
       _state.editor.loading = true;
       RegDemStore.emitChange();
 
