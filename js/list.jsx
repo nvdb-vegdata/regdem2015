@@ -21,8 +21,8 @@ let List = React.createClass({
     // Hvis ingen objektID er satt skal ikke skjemaet vises.
     if (!this.props.data.list.open ) {
       return null;
-    } else {
-      var elements = this.props.data.searchResults.resultater[0].vegObjekter;
+    } else if (this.props.data.searchResults) {
+      var elements = this.props.data.searchResults.resultater[0].vegObjekter || [];
       var size = elements.length;
       return (
         <div className="list">
@@ -45,6 +45,8 @@ let List = React.createClass({
           </Card>
         </div>
       );
+    } else {
+      return null;
     }
   }
 });
