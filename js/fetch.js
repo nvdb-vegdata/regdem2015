@@ -62,12 +62,12 @@ module.exports.fetch = function(input, callback) {
   var url = 'https://www.vegvesen.no/nvdb/api/datakatalog/objekttyper/.json';
 
   // Implementerer caching
-  if (this.objektListe) {
-    filterCallback(this.objektListe);
+  if (objektListe) {
+    filterCallback(objektListe);
   } else {
     requestHTTP(url, (responseData) => {
-      this.objektListe = responseData;
-      filterCallback(this.objektListe);
+      objektListe = responseData;
+      filterCallback(objektListe);
     }, true);
   }
 };

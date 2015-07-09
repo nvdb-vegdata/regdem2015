@@ -1,13 +1,11 @@
 let React = require('react/addons');
-let mui = require('material-ui');
 let RegDemActions = require('./actions');
 var RegDemConstants = require('./constants');
 let Helper = require('./helper.js');
 
 let Fields = require('./fields.jsx');
 
-let { Mixins, SelectField, TextField, TimePicker, DatePicker, Card,
-  ClearFix, CardActions, FlatButton, CardTitle, CardText, CircularProgress } = require('material-ui');
+let { Card, CardActions, FlatButton, CardTitle, CardText, CircularProgress } = require('material-ui');
 
 //Needed for onTouchTap
 //Can go away when react 1.0 release
@@ -15,8 +13,6 @@ let { Mixins, SelectField, TextField, TimePicker, DatePicker, Card,
 //https://github.com/zilverline/react-tap-event-plugin
 var injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
-
-let Colors = mui.Styles.Colors;
 
 let Editor = React.createClass({
   // Mixins, for linked state
@@ -60,7 +56,6 @@ let Editor = React.createClass({
     let objektId = this.props.data.objekt ? this.props.data.objekt.objektId : '';
     let vegreferanse = this.props.data.objekt ? Helper.vegReferanseString(this.props.data.objekt.lokasjon.vegReferanser[0]) : '';
     let egenskapsTyper = this.props.data.objektType ? this.props.data.objektType.egenskapsTyper : [];
-    let objekt = this.props.data.objekt ? this.props.data.objekt : [];
 
     let formName, subtitle;
     if (this.props.data.objektID && this.props.data.objektID !== -1) {

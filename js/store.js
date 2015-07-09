@@ -53,6 +53,100 @@ let _initialState = simpleDeepCopy(_state);
 
 let mapData = null;
 
+let RegDemStore = assign({}, EventEmitter.prototype, {
+  /**
+   * Get the entire collection of TODOs.
+   * @return {object}
+   */
+  getAll: function() {
+    return _state;
+  },
+
+  emitChange: function() {
+    this.emit(CHANGE_EVENT);
+  },
+
+  /**
+   * @param {function} callback
+   */
+  addChangeListener: function(callback) {
+    this.on(CHANGE_EVENT, callback);
+  },
+
+  /**
+   * @param {function} callback
+   */
+  removeChangeListener: function(callback) {
+    this.removeListener(CHANGE_EVENT, callback);
+  }
+});
+
+/* Helpers for actions */
+
+let fetchObjektTypeData = function () {
+  // Hvis objektType allerede er lastet, trenger vi ikke hente den igjen
+  if (_state.objektTypeID && _state.objektType && _state.objektType.id === _state.objektTypeID) {
+    _state.editor.loading = false;
+    _state.editor.expanded = false;
+
+    RegDemStore.emitChange();
+  } else {
+    // Nå som vi har objektet, kan vi hente objekttype
+    Fetch.fetchObjektType(_state.objektTypeID, (objektTypeData) => {
+      // Sorterer egenskaper til objekttype etter viktighet og sorteringsnummer
+      objektTypeData.egenskapsTyper.sort(function (a, b) {
+        let differanseMellomAogB = Helper.objektTypeViktighetTilNummer(a.viktighet) - Helper.objektTypeViktighetTilNummer(b.viktighet);
+
+        if (differanseMellomAogB === 0) {
+          // Sorter på sorteringsnummer, nivå 2
+          return a.sorteringsnummer - b.sorteringsnummer;
+        } else {
+          // Sorter på viktighet, nivå 1
+          return differanseMellomAogB;
+        }
+      });
+
+      _state.objektType = objektTypeData;
+      _state.editor.loading = false;
+      _state.editor.expanded = false;
+
+      RegDemStore.emitChange();
+    });
+  }
+};
+
+let fetchObjektData = function () {
+  Fetch.fetchObjekt(_state.objektID, (objektData) => {
+    // Siden vi henter ObjektType ved søk trenger vi som oftest ikke å hente denne også
+    _state.objekt = objektData;
+
+    fetchObjektTypeData();
+  });
+};
+
+let getNewData = function () {
+  // Skal vi lage nytt objekt?
+  if (_state.objektID === -1) {
+    // Har vi oppgitt
+    if (_state.objektTypeID) {
+      // Kun hent ObjektType data, sett Objekt data til null
+      _state.editor.loading = true;
+      RegDemStore.emitChange();
+
+      fetchObjektTypeData();
+    }
+  } else {
+    if (!_state.objekt || _state.objektID !== _state.objekt.objektId) {
+      _state.editor.loading = true;
+      RegDemStore.emitChange();
+
+      fetchObjektData();
+    }
+  }
+};
+
+/* Funksjoner for actions */
+
 let setObjektID = function (objektID) {
   if (objektID) {
     _state.objektID = objektID;
@@ -112,7 +206,7 @@ let executeSearch = function (objektTypeID) {
   _state.objektTypeID = objektTypeID;
   _state.objektType = null;
 
-  fetchObjekTypetData();
+  fetchObjektTypeData();
 
   fetchObjektPositions();
 };
@@ -142,7 +236,8 @@ let showList = function () {
 
 let highlightMarker = function (id) {
   _state.list.highlighted = id;
-}
+};
+
 let getCurrentLocation = function () {
   _state.map.myLocation = true;
 };
@@ -150,98 +245,6 @@ let getCurrentLocation = function () {
 let locationHasBeenSet = function () {
   _state.map.myLocation = false;
 };
-
-// Get editor data
-
-let getNewData = function () {
-  // Skal vi lage nytt objekt?
-  if (_state.objektID === -1) {
-    // Har vi oppgitt
-    if (_state.objektTypeID) {
-      // Kun hent ObjektType data, sett Objekt data til null
-      _state.editor.loading = true;
-      RegDemStore.emitChange();
-
-      fetchObjekTypetData();
-    }
-  } else {
-    if (!_state.objekt || _state.objektID !== _state.objekt.objektId) {
-      _state.editor.loading = true;
-      RegDemStore.emitChange();
-
-      fetchObjektData();
-    }
-  }
-};
-
-let fetchObjektData = function () {
-  Fetch.fetchObjekt(_state.objektID, (objektData) => {
-    // Siden vi henter ObjektType ved søk trenger vi som oftest ikke å hente denne også
-    _state.objekt = objektData;
-
-    fetchObjekTypetData();
-  });
-};
-
-let fetchObjekTypetData = function () {
-  // Hvis objektType allerede er lastet, trenger vi ikke hente den igjen
-  if (_state.objektTypeID && _state.objektType && _state.objektType.id === _state.objektTypeID) {
-    _state.editor.loading = false;
-    _state.editor.expanded = false;
-
-    RegDemStore.emitChange();
-  } else {
-    // Nå som vi har objektet, kan vi hente objekttype
-    Fetch.fetchObjektType(_state.objektTypeID, (objektTypeData) => {
-      // Sorterer egenskaper til objekttype etter viktighet og sorteringsnummer
-      objektTypeData.egenskapsTyper.sort(function (a, b) {
-        let differanseMellomAogB = Helper.objektTypeViktighetTilNummer(a.viktighet) - Helper.objektTypeViktighetTilNummer(b.viktighet);
-
-        if (differanseMellomAogB === 0) {
-          // Sorter på sorteringsnummer, nivå 2
-          return a.sorteringsnummer - b.sorteringsnummer;
-        } else {
-          // Sorter på viktighet, nivå 1
-          return differanseMellomAogB;
-        }
-      });
-
-      _state.objektType = objektTypeData;
-      _state.editor.loading = false;
-      _state.editor.expanded = false;
-
-      RegDemStore.emitChange();
-    });
-  }
-};
-
-let RegDemStore = assign({}, EventEmitter.prototype, {
-  /**
-   * Get the entire collection of TODOs.
-   * @return {object}
-   */
-  getAll: function() {
-    return _state;
-  },
-
-  emitChange: function() {
-    this.emit(CHANGE_EVENT);
-  },
-
-  /**
-   * @param {function} callback
-   */
-  addChangeListener: function(callback) {
-    this.on(CHANGE_EVENT, callback);
-  },
-
-  /**
-   * @param {function} callback
-   */
-  removeChangeListener: function(callback) {
-    this.removeListener(CHANGE_EVENT, callback);
-  }
-});
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
