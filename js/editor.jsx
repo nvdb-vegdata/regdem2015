@@ -32,7 +32,7 @@ let Editor = React.createClass({
   finnVerdi: function (egenskap, returFunksjon) {
     let dataTilEgenskap = [];
 
-    if (this.props.data.objekt.egenskaper) {
+    if (this.props.data.objekt && this.props.data.objekt.egenskaper) {
       dataTilEgenskap = this.props.data.objekt.egenskaper.filter((objektEgenskap) => { return objektEgenskap.id === egenskap.id; });
     }
 
@@ -100,7 +100,7 @@ let Editor = React.createClass({
     }
 
     // Når objektet er hentet og ikke laster lenger
-    if (this.props.data.objekt && !this.props.data.editor.loading) {
+    if ((this.props.data.objekt || this.props.data.objektID === -1)  && !this.props.data.editor.loading) {
       EditorClassName = 'Editor';
       EditorCloseClassName = 'Editor-lukk';
       EditorCardClassName = 'Editor-Card Editor-Card-loaded';
@@ -115,15 +115,15 @@ let Editor = React.createClass({
         EditorFields = egenskapsTyper.map((egenskap) => {
                           switch (egenskap.type) {
                             case 'ENUM':
-                              return (<Fields.ENUM verdi={this.finnENUMVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                              return (<Fields.ENUM verdi={this.finnENUMVerdi(egenskap)} egenskaper={egenskap} key={this.props.data.objektID + '-' + egenskap.id} />);
                             case 'Tekst':
-                              return (<Fields.Tekst verdi={this.finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                              return (<Fields.Tekst verdi={this.finnTekstVerdi(egenskap)} egenskaper={egenskap} key={this.props.data.objektID + '-' +egenskap.id} />);
                             case 'Tall':
-                              return (<Fields.Tall verdi={this.finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                              return (<Fields.Tall verdi={this.finnTekstVerdi(egenskap)} egenskaper={egenskap} key={this.props.data.objektID + '-' +egenskap.id} />);
                             case 'Klokkeslett':
-                              return (<Fields.Klokkeslett verdi={this.finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                              return (<Fields.Klokkeslett verdi={this.finnTekstVerdi(egenskap)} egenskaper={egenskap} key={this.props.data.objektID + '-' +egenskap.id} />);
                             case 'Dato':
-                              return (<Fields.Dato verdi={this.finnTekstVerdi(egenskap)} egenskaper={egenskap} key={egenskap.id} />);
+                              return (<Fields.Dato verdi={this.finnTekstVerdi(egenskap)} egenskaper={egenskap} key={this.props.data.objektID + '-' +egenskap.id} />);
                             default:
                               break;
                           }
