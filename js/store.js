@@ -81,7 +81,6 @@ let fetchObjektPositions = function (id) {
     var mapbox = mapData.getBounds();
 
     Fetch.fetchAPIObjekter(id, mapbox, (data) => {
-      _state.list.open = true;
       _state.searchResults = data;
       _state.search.loading = false;
       RegDemStore.emitChange();
