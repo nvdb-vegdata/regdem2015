@@ -62,12 +62,14 @@
 }
 
 .search-field-objekttype-selected .search-field-list-icon, .search-field-objekttype-selected .search-field-go-back  {
-  color: #fff;
+  color: #fff !important;
 }
 
 .search-field-objekttype-selected input {
-  background-color: #008ec2;
+  background-color: #008ec2 !important;
   color: #fff;
+  opacity: 1;
+  -webkit-text-fill-color:#fff;
 }
 
 .search-field-objekttype-selected .search-field-indicator-container circle {
