@@ -85,9 +85,14 @@ var RegDemActions = {
       id: id
     });
   },
-  placeMarker: function () {
+  addGeomStart: function () {
     AppDispatcher.dispatch({
-      actionType: RegDemConstants.actions.REGDEM_PLACE_MARKER
+      actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_START
+    });
+  },
+  addGeomEnd: function () {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_END
     });
   }
 };
