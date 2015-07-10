@@ -4,6 +4,8 @@ let RegDemActions = require('./actions');
 let L = window.L || {};
 
 let curPosLayer = new L.FeatureGroup();
+let editLayer = new L.FeatureGroup();
+let currentEditGeom = null;
 let markers = new L.MarkerClusterGroup({
   maxClusterRadius: 50
 });
@@ -27,6 +29,7 @@ let blueIcon = L.icon({
 let clearMarkers = function () {
   markerList = {};
   markers.clearLayers();
+  editLayer.clearLayers();
   highlightedMarker = null;
 };
 
@@ -70,9 +73,27 @@ let colorize = function (id) {
   }
 };
 
+let addGeom = function (kart) {
+  if(currentEditGeom) {
+
+  }
+  console.log('før', kart);
+  editLayer.clearLayers();
+  currentEditGeom = kart.editTools.startMarker();
+  console.log('etter', kart);
+  //kart.addLayer(editTools);
+};
+
+let getEditLayer = function () {
+  let that = this;
+  return that.editLayer;
+};
+
 module.exports = {
+  getEditLayer: getEditLayer,
   clearMarkers: clearMarkers,
   update: update,
   displayCurrentPosition: displayCurrentPosition,
-  colorize: colorize
+  colorize: colorize,
+  addGeom: addGeom
 };
