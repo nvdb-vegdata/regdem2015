@@ -67,8 +67,8 @@ let Sok = React.createClass({
 
   componentDidUpdate: function (prevProps, prevState) {
     if (prevState.objektTypeSelected && !this.state.objektTypeSelected) {
-      this.refs.typeahead.focus();
       this.refs.typeahead.showDropdown();
+      this.refs.typeahead.focus();
     }
   },
 
