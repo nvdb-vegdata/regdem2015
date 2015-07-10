@@ -90,7 +90,7 @@ let MapComponent = React.createClass({
       Marker.update(this.mapData, nextProps.data.searchResults);
     }
 
-    if(nextProps.data.list.highlighted && nextProps.data.list.higlighted !== wasHighlighted) {
+    if(nextProps.data.list.higlighted !== wasHighlighted) {
       Marker.colorize(nextProps.data.list.highlighted);
     }
 
