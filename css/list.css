@@ -33,8 +33,18 @@
   text-align: right;
 }
 
-.list-toolbar {
-  padding-right: 0 !important;
+.list-extra-egenskap-choser {
+  text-align: right;
+}
+
+.list-extra-egenskap-choser > div {
+  text-align: left;
+}
+
+.list-extra-egenskap-choser-icon {
+  display: inline-block;
+  vertical-align: top;
+  padding-top: 6px;
 }
 
 .list-element {
