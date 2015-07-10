@@ -104,6 +104,11 @@ let MapComponent = React.createClass({
     if (nextProps.data.map.myLocation) {
       this.mapData.locate({setView: true, maxZoom: 15});
     }
+
+    if (nextProps.data.geometry.addingMarker) {
+      //let objID = nextProps.data.geometry.current;
+      Marker.addGeom(this.mapData);
+    }
   },
 
   componentWillUnmount: function() {
