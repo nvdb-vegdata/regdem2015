@@ -54,7 +54,10 @@ let MapComponent = React.createClass({
       center: [63.43, 10.40],
       zoom: 13,
       zoomControl: false,
-      editable: true
+      editable: true,
+      editOptions: {
+        featuresLayer: Marker.getEditLayer()
+      }
     });
 
     // PLassering av zoom kontrollene
