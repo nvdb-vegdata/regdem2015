@@ -79,6 +79,10 @@ let MapComponent = React.createClass({
         RegDemActions.fetchObjektPositions(null);
       }
     });
+
+    this.mapData.on('editable:drawing:end', () => {
+      RegDemActions.addGeomEnd();
+    });
   },
 
   componentWillReceiveProps: function (nextProps) {
