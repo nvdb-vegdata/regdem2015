@@ -74,7 +74,7 @@ let MapComponent = React.createClass({
 
     this.mapData.on('moveend', () => {
       if (this.props.data.objektTypeID) {
-        RegDemActions.fetchObjektPositions(null);
+        RegDemActions.fetchObjektPositions();
       }
     });
   },

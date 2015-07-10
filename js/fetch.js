@@ -82,7 +82,7 @@ module.exports.fetchObjekt = function(objektID, callback) {
   requestHTTP(url, callback);
 };
 
-module.exports.fetchAPIObjekter = function(objectID, box, callback) {
+module.exports.fetchAPIObjekter = function(objectID, box, callback, extraEgenskap) {
   var nelat = box._northEast.lat;
   var nelng = box._northEast.lng;
   var swlat = box._southWest.lat;
@@ -100,6 +100,10 @@ module.exports.fetchAPIObjekter = function(objectID, box, callback) {
   };
 
   var select = 'objektId,objektTypeId,vegObjektLokasjon/vegReferanser,vegObjektLokasjon/geometriWgs84';
+  
+  if (extraEgenskap) {
+    select = '';
+  }
 
   var url = 'https://www.vegvesen.no/nvdb/api/sok?kriterie=' + encodeURIComponent(JSON.stringify(kriterie)) + '&select=' + encodeURIComponent(select);
   requestHTTP(url, callback, true);

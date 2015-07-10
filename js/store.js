@@ -20,6 +20,7 @@ let _state = {
   objektType: null,
 
   searchResults: null,
+  searchResultsFull: null,
 
   editor: {
     // Hvorvidt editor har lastet
@@ -37,6 +38,7 @@ let _state = {
 
   list: {
     open: false,
+    extraEgenskap: null,
     highlighted: null
   },
 
@@ -151,6 +153,7 @@ let getNewData = function () {
 let setObjektID = function (objektID) {
   if (objektID) {
     _state.objektID = objektID;
+    closeList();
     getNewData();
   }
 };
@@ -166,20 +169,44 @@ let expandEditor = function () {
   _state.editor.expanded = true;
 };
 
-let fetchObjektPositions = function (id) {
+let fetchObjektPositions = function () {
   _state.search.loading = true;
   RegDemStore.emitChange();
 
-  id = id || _state.objektTypeID;
+  let id = _state.objektTypeID;
 
   if (mapData) {
     var mapbox = mapData.getBounds();
 
     Fetch.fetchAPIObjekter(id, mapbox, (data) => {
       _state.searchResults = data;
+      _state.searchResultsFull = null;
       _state.search.loading = false;
       RegDemStore.emitChange();
     });
+  }
+};
+
+let fetchAllDataFromObjektPosition = function (extraEgenskap) {
+  if (_state.searchResultsFull) {
+    _state.list.extraEgenskap = extraEgenskap;
+    RegDemStore.emitChange();
+  } else {
+    _state.search.loading = true;
+    RegDemStore.emitChange();
+
+    let id = _state.objektTypeID;
+
+    if (mapData) {
+      var mapbox = mapData.getBounds();
+
+      Fetch.fetchAPIObjekter(id, mapbox, (data) => {
+        _state.searchResultsFull = data;
+        _state.search.loading = false;
+        _state.list.extraEgenskap = extraEgenskap;
+        RegDemStore.emitChange();
+      }, true);
+    }
   }
 };
 
@@ -232,7 +259,12 @@ let closeList = function () {
 };
 
 let showList = function () {
-  _state.list.open = true;
+  // _state.list.open = true;
+  if (_state.objektID) {
+    _state.objekt = null;
+    _state.objektID = null;
+  }
+  _state.list.open = !_state.list.open;
 };
 
 let highlightMarker = function (id) {
@@ -249,7 +281,7 @@ let locationHasBeenSet = function () {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  let id, inputMapData, objektType, inputValue, userInput, objektTypeID;
+  let id, inputMapData, objektType, inputValue, userInput, objektTypeID, extraEgenskap;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -268,8 +300,12 @@ AppDispatcher.register(function(action) {
       break;
 
     case RegDemConstants.actions.REGDEM_FETCH_OBJEKT_POSITIONS:
-      id = action.id;
-      fetchObjektPositions(id);
+      fetchObjektPositions();
+      break;
+
+    case RegDemConstants.actions.REGDEM_SELECT_EXTRA_EGENSKAP:
+      extraEgenskap = action.extraEgenskap;
+      fetchAllDataFromObjektPosition(extraEgenskap);
       break;
 
     case RegDemConstants.actions.REGDEM_FETCH_OBJEKT_TYPES:
