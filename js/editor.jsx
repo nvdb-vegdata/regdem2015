@@ -3,7 +3,7 @@ let RegDemActions = require('./actions');
 var RegDemConstants = require('./constants');
 let Helper = require('./helper.js');
 
-let Geometry = require('./geometry.jsx');
+let GeometryFields = require('./geometryFields.jsx');
 let Fields = require('./fields.jsx');
 
 let { Card, CardActions, FlatButton, CardTitle, CardText, CircularProgress } = require('material-ui');
@@ -79,6 +79,7 @@ let Editor = React.createClass({
 
     // Pre-compute forms
     let EditorFields = null;
+    let GeomFields = null;
 
     // CSS Styles
     let EditorClassName = 'Editor Editor-Visible-Hidden';
@@ -113,6 +114,8 @@ let Editor = React.createClass({
         CardTextClassName = 'Editor-CardText';
         CardActionsClassName = 'Editor-knapp-container';
 
+        GeomFields = (<GeometryFields.Marker objektID={this.props.data.objektID} />);
+
         EditorFields = egenskapsTyper.map((egenskap) => {
                           switch (egenskap.type) {
                             case 'ENUM':
@@ -142,7 +145,7 @@ let Editor = React.createClass({
 
             <CardTitle title={formName} subtitle={subtitle} className={CardTitleClassName} />
             <CardText className={CardTextClassName}>
-              <Geometry.Marker />
+              {GeomFields}
               {EditorFields}
             </CardText>
             <CardActions className={CardActionsClassName}>
