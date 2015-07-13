@@ -9,7 +9,6 @@ module.exports.actions = keyMirror({
   REGDEM_FETCH_OBJEKT_TYPES: null,
   REGDEM_SET_INPUT_VALUE: null,
   REGDEM_EXECUTE_SEARCH: null,
-  REGDEM_ADD_MAPDATA_AS_REFERENCE: null,
   REGDEM_RESET_APP: null,
   REGDEM_CLOSE_LIST: null,
   REGDEM_SHOW_LIST: null,

@@ -33,8 +33,17 @@
   text-align: right;
 }
 
-.list-toolbar {
-  padding-right: 0 !important;
+.list-extra-egenskap-choser {
+  text-align: right;
+}
+
+.list-extra-egenskap-choser > div {
+  text-align: left;
+}
+
+.list-extra-egenskap-choser-icon {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .list-element {
@@ -47,7 +56,7 @@
   border-bottom: 1px solid #eee !important;
 }
 
-.list-element-container a:last-child {
+.list-element-container div:last-child a {
   border-bottom: 0 !important;
 }
 
@@ -56,14 +65,19 @@
   background-color:#ebf2fe;
 }
 
-.list-vegref {
+.list-vegref, .heading-vegref {
   display: inline-block;
   font-size: 14px;
 }
 
-.list-extra-egenskap {
+.list-extra-egenskap, .heading-extra-egenskap {
   float: right;
   font-size: 14px;
+}
+
+.heading-extra-egenskap {
+  cursor: pointer;
+  user-select: none;
 }
 
 .material-icons.list-keyboard-arrow-down {

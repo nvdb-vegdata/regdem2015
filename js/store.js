@@ -57,8 +57,6 @@ let simpleDeepCopy = function (oldObject) {
 
 let _initialState = simpleDeepCopy(_state);
 
-let mapData = null;
-
 let RegDemStore = assign({}, EventEmitter.prototype, {
   /**
    * Get the entire collection of TODOs.
@@ -179,13 +177,16 @@ let fetchObjektPositions = function () {
 
   let id = _state.objektTypeID;
 
-  if (mapData) {
-    var mapbox = mapData.getBounds();
+  if (MapFunctions.mapData()) {
+    var mapbox = MapFunctions.getBounds();
 
     Fetch.fetchAPIObjekter(id, mapbox, (data) => {
       _state.searchResults = data;
       _state.searchResultsFull = null;
       _state.search.loading = false;
+
+      MapFunctions.updateMarkers(data);
+
       RegDemStore.emitChange();
     });
   }
@@ -201,8 +202,8 @@ let fetchAllDataFromObjektPosition = function (extraEgenskap) {
 
     let id = _state.objektTypeID;
 
-    if (mapData) {
-      var mapbox = mapData.getBounds();
+    if (MapFunctions.mapData()) {
+      var mapbox = MapFunctions.getBounds();
 
       Fetch.fetchAPIObjekter(id, mapbox, (data) => {
         _state.searchResultsFull = data;
@@ -242,11 +243,8 @@ let executeSearch = function (objektTypeID) {
   fetchObjektPositions();
 };
 
-let addMapDataAsReference = function (inputMapData) {
-  mapData = inputMapData;
-};
-
 let resetApp = function () {
+  MapFunctions.clearMarkers();
   _state = simpleDeepCopy(_initialState);
   _state.map.myLocation = false;
 };
@@ -272,12 +270,13 @@ let showList = function () {
 };
 
 let highlightMarker = function (id) {
-  _state.list.highlighted = id;
+  MapFunctions.colorizeMarker(id);
 };
 
 let addGeomStart = function (id) {
   _state.geometry.addingMarker = true;
   _state.geometry.current = id;
+  MapFunctions.addGeom(id);
 };
 
 let addGeomEnd = function () {
@@ -286,6 +285,7 @@ let addGeomEnd = function () {
 
 let getCurrentLocation = function () {
   _state.map.myLocation = true;
+  MapFunctions.findMyPosition();
 };
 
 let locationHasBeenSet = function () {
@@ -294,7 +294,7 @@ let locationHasBeenSet = function () {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  let id, inputMapData, objektType, inputValue, userInput, objektTypeID, extraEgenskap;
+  let id, objektType, inputValue, userInput, objektTypeID, extraEgenskap;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -336,11 +336,6 @@ AppDispatcher.register(function(action) {
       executeSearch(objektTypeID);
       break;
 
-    case RegDemConstants.actions.REGDEM_ADD_MAPDATA_AS_REFERENCE:
-      inputMapData = action.mapData;
-      addMapDataAsReference(inputMapData);
-      break;
-
     case RegDemConstants.actions.REGDEM_RESET_APP:
       resetApp();
       RegDemStore.emitChange();
@@ -359,7 +354,6 @@ AppDispatcher.register(function(action) {
     case RegDemConstants.actions.REGDEM_HIGHLIGHT_MARKER:
       id = action.id;
       highlightMarker(id);
-      RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_ADD_GEOM_START:

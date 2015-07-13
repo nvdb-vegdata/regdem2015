@@ -39,14 +39,14 @@ let Buttons = React.createClass({
                                 </FloatingActionButton>);
 
     let passiveLocationButton = (<FloatingActionButton onTouchTap={this.handleChangeMyLocation} className="buttons-button-my-location">
-                                    <FontIcon className="material-icons buttons-my-location" color={Colors.orange700}>my_location</FontIcon>
+                                    <FontIcon className="material-icons" color={Colors.orange700}>my_location</FontIcon>
                                 </FloatingActionButton>);
 
     let myLocationButton = this.props.data.map.myLocation ? loadingLocationButton : passiveLocationButton;
 
 
     let addButton = (<FloatingActionButton onTouchTap={this.handleAdd}>
-                      <FontIcon className="material-icons buttons-add-icon" color={Colors.white}>add</FontIcon>
+                      <FontIcon className="material-icons" color={Colors.white}>add</FontIcon>
                     </FloatingActionButton>);
 
     addButton = this.props.data.objektType ? addButton : null;
