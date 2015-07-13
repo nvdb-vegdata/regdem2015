@@ -142,6 +142,17 @@ let getNewData = function () {
     }
   } else {
     if (!_state.objekt || _state.objektID !== _state.objekt.objektId) {
+      // Sjekk om objektet finnes i searchResultsFull
+      if (_state.searchResultsFull) {
+        for (var i = 0; i < _state.searchResultsFull.resultater[0].vegObjekter.length; i++) {
+          if (_state.searchResultsFull.resultater[0].vegObjekter[i].objektId === _state.objektID) {
+            _state.objekt = _state.searchResultsFull.resultater[0].vegObjekter[i];
+            RegDemStore.emitChange();
+            return;
+          }
+        }
+      }
+
       _state.editor.loading = true;
       RegDemStore.emitChange();
 
