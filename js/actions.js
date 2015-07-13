@@ -85,9 +85,10 @@ var RegDemActions = {
       id: id
     });
   },
-  addGeomStart: function () {
+  addGeomStart: function (id) {
     AppDispatcher.dispatch({
-      actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_START
+      actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_START,
+      id: id
     });
   },
   addGeomEnd: function () {

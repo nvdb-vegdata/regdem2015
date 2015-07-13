@@ -8,13 +8,13 @@ let Marker = React.createClass({
   getInitialState: function () {
     return {
       markerPlaced: false,
-      currentMarker: null
+      currentMarkerID: this.props.objektID
     };
   },
 
   handleClick: function () {
-    RegDemActions.addGeomStart();
     this.setMarkerPlaced(true);
+    RegDemActions.addGeomStart(this.props.objektID);
   },
 
   setMarkerPlaced: function (value) {

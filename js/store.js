@@ -243,8 +243,9 @@ let highlightMarker = function (id) {
   _state.list.highlighted = id;
 };
 
-let addGeomStart = function () {
+let addGeomStart = function (id) {
   _state.geometry.addingMarker = true;
+  _state.geometry.current = id;
 };
 
 let addGeomEnd = function () {
@@ -326,7 +327,8 @@ AppDispatcher.register(function(action) {
       break;
 
     case RegDemConstants.actions.REGDEM_ADD_GEOM_START:
-      addGeomStart();
+      id = action.id;
+      addGeomStart(id);
       RegDemStore.emitChange();
       break;
 
