@@ -1,6 +1,7 @@
 let React = require('react');
 let Marker = require('./marker');
 let RegDemActions = require('./actions');
+let mapData = null;
 
 let MapComponent = React.createClass({
   componentDidMount: function() {
@@ -43,7 +44,7 @@ let MapComponent = React.createClass({
       attribution: 'Registratordemonstrator'
     });
 
-    this.mapData = L.map(React.findDOMNode(this.refs.map), {
+    mapData = L.map(React.findDOMNode(this.refs.map), {
       crs: crs,
       continuousWorld: true,
       worldCopyJump: false,
@@ -56,49 +57,33 @@ let MapComponent = React.createClass({
     });
 
     // PLassering av zoom kontrollene
-    new L.Control.Zoom( {position: 'bottomleft'}).addTo(this.mapData);
+    new L.Control.Zoom( {position: 'bottomleft'}).addTo(mapData);
 
-    this.mapData.locate({setView: true, maxZoom: 15});
+    mapData.locate({setView: true, maxZoom: 15});
 
-    this.mapData.on('locationfound', (e) => {
-      Marker.displayCurrentPosition(e, this.mapData);
+    mapData.on('locationfound', (e) => {
+      Marker.displayCurrentPosition(e, mapData);
       RegDemActions.locationHasBeenSet();
     });
 
-    this.mapData.on('locationerror', () => {
+    mapData.on('locationerror', () => {
       RegDemActions.locationHasBeenSet();
     });
+    
 
-    // Legg mapData inn som referanse i store
-    RegDemActions.addMapDataAsReference(this.mapData);
-
-    this.mapData.on('moveend', () => {
+    mapData.on('moveend', () => {
       if (this.props.data.objektTypeID) {
         RegDemActions.fetchObjektPositions();
       }
     });
   },
 
-  componentWillReceiveProps: function (nextProps) {
-    var wasHighlighted = this.props.data.list.highlighted;
-
-    if (this.props.data.searchResults !== nextProps.data.searchResults && nextProps.data.searchResults == null) {
-      Marker.clearMarkers();
-    } else if (this.props.data.searchResults !== nextProps.data.searchResults) {
-      Marker.update(this.mapData, nextProps.data.searchResults);
-    }
-
-    if(nextProps.data.list.highlighted && nextProps.data.list.higlighted !== wasHighlighted) {
-      Marker.colorize(nextProps.data.list.highlighted);
-    }
-
-    if (nextProps.data.map.myLocation) {
-      this.mapData.locate({setView: true, maxZoom: 15});
-    }
+  shouldComponentUpdate: function () {
+    return false;
   },
 
   componentWillUnmount: function() {
-    this.mapData = null;
+    mapData = null;
   },
 
   render: function() {
@@ -107,5 +92,26 @@ let MapComponent = React.createClass({
     );
   }
 });
+
+window.MapFunctions = {
+  colorizeMarker: function (id) {
+    Marker.colorize(id);
+  },
+  findMyPosition: function () {
+    mapData.locate({setView: true, maxZoom: 15});
+  },
+  updateMarkers: function (searchResult) {
+    Marker.update(mapData, searchResult);
+  },
+  clearMarkers: function () {
+    Marker.clearMarkers();
+  },
+  getBounds: function () {
+    return mapData.getBounds();
+  },
+  mapData: function () {
+    return mapData;
+  }
+};
 
 module.exports = MapComponent;

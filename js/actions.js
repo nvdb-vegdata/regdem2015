@@ -47,12 +47,6 @@ var RegDemActions = {
       objektTypeID: objektTypeID
     });
   },
-  addMapDataAsReference: function (mapData) {
-    AppDispatcher.dispatch({
-      actionType: RegDemConstants.actions.REGDEM_ADD_MAPDATA_AS_REFERENCE,
-      mapData: mapData
-    });
-  },
   resetApp: function () {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_RESET_APP
