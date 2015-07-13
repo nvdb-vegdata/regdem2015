@@ -83,6 +83,17 @@ var RegDemActions = {
       actionType: RegDemConstants.actions.REGDEM_HIGHLIGHT_MARKER,
       id: id
     });
+  },
+  addGeomStart: function (id) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_START,
+      id: id
+    });
+  },
+  addGeomEnd: function () {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_END
+    });
   }
 };
 
