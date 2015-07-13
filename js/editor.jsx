@@ -34,14 +34,14 @@ let Editor = React.createClass({
     let dataTilEgenskap = [];
 
     if (this.props.data.objekt && this.props.data.objekt.egenskaper) {
-      dataTilEgenskap = this.props.data.objekt.egenskaper.filter((objektEgenskap) => { return objektEgenskap.id === egenskap.id; });
+      for (var i = 0; i < this.props.data.objekt.egenskaper.length; i++) {
+        if (this.props.data.objekt.egenskaper[i].id === egenskap.id) {
+          return returFunksjon(this.props.data.objekt.egenskaper[i]);
+        }
+      }
     }
 
-    if (dataTilEgenskap.length > 0) {
-      return returFunksjon(dataTilEgenskap[0]);
-    } else {
-      return '';
-    }
+    return '';
   },
 
   finnENUMVerdi: function (egenskap) {

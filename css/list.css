@@ -33,12 +33,44 @@
   text-align: right;
 }
 
+.list-toolbar {
+  padding-right: 0 !important;
+}
+
 .list-element {
   position: relative;
   padding:10px 0 9px;
   border-bottom: 1px solid #e6e6e6;
 }
 
+.list-element-container a {
+  border-bottom: 1px solid #eee !important;
+}
+
+.list-element-container a:last-child {
+  border-bottom: 0 !important;
+}
+
+
 .list-element:hover {
   background-color:#ebf2fe;
+}
+
+.list-vegref {
+  display: inline-block;
+  font-size: 14px;
+}
+
+.list-extra-egenskap {
+  float: right;
+  font-size: 14px;
+}
+
+.material-icons.list-keyboard-arrow-down {
+  top: 17px;
+  color: rgba(0, 0, 0, .40) !important;
+}
+
+.list-toolbar-dropdown div:last-child {
+  z-index: 10 !important;
 }

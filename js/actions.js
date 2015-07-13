@@ -18,10 +18,15 @@ var RegDemActions = {
       actionType: RegDemConstants.actions.REGDEM_EXPAND_EDITOR
     });
   },
-  fetchObjektPositions: function (id) {
+  fetchObjektPositions: function () {
     AppDispatcher.dispatch({
-      actionType: RegDemConstants.actions.REGDEM_FETCH_OBJEKT_POSITIONS,
-      id: id
+      actionType: RegDemConstants.actions.REGDEM_FETCH_OBJEKT_POSITIONS
+    });
+  },
+  selectExtraEgenskap: function (extraEgenskap) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_SELECT_EXTRA_EGENSKAP,
+      extraEgenskap: extraEgenskap
     });
   },
   fetchObjektTypes: function (objektType) {
