@@ -25,6 +25,7 @@
   top:0;
   right:0;
   cursor:pointer;
+  user-select: none;
 }
 
 .search-field-indicator-container {
