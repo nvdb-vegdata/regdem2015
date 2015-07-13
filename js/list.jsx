@@ -4,8 +4,10 @@ let RegDemActions = require('./actions.js');
 
 let KeyboardArrowDown = require('material-ui/lib/svg-icons/hardware/keyboard-arrow-down');
 let Clear = require('material-ui/lib/svg-icons/content/clear');
-let { Card, CardActions, CardTitle, CardText, List, ListItem, IconButton, IconMenu, RaisedButton } = require('material-ui');
+let { Card, CardActions, CardTitle, CardText, List, ListItem, IconButton, IconMenu, FlatButton } = require('material-ui');
 let MenuItem = require('material-ui/lib/menus/menu-item');
+
+
 
 //Needed for onTouchTap
 //Can go away when react 1.0 release
@@ -44,7 +46,9 @@ let ListComponent = React.createClass({
         }
       }
 
-      let iconButtonElement = <RaisedButton label={[extraEgenskapName || 'Vis ekstra informasjon ', <div className="list-extra-egenskap-choser-icon"><KeyboardArrowDown /></div>]} />;
+      // let iconButtonElement = <FlatButton label={[extraEgenskapName || 'Vis ekstra informasjon ', <div className="list-extra-egenskap-choser-icon"><KeyboardArrowDown /></div>]} />;
+      let iconButtonElement = <div>{[extraEgenskapName || 'Vis ekstra informasjon ', <div className="list-extra-egenskap-choser-icon"><KeyboardArrowDown /></div>]}</div>;
+
       let listOfProperties = egenskapsTyper.filter((egenskap) => {
         if (egenskap) {
           switch (egenskap.type) {
@@ -67,21 +71,26 @@ let ListComponent = React.createClass({
             <div className="list-container">
               <CardActions className="list-lukk"><i className="material-icons" onTouchTap={this.closeList}>clear</i></CardActions>
               <CardTitle title="Liste" subtitle={size + ' elementer'} />
-              <CardText className="list-extra-egenskap-choser"><IconMenu iconButtonElement={iconButtonElement} onChange={this.handleEgenskapChange} value={this.props.data.list.extraEgenskap}>
-                <MenuItem primaryText="Ingen" value="0" />
-                {
-                  listOfProperties.map((egenskap) => {
-                    return (
-                      <MenuItem primaryText={egenskap.navn} value={egenskap.id} />
-                    );
-                  })
-                }
-              </IconMenu></CardText>
+              <CardText>
+                <div className="heading-vegref">Vegreferanse</div>
+                <div className="heading-extra-egenskap">
+                  <IconMenu iconButtonElement={iconButtonElement} onChange={this.handleEgenskapChange} value={this.props.data.list.extraEgenskap}>
+                    <MenuItem primaryText="Ingen" value="0" />
+                    {
+                      listOfProperties.map((egenskap) => {
+                        return (
+                          <MenuItem primaryText={egenskap.navn} value={egenskap.id} key={egenskap.id} />
+                        );
+                      })
+                    }
+                  </IconMenu>
+                </div>
+              </CardText>
               <List className="list-element-container">
                 {
                   elements.map((objekt) => {
                     return (
-                      <ListElement objekt={objekt} data={this.props.data} />
+                      <ListElement objekt={objekt} data={this.props.data} key={objekt.objektID} />
                     );
                   })
                 }
@@ -116,47 +125,49 @@ let ListElement = React.createClass({
 
   render: function () {
     var objektID = this.props.objekt.objektId;
-    let vegref, extraEgenskap;
+    let vegref = '--';
+    let extraEgenskap;
+
     if (this.props.objekt.lokasjon.vegReferanser) {
       vegref = Helper.vegReferanseString(this.props.objekt.lokasjon.vegReferanser[0]);
+    }
 
-      if (this.props.data.list.extraEgenskap) {
-        // Ser om det finnes en egenskap på objektet for valgt egenskap
-        let egenskapDetails = null;
-        for (var i = 0; i < this.props.objekt.egenskaper.length; i++) {
-          if (this.props.objekt.egenskaper[i].id === this.props.data.list.extraEgenskap) {
-            egenskapDetails = this.props.objekt.egenskaper[i];
+    if (this.props.data.list.extraEgenskap) {
+      extraEgenskap = '--';
+      
+      // Ser om det finnes en egenskap på objektet for valgt egenskap
+      let egenskapDetails = null;
+      for (var i = 0; i < this.props.objekt.egenskaper.length; i++) {
+        if (this.props.objekt.egenskaper[i].id === this.props.data.list.extraEgenskap) {
+          egenskapDetails = this.props.objekt.egenskaper[i];
+          break;
+        }
+      }
+
+      if (egenskapDetails) {
+        // Finner ut hvordan man skal hente ut egenskap
+        for (var i = 0; i < this.props.data.objektType.egenskapsTyper.length; i++) {
+          let egenskapDetailFromObjektType = this.props.data.objektType.egenskapsTyper[i];
+
+          if (egenskapDetailFromObjektType.id === this.props.data.list.extraEgenskap) {
+
+            switch (egenskapDetailFromObjektType.type) {
+              case 'ENUM':
+                extraEgenskap = egenskapDetails.enumVerdi.verdi;
+                break;
+              case 'Tekst':
+              case 'Tall':
+              case 'Klokkeslett':
+              case 'Dato':
+                extraEgenskap = egenskapDetails.verdi;
+                break;
+              default:
+                break;
+            }
             break;
           }
         }
-
-        if (egenskapDetails) {
-          // Finner ut hvordan man skal hente ut egenskap
-          for (var i = 0; i < this.props.data.objektType.egenskapsTyper.length; i++) {
-            let egenskapDetailFromObjektType = this.props.data.objektType.egenskapsTyper[i];
-
-            if (egenskapDetailFromObjektType.id === this.props.data.list.extraEgenskap) {
-
-              switch (egenskapDetailFromObjektType.type) {
-                case 'ENUM':
-                  extraEgenskap = egenskapDetails.enumVerdi.verdi;
-                  break;
-                case 'Tekst':
-                case 'Tall':
-                case 'Klokkeslett':
-                case 'Dato':
-                  extraEgenskap = egenskapDetails.verdi;
-                  break;
-                default:
-                  break;
-              }
-              break;
-            }
-          }
-        }
       }
-    } else {
-      vegref = '--';
     }
 
     return (
