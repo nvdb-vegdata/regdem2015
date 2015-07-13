@@ -104,8 +104,8 @@ let MapComponent = React.createClass({
 });
 
 window.MapFunctions = {
-  colorizeMarker: function (id) {
-    Marker.colorize(id);
+  focusMarker: function (id) {
+    Marker.focusMarker(id);
   },
   findMyPosition: function () {
     mapData.locate({setView: true, maxZoom: 15});

@@ -270,7 +270,7 @@ let showList = function () {
 };
 
 let highlightMarker = function (id) {
-  MapFunctions.colorizeMarker(id);
+  MapFunctions.focusMarker(id);
 };
 
 let addGeomStart = function (id) {
