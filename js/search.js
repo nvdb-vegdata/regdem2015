@@ -65,6 +65,10 @@ let Sok = React.createClass({
     );
   },
 
+  componentDidMount: function () {
+    this.getOptions('');
+  },
+
   componentDidUpdate: function (prevProps, prevState) {
     if (prevState.objektTypeSelected && !this.state.objektTypeSelected) {
       this.refs.typeahead.showDropdown();
