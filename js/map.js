@@ -56,7 +56,7 @@ let MapComponent = React.createClass({
       zoomControl: false,
       editable: true,
       editOptions: {
-        featuresLayer: Marker.getEditLayer()
+        featuresLayer: Marker.editLayer
       }
     });
 
@@ -85,6 +85,7 @@ let MapComponent = React.createClass({
 
     this.mapData.on('editable:drawing:end', () => {
       RegDemActions.addGeomEnd();
+      Marker.unfocusMarker();
     });
   },
 
@@ -106,8 +107,8 @@ let MapComponent = React.createClass({
     }
 
     if (nextProps.data.geometry.addingMarker) {
-      //let objID = nextProps.data.geometry.current;
-      Marker.addGeom(this.mapData);
+      let objID = nextProps.data.geometry.current;
+      Marker.addGeom(this.mapData, objID);
     }
   },
 

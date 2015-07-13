@@ -48,6 +48,7 @@ let displayMarkers = function (kart, objekter) {
 
   });
   kart.addLayer(markers);
+  kart.addLayer(editLayer);
 };
 
 let update = function (kart, data) {
@@ -56,6 +57,20 @@ let update = function (kart, data) {
     displayMarkers(kart, data.resultater[0].vegObjekter);
   }
 };
+
+let focusMarker = function ( id ) {
+  for (var i in markerList) {
+    if (id != i) {
+      markerList[i].getLayers()[0].setOpacity(0.3);
+    }
+  }
+}
+
+let unfocusMarker = function ( id ) {
+  for (var i in markerList) {
+    markerList[i].getLayers()[0].setOpacity(1);
+  }
+}
 
 let displayCurrentPosition = function (pos, kart) {
   curPosLayer.clearLayers();
@@ -73,15 +88,10 @@ let colorize = function (id) {
   }
 };
 
-let addGeom = function (kart) {
-  if(currentEditGeom) {
-
-  }
-  console.log('før', kart);
+let addGeom = function (kart, id) {
   editLayer.clearLayers();
+  focusMarker(id);
   currentEditGeom = kart.editTools.startMarker();
-  console.log('etter', kart);
-  //kart.addLayer(editTools);
 };
 
 let getEditLayer = function () {
@@ -90,10 +100,11 @@ let getEditLayer = function () {
 };
 
 module.exports = {
-  getEditLayer: getEditLayer,
+  editLayer: editLayer,
   clearMarkers: clearMarkers,
   update: update,
   displayCurrentPosition: displayCurrentPosition,
   colorize: colorize,
-  addGeom: addGeom
+  addGeom: addGeom,
+  unfocusMarker: unfocusMarker
 };
