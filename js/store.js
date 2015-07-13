@@ -155,6 +155,7 @@ let getNewData = function () {
 let setObjektID = function (objektID) {
   if (objektID) {
     _state.objektID = objektID;
+    MapFunctions.focusMarker(objektID);
     closeList();
     getNewData();
   }
@@ -165,6 +166,7 @@ let closeEditor = function () {
   _state.objekt = null;
   _state.editor.loading = false;
   _state.editor.expanded = false;
+  MapFunctions.focusMarker(null);
 };
 
 let expandEditor = function () {

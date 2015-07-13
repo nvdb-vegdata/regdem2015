@@ -59,14 +59,20 @@ let update = function (kart, data) {
 };
 
 let focusMarker = function ( id ) {
-  for (var i in markerList) {
-    if (id != i) {
-      markerList[i].getLayers()[0].setOpacity(0.3);
+  if(!id){
+    unfocusMarker();
+  } else {
+    for (var i in markerList) {
+      if (id != i) {
+        markerList[i].getLayers()[0].setOpacity(0.5);
+      } else {
+        markerList[i].getLayers()[0].setOpacity(1);
+      }
     }
   }
 }
 
-let unfocusMarker = function ( id ) {
+let unfocusMarker = function () {
   for (var i in markerList) {
     markerList[i].getLayers()[0].setOpacity(1);
   }
@@ -78,19 +84,8 @@ let displayCurrentPosition = function (pos, kart) {
   kart.addLayer(curPosLayer);
 };
 
-let colorize = function (id) {
-  if(highlightedMarker){
-    highlightedMarker.setIcon(blueIcon);
-  }
-  if (markerList[id]) {
-    highlightedMarker = markerList[id].getLayers()[0];
-    highlightedMarker.setIcon(redIcon);
-  }
-};
-
 let addGeom = function (kart, id) {
   editLayer.clearLayers();
-  focusMarker(id);
   currentEditGeom = kart.editTools.startMarker();
 };
 
@@ -104,7 +99,7 @@ module.exports = {
   clearMarkers: clearMarkers,
   update: update,
   displayCurrentPosition: displayCurrentPosition,
-  colorize: colorize,
   addGeom: addGeom,
+  focusMarker: focusMarker,
   unfocusMarker: unfocusMarker
 };
