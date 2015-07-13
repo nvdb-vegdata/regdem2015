@@ -51,8 +51,8 @@ let Sok = React.createClass({
     if ((this.props.data.search.inputValue && this.props.data.search.inputValue.length > 0) || this.props.data.objektTypeID !== null) {
       return (
         <i
-        onTouchTap={this.handleRemoveClick}
-        className="material-icons search-field-clear-icon">clear</i>
+          onTouchTap={this.handleRemoveClick}
+          className="material-icons search-field-clear-icon">clear</i>
       );
     }
   },
