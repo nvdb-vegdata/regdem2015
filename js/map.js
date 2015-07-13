@@ -1,6 +1,7 @@
 let React = require('react');
 let Marker = require('./marker');
 let RegDemActions = require('./actions');
+let Editable = require('leaflet-editable');
 
 let MapComponent = React.createClass({
   componentDidMount: function() {
@@ -52,7 +53,11 @@ let MapComponent = React.createClass({
       ],
       center: [63.43, 10.40],
       zoom: 13,
-      zoomControl: false
+      zoomControl: false,
+      editable: true,
+      editOptions: {
+        featuresLayer: Marker.editLayer
+      }
     });
 
     // PLassering av zoom kontrollene
@@ -77,6 +82,11 @@ let MapComponent = React.createClass({
         RegDemActions.fetchObjektPositions();
       }
     });
+
+    this.mapData.on('editable:drawing:end', () => {
+      RegDemActions.addGeomEnd();
+      Marker.unfocusMarker();
+    });
   },
 
   componentWillReceiveProps: function (nextProps) {
@@ -88,12 +98,17 @@ let MapComponent = React.createClass({
       Marker.update(this.mapData, nextProps.data.searchResults);
     }
 
-    if(nextProps.data.list.highlighted && nextProps.data.list.higlighted !== wasHighlighted) {
+    if(nextProps.data.list.higlighted !== wasHighlighted) {
       Marker.colorize(nextProps.data.list.highlighted);
     }
 
     if (nextProps.data.map.myLocation) {
       this.mapData.locate({setView: true, maxZoom: 15});
+    }
+
+    if (nextProps.data.geometry.addingMarker) {
+      let objID = nextProps.data.geometry.current;
+      Marker.addGeom(this.mapData, objID);
     }
   },
 

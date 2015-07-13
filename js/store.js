@@ -6,7 +6,6 @@ let RegDemConstants = require('./constants');
 let Helper = require('./helper.js');
 let Fetch = require('./fetch.js');
 
-
 let CHANGE_EVENT = 'change';
 
 let _state = {
@@ -44,6 +43,11 @@ let _state = {
 
   map: {
     myLocation: true
+  },
+
+  geometry: {
+    addingMarker: false,
+    current: null
   }
 };
 
@@ -271,6 +275,15 @@ let highlightMarker = function (id) {
   _state.list.highlighted = id;
 };
 
+let addGeomStart = function (id) {
+  _state.geometry.addingMarker = true;
+  _state.geometry.current = id;
+};
+
+let addGeomEnd = function () {
+  _state.geometry.addingMarker = false;
+};
+
 let getCurrentLocation = function () {
   _state.map.myLocation = true;
 };
@@ -346,6 +359,17 @@ AppDispatcher.register(function(action) {
     case RegDemConstants.actions.REGDEM_HIGHLIGHT_MARKER:
       id = action.id;
       highlightMarker(id);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_ADD_GEOM_START:
+      id = action.id;
+      addGeomStart(id);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_ADD_GEOM_END:
+      addGeomEnd();
       RegDemStore.emitChange();
       break;
 
