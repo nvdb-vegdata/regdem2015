@@ -84,7 +84,6 @@ let MapComponent = React.createClass({
 
     mapData.on('editable:drawing:end', () => {
       RegDemActions.addGeomEnd();
-      Marker.unfocusMarker();
     });
   },
 
@@ -104,8 +103,8 @@ let MapComponent = React.createClass({
 });
 
 window.MapFunctions = {
-  colorizeMarker: function (id) {
-    Marker.colorize(id);
+  focusMarker: function (id) {
+    Marker.focusMarker(id);
   },
   findMyPosition: function () {
     mapData.locate({setView: true, maxZoom: 15});
