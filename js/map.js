@@ -84,7 +84,6 @@ let MapComponent = React.createClass({
 
     mapData.on('editable:drawing:end', () => {
       RegDemActions.addGeomEnd();
-      Marker.unfocusMarker();
     });
   },
 
