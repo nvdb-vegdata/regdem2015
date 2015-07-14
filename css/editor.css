@@ -1,11 +1,12 @@
 /* Containers og meta */
 .Editor {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  z-index: 4;
   left: 0;
   right: 0;
-  margin: 20px;
+  bottom: 0;
+  top: 62px;
+  margin: 10px;
   max-width: 500px;
   pointer-events: none;
 }

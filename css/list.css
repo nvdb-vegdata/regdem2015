@@ -1,5 +1,17 @@
 /* Containers og meta */
 
+.list {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 50px;
+  margin: 11px;
+  max-width: 498px;
+  pointer-events: none;
+}
+
 .list-card {
   height: 100%;
   text-align: center;
