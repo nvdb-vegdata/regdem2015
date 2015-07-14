@@ -72,6 +72,7 @@ let MapComponent = React.createClass({
     locationControl = L.control.locate({
       showPopup: false,
       remainActive: true,
+      onLocationError: function(err) {console.log(err.message)},
        locateOptions: {
          maxZoom: 15
        }
