@@ -91,9 +91,10 @@ var RegDemActions = {
       type: type
     });
   },
-  addGeomEnd: function () {
+  addGeomEnd: function (result) {
     AppDispatcher.dispatch({
-      actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_END
+      actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_END,
+      result: result
     });
   }
 };

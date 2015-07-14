@@ -47,7 +47,8 @@ let _state = {
 
   geometry: {
     addingMarker: false,
-    current: null
+    current: null,
+    result: null
   }
 };
 
@@ -280,7 +281,8 @@ let addGeomStart = function (id, type) {
   MapFunctions.addGeom(id, type);
 };
 
-let addGeomEnd = function () {
+let addGeomEnd = function (result) {
+  _state.geometry.result = result;
   _state.geometry.addingMarker = false;
 };
 
@@ -295,7 +297,7 @@ let locationHasBeenSet = function () {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  let id, objektType, inputValue, userInput, objektTypeID, extraEgenskap;
+  let id, objektType, inputValue, userInput, objektTypeID, extraEgenskap, type;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -365,7 +367,8 @@ AppDispatcher.register(function(action) {
       break;
 
     case RegDemConstants.actions.REGDEM_ADD_GEOM_END:
-      addGeomEnd();
+      let result = action.result;
+      addGeomEnd(result);
       RegDemStore.emitChange();
       break;
 
