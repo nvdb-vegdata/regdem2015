@@ -30,7 +30,8 @@ let MapComponent = React.createClass({
         2.6458386250105836,
         1.3229193125052918,
         0.6614596562526459,
-        0.33072982812632296
+        0.33072982812632296,
+        0.1653649140631615
       ]
     });
 
@@ -38,7 +39,8 @@ let MapComponent = React.createClass({
 
     // Oppsett av bakgrunnskartet
     let bakgrunnskart = new L.tileLayer(kartcache, {
-      maxZoom: 16,
+      maxZoom: 17,
+      maxNativeZoom: 16,
       minZoom: 3,
       subdomains: '123456789',
       continuousWorld: true,
