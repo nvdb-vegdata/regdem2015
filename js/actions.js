@@ -84,10 +84,11 @@ var RegDemActions = {
       id: id
     });
   },
-  addGeomStart: function (id) {
+  addGeomStart: function (id, type) {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_START,
-      id: id
+      id: id,
+      type: type
     });
   },
   addGeomEnd: function () {

@@ -274,10 +274,10 @@ let highlightMarker = function (id) {
   MapFunctions.focusMarker(id);
 };
 
-let addGeomStart = function (id) {
+let addGeomStart = function (id, type) {
   _state.geometry.addingMarker = true;
   _state.geometry.current = id;
-  MapFunctions.addGeom(id);
+  MapFunctions.addGeom(id, type);
 };
 
 let addGeomEnd = function () {
@@ -359,7 +359,8 @@ AppDispatcher.register(function(action) {
 
     case RegDemConstants.actions.REGDEM_ADD_GEOM_START:
       id = action.id;
-      addGeomStart(id);
+      type = action.type;
+      addGeomStart(id, type);
       RegDemStore.emitChange();
       break;
 
