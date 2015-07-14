@@ -37,14 +37,14 @@ let clearMarkers = function () {
 let displayMarkers = function (kart, objekter) {
   objekter.forEach(function (vegObjekt) {
     let posisjon = vegObjekt.lokasjon.geometriWgs84;
-    let marker = omnivore.wkt.parse(posisjon);
+    let geom = omnivore.wkt.parse(posisjon);
 
-    marker.on('click', () => {
+    geom.on('click', () => {
       RegDemActions.setObjektID(vegObjekt.objektId);
     });
 
-    markerList[vegObjekt.objektId] = marker;
-    markers.addLayer(marker);
+    markerList[vegObjekt.objektId] = {obj:geom, type:posisjon.charAt(0)};
+    markers.addLayer(geom);
 
   });
   kart.addLayer(markers);
@@ -63,18 +63,24 @@ let focusMarker = function ( id ) {
     unfocusMarker();
   } else {
     for (var i in markerList) {
-      if (id != i) {
-        markerList[i].getLayers()[0].setOpacity(0.5);
-      } else {
-        markerList[i].getLayers()[0].setOpacity(1);
+      if(markerList[i].type == "P"){
+        if (id != i) {
+          markerList[i].obj.getLayers()[0].setOpacity(0.5);
+        } else {
+          markerList[i].obj.getLayers()[0].setOpacity(1);
+        }
       }
     }
   }
 }
 
 let unfocusMarker = function () {
-  for (var i in markerList) {
-    markerList[i].getLayers()[0].setOpacity(1);
+  if(markerList) {
+    for (var i in markerList) {
+      if(markerList[i].type == "P"){
+        markerList[i].obj.getLayers()[0].setOpacity(1);
+      }
+    }
   }
 }
 
@@ -103,5 +109,6 @@ module.exports = {
   displayCurrentPosition: displayCurrentPosition,
   addGeom: addGeom,
   focusMarker: focusMarker,
-  unfocusMarker: unfocusMarker
+  unfocusMarker: unfocusMarker,
+  currentEditGeom: currentEditGeom
 };
