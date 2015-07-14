@@ -84,14 +84,16 @@ let displayCurrentPosition = function (pos, kart) {
   kart.addLayer(curPosLayer);
 };
 
-let addGeom = function (kart, id) {
+let addGeom = function (kart, id, type) {
   editLayer.clearLayers();
-  currentEditGeom = kart.editTools.startMarker();
-};
-
-let getEditLayer = function () {
-  let that = this;
-  return that.editLayer;
+  if (type == 'marker') {
+    currentEditGeom = kart.editTools.startMarker();
+  } else if (type == 'strekning') {
+    currentEditGeom = kart.editTools.startPolyline();
+  } else {
+    currentEditGeom = kart.editTools.startPolygon();
+  }
+  console.log(currentEditGeom);
 };
 
 module.exports = {
