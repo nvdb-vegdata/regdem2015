@@ -5,22 +5,8 @@ let { FlatButton } = require('material-ui');
 
 let Marker = React.createClass({
 
-  getInitialState: function () {
-    return {
-      markerPlaced: false,
-      currentMarkerID: this.props.objektID
-    };
-  },
-
   handleClick: function () {
-    this.setMarkerPlaced(true);
     RegDemActions.addGeomStart(this.props.objektID);
-  },
-
-  setMarkerPlaced: function (value) {
-    this.setState({
-      markerPlaced: value
-    });
   },
 
   render: function () {
@@ -30,6 +16,34 @@ let Marker = React.createClass({
   }
 });
 
+let Strekning = React.createClass({
+
+  handleClick: function () {
+    RegDemActions.addGeomStart(this.props.objektID);
+  },
+
+  render: function () {
+    return (
+      <FlatButton label="Plassér Strekning" onTouchTap={this.handleClick} />
+    );
+  }
+});
+
+let Flate = React.createClass({
+
+  handleClick: function () {
+    RegDemActions.addGeomStart(this.props.objektID);
+  },
+
+  render: function () {
+    return (
+      <FlatButton label="Plassér Flate" onTouchTap={this.handleClick} />
+    );
+  }
+});
+
 module.exports = {
-  Marker: Marker
+  Marker: Marker,
+  Strekning: Strekning,
+  Flate: Flate
 };
