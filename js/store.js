@@ -272,7 +272,6 @@ let closeList = function () {
 };
 
 let showList = function () {
-  // _state.list.open = true;
   if (_state.objektID) {
     _state.objekt = null;
     _state.objektID = null;
