@@ -155,6 +155,7 @@ let getNewData = function () {
 let setObjektID = function (objektID) {
   if (objektID) {
     _state.objektID = objektID;
+    MapFunctions.focusMarker(objektID);
     closeList();
     getNewData();
   }
@@ -165,6 +166,7 @@ let closeEditor = function () {
   _state.objekt = null;
   _state.editor.loading = false;
   _state.editor.expanded = false;
+  MapFunctions.focusMarker(null);
 };
 
 let expandEditor = function () {
@@ -263,14 +265,13 @@ let closeList = function () {
 let showList = function () {
   // _state.list.open = true;
   if (_state.objektID) {
-    _state.objekt = null;
-    _state.objektID = null;
+    closeEditor();
   }
   _state.list.open = !_state.list.open;
 };
 
 let highlightMarker = function (id) {
-  MapFunctions.colorizeMarker(id);
+  MapFunctions.focusMarker(id);
 };
 
 let addGeomStart = function (id) {
