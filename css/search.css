@@ -65,6 +65,7 @@
   font-weight: 300;
   padding: 0 11px 0 52px;
   text-overflow: ellipsis;
+  opacity: 1 !important;
 }
 
 .react-typeahead-input-container input:focus, .react-typeahead-input-container input:focus + input {
