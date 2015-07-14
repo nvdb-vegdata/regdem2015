@@ -7,9 +7,9 @@ let Colors = mui.Styles.Colors;
 let MapComponent = require('./map.js');
 let Editor = require('./editor.jsx');
 let List = require('./list.jsx');
-let Search = require('./search.js');
+let Search = require('./search.jsx');
 let Buttons = require('./buttons.jsx');
-let RegDemStore = require('./store');
+let RegDemStore = require('./store.js');
 
 // For React developer tools
 window.React = React;
