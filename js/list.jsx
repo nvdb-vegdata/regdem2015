@@ -136,7 +136,7 @@ let ListElement = React.createClass({
       vegref = Helper.vegReferanseString(this.props.objekt.lokasjon.vegReferanser[0]);
     }
 
-    if (this.props.data.list.extraEgenskap && this.props.objekt) {
+    if (this.props.data.list.extraEgenskap && this.props.objekt && this.props.objekt.egenskaper) {
       extraEgenskap = '--';
 
       // Ser om det finnes en egenskap på objektet for valgt egenskap
