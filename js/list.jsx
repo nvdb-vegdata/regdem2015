@@ -30,9 +30,10 @@ let ListComponent = React.createClass({
   render: function() {
     // Hvis ingen objektID er satt skal ikke skjemaet vises.
     if (this.props.data.list.open && this.props.data.searchResults) {
-      var elements = this.props.data.searchResultsFull || this.props.data.searchResults;
+
+      let elements = this.props.data.searchResultsFull || this.props.data.searchResults;
       elements = elements.resultater[0].vegObjekter || [];
-      var size = elements.length;
+      let size = elements.length;
 
       let egenskapsTyper = this.props.data.objektType ? this.props.data.objektType.egenskapsTyper : [];
 
@@ -67,40 +68,43 @@ let ListComponent = React.createClass({
 
       return (
         <div className="list">
-          <Card className="list-card">
-            <div className="list-container">
-              <CardActions className="list-lukk"><i className="material-icons" onTouchTap={this.closeList}>clear</i></CardActions>
-              <CardTitle title="Liste" subtitle={size + ' elementer'} />
-              <CardText>
-                <div className="heading-vegref">Vegreferanse</div>
-                <div className="heading-extra-egenskap">
-                  <IconMenu iconButtonElement={iconButtonElement} onChange={this.handleEgenskapChange} value={this.props.data.list.extraEgenskap}>
-                    <MenuItem primaryText="Ingen" value="0" />
-                    {
-                      listOfProperties.map((egenskap) => {
-                        return (
-                          <MenuItem primaryText={egenskap.navn} value={egenskap.id} key={egenskap.id} />
-                        );
-                      })
-                    }
-                  </IconMenu>
-                </div>
-              </CardText>
-              <List className="list-element-container">
-                {
-                  elements.map((objekt) => {
-                    return (
-                      <ListElement objekt={objekt} data={this.props.data} key={objekt.objektID} />
-                    );
-                  })
-                }
-              </List>
-            </div>
+          <Card className="list-card list-card-open">
+            <CardText>
+              <div className="heading-vegref">Vegreferanse</div>
+              <div className="heading-extra-egenskap">
+                <IconMenu iconButtonElement={iconButtonElement} onChange={this.handleEgenskapChange} value={this.props.data.list.extraEgenskap}>
+                  <MenuItem primaryText="Ingen" value="0" />
+                  {
+                    listOfProperties.map((egenskap) => {
+                      return (
+                        <MenuItem primaryText={egenskap.navn} value={egenskap.id} key={egenskap.id} />
+                      );
+                    })
+                  }
+                </IconMenu>
+              </div>
+            </CardText>
+            <List className="list-element-container">
+              {
+                elements.map((objekt) => {
+                  return (
+                    <ListElement objekt={objekt} data={this.props.data} key={objekt.objektID} />
+                  );
+                })
+              }
+            </List>
           </Card>
         </div>
       );
     } else {
-      return (<div></div>);
+      return (<div className="list">
+                <Card className="list-card">
+                  <CardText>
+                    <div className="heading-vegref"> </div>
+                    <div className="heading-extra-egenskap"> </div>
+                  </CardText>
+                </Card>
+              </div>);
     }
   }
 });
