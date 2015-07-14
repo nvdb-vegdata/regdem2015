@@ -47,7 +47,6 @@ let ListComponent = React.createClass({
         }
       }
 
-      // let iconButtonElement = <FlatButton label={[extraEgenskapName || 'Vis ekstra informasjon ', <div className="list-extra-egenskap-choser-icon"><KeyboardArrowDown /></div>]} />;
       let iconButtonElement = <div>{[extraEgenskapName || 'Vis ekstra informasjon ', <div className="list-extra-egenskap-choser-icon"><KeyboardArrowDown /></div>]}</div>;
 
       let listOfProperties = egenskapsTyper.filter((egenskap) => {
