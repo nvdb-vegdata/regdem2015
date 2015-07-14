@@ -17,12 +17,22 @@ let highlightedMarker = null;
 // Definerer ikon
 let redIcon = L.icon({
   iconUrl: 'libs/leaflet-0.7.3/images/marker-icon-red.png',
-  shadowUrl: 'libs/leaflet-0.7.3/images/marker-shadow.png'
+  shadowUrl: 'libs/leaflet-0.7.3/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+
+  shadowSize: [41, 41]
 });
 
 let blueIcon = L.icon({
   iconUrl: 'libs/leaflet-0.7.3/images/marker-icon.png',
-  shadowUrl: 'libs/leaflet-0.7.3/images/marker-shadow.png'
+  shadowUrl: 'libs/leaflet-0.7.3/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+
+  shadowSize: [41, 41]
 });
 
 // Fjerner alle markører på kartet.

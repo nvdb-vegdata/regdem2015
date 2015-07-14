@@ -3,6 +3,7 @@ let Marker = require('./marker');
 let RegDemActions = require('./actions');
 let Editable = require('leaflet-editable');
 let mapData = null;
+let locationControl = null;
 
 let MapComponent = React.createClass({
   componentDidMount: function() {
@@ -66,17 +67,26 @@ let MapComponent = React.createClass({
     // PLassering av zoom kontrollene
     new L.Control.Zoom( {position: 'bottomleft'}).addTo(mapData);
 
-    mapData.locate({setView: true, maxZoom: 15});
+    // Min posisjon
 
+    locationControl = L.control.locate({
+      showPopup: false,
+      remainActive: true,
+       locateOptions: {
+         maxZoom: 15
+       }
+    }).addTo(mapData);
+
+    locationControl.start();
+
+    // Events
     mapData.on('locationfound', (e) => {
-      Marker.displayCurrentPosition(e, mapData);
       RegDemActions.locationHasBeenSet();
     });
 
     mapData.on('locationerror', () => {
       RegDemActions.locationHasBeenSet();
     });
-
 
     mapData.on('moveend', () => {
       if (this.props.data.objektTypeID) {
@@ -110,7 +120,8 @@ window.MapFunctions = {
     Marker.colorize(id);
   },
   findMyPosition: function () {
-    mapData.locate({setView: true, maxZoom: 15});
+    locationControl.stop();
+    locationControl.start();
   },
   updateMarkers: function (searchResult) {
     Marker.update(mapData, searchResult);
