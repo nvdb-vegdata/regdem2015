@@ -128,7 +128,12 @@ let Editor = React.createClass({
           }
         }
 
-        GeomFields = (<GeometryFields.Geom objektID={this.props.data.objektID} egenskaper={geomEgenskaper} />);
+        GeomFields = (<GeometryFields.Geom
+                        objektID={this.props.data.objektID}
+                        egenskaper={geomEgenskaper}
+                        result={this.props.data.geometry.result}
+                        resultType={this.props.data.geometry.resultType}
+                      />);
 
         EditorFields = egenskapsTyper.map((egenskap) => {
                           switch (egenskap.type) {

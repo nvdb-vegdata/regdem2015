@@ -1,9 +1,39 @@
 let React = require('react');
 let RegDemActions = require('./actions.js');
 
-let { RaisedButton, TextField } = require('material-ui');
+let { RaisedButton } = require('material-ui');
 
 let Geom = React.createClass({
+
+  getInitialState: function () {
+    return {
+      currentGeom: null,
+      currentType: null
+    }
+  },
+
+  setCurrentGeom: function (val) {
+    this.setState({
+      currentGeom: val
+    })
+  },
+
+  setCurrentType: function (val) {
+    this.setState({
+      currentType: val
+    })
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    if(this.state.currentGeom != nextProps.result){
+      this.setCurrentGeom(nextProps.result);
+    }
+
+    if (this.state.currentType != nextProps.resultType) {
+      this.setCurrentType(nextProps.resultType);
+    }
+  },
+
   render: function () {
     return (
       <div className="Editor-geom">

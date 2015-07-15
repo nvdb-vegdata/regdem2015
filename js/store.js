@@ -48,7 +48,8 @@ let _state = {
   geometry: {
     addingMarker: false,
     current: null,
-    result: null
+    result: null,
+    resultType: null
   }
 };
 
@@ -278,6 +279,7 @@ let highlightMarker = function (id) {
 let addGeomStart = function (id, type) {
   _state.geometry.addingMarker = true;
   _state.geometry.current = id;
+  _state.geometry.resultType = type;
   MapFunctions.addGeom(id, type);
 };
 
