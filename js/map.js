@@ -3,6 +3,7 @@ let Marker = require('./marker');
 let RegDemActions = require('./actions');
 let Editable = require('leaflet-editable');
 let mapData = null;
+let locationControl = null;
 
 let MapComponent = React.createClass({
   componentDidMount: function() {
@@ -30,7 +31,8 @@ let MapComponent = React.createClass({
         2.6458386250105836,
         1.3229193125052918,
         0.6614596562526459,
-        0.33072982812632296
+        0.33072982812632296,
+        0.1653649140631615
       ]
     });
 
@@ -38,7 +40,8 @@ let MapComponent = React.createClass({
 
     // Oppsett av bakgrunnskartet
     let bakgrunnskart = new L.tileLayer(kartcache, {
-      maxZoom: 16,
+      maxZoom: 17,
+      maxNativeZoom: 16,
       minZoom: 3,
       subdomains: '123456789',
       continuousWorld: true,
@@ -64,17 +67,27 @@ let MapComponent = React.createClass({
     // PLassering av zoom kontrollene
     new L.Control.Zoom( {position: 'bottomleft'}).addTo(mapData);
 
-    mapData.locate({setView: true, maxZoom: 15});
+    // Min posisjon
 
+    locationControl = L.control.locate({
+      showPopup: false,
+      remainActive: true,
+      onLocationError: function(err) {console.log(err.message)},
+       locateOptions: {
+         maxZoom: 15
+       }
+    }).addTo(mapData);
+
+    locationControl.start();
+
+    // Events
     mapData.on('locationfound', (e) => {
-      Marker.displayCurrentPosition(e, mapData);
       RegDemActions.locationHasBeenSet();
     });
 
     mapData.on('locationerror', () => {
       RegDemActions.locationHasBeenSet();
     });
-
 
     mapData.on('moveend', () => {
       if (this.props.data.objektTypeID) {
@@ -107,7 +120,8 @@ window.MapFunctions = {
     Marker.focusMarker(id);
   },
   findMyPosition: function () {
-    mapData.locate({setView: true, maxZoom: 15});
+    locationControl.stop();
+    locationControl.start();
   },
   updateMarkers: function (searchResult) {
     Marker.update(mapData, searchResult);

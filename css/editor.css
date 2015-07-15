@@ -1,11 +1,12 @@
 /* Containers og meta */
 .Editor {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  z-index: 4;
   left: 0;
   right: 0;
-  margin: 20px;
+  bottom: 0;
+  top: 62px;
+  margin: 10px;
   max-width: 500px;
   pointer-events: none;
 }
@@ -163,6 +164,10 @@
   transform: perspective(1px) scale(0.75) translate3d(0, -18px, 0);
   transform-origin: left top;
 }
+.Editor-selectField > div:nth-of-type(2) > div {
+  overflow: scroll;
+}
+
 .Editor-permanentEtikett > label:first-child {
   color: rgba(0, 0, 0, 0.5) !important;
   transform: perspective(1px) scale(0.75) translate3d(0, -18px, 0) !important;

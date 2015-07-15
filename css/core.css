@@ -10,9 +10,6 @@ html, body {
 strong {
   font-weight: 500;
 }
-.target {
-  font-size: 1.2em
-}
 .kart {
   position: absolute;
   top: 0;
@@ -21,13 +18,6 @@ strong {
   bottom: 0;
   z-index: 1;
 }
-.Editor, .list {
-  position: absolute;
-  z-index: 4;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 62px;
-  margin: 10px;
-  max-width: 500px;
+.leaflet-control-locate {
+  display: none;
 }
