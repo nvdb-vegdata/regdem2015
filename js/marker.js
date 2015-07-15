@@ -47,14 +47,14 @@ let clearMarkers = function () {
 let displayMarkers = function (kart, objekter) {
   objekter.forEach(function (vegObjekt) {
     let posisjon = vegObjekt.lokasjon.geometriWgs84;
-    let marker = omnivore.wkt.parse(posisjon);
+    let geom = omnivore.wkt.parse(posisjon);
 
-    marker.on('click', () => {
+    geom.on('click', () => {
       RegDemActions.setObjektID(vegObjekt.objektId);
     });
 
-    markerList[vegObjekt.objektId] = marker;
-    markers.addLayer(marker);
+    markerList[vegObjekt.objektId] = {obj:geom, type:posisjon.charAt(0)};
+    markers.addLayer(geom);
 
   });
   kart.addLayer(markers);
@@ -73,18 +73,34 @@ let focusMarker = function ( id ) {
     unfocusMarker();
   } else {
     for (var i in markerList) {
-      if (id != i) {
-        markerList[i].getLayers()[0].setOpacity(0.5);
-      } else {
-        markerList[i].getLayers()[0].setOpacity(1);
-      }
+        if (id != i) {
+          setGeomOpacity(markerList[i].obj.getLayers()[0], 0.5, markerList[i].type);
+        } else {
+          setGeomOpacity(markerList[i].obj.getLayers()[0], 1, markerList[i].type);
+        }
     }
   }
 }
 
 let unfocusMarker = function () {
-  for (var i in markerList) {
-    markerList[i].getLayers()[0].setOpacity(1);
+  if(markerList) {
+    for (var i in markerList) {
+      setGeomOpacity(markerList[i].obj.getLayers()[0], 1, markerList[i].type);
+    }
+  }
+}
+
+let setGeomOpacity = function (geom, opacity, type) {
+  switch (type) {
+    case "P":
+      geom.setOpacity(opacity);
+      break;
+    case "L":
+    case "F":
+      geom.setStyle({opacity:opacity/2}); // Linjer og Flaters default opacity er 0,5.
+      break;
+    default:
+      break;
   }
 }
 
@@ -94,14 +110,15 @@ let displayCurrentPosition = function (pos, kart) {
   kart.addLayer(curPosLayer);
 };
 
-let addGeom = function (kart, id) {
+let addGeom = function (kart, id, type) {
   editLayer.clearLayers();
-  currentEditGeom = kart.editTools.startMarker();
-};
-
-let getEditLayer = function () {
-  let that = this;
-  return that.editLayer;
+  if (type == 'marker') {
+    currentEditGeom = kart.editTools.startMarker();
+  } else if (type == 'strekning') {
+    currentEditGeom = kart.editTools.startPolyline();
+  } else {
+    currentEditGeom = kart.editTools.startPolygon();
+  }
 };
 
 module.exports = {
@@ -111,5 +128,6 @@ module.exports = {
   displayCurrentPosition: displayCurrentPosition,
   addGeom: addGeom,
   focusMarker: focusMarker,
-  unfocusMarker: unfocusMarker
+  unfocusMarker: unfocusMarker,
+  currentEditGeom: currentEditGeom
 };

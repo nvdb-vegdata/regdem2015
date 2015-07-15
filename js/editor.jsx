@@ -114,7 +114,26 @@ let Editor = React.createClass({
         CardTextClassName = 'Editor-CardText';
         CardActionsClassName = 'Editor-knapp-container';
 
-        GeomFields = (<GeometryFields.Marker objektID={this.props.data.objektID} />);
+        let geomEgenskaper = {};
+        for (var i = 0; i < egenskapsTyper.length; i++) {
+          let navn = egenskapsTyper[i].navn;
+          if (navn.indexOf('Geometri') == 0 ) {
+            if (navn.indexOf('punkt') >= 0) {
+              geomEgenskaper.punkt = true;
+            } else if (navn.indexOf('linje') >= 0) {
+              geomEgenskaper.linje = true;
+            } else if (navn.indexOf('flate') >= 0) {
+              geomEgenskaper.flate = true;
+            }
+          }
+        }
+
+        GeomFields = (<GeometryFields.Geom
+                        objektID={this.props.data.objektID}
+                        egenskaper={geomEgenskaper}
+                        result={this.props.data.geometry.result}
+                        resultType={this.props.data.geometry.resultType}
+                      />);
 
         EditorFields = egenskapsTyper.map((egenskap) => {
                           switch (egenskap.type) {

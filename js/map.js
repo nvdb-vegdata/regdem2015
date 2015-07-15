@@ -95,8 +95,8 @@ let MapComponent = React.createClass({
       }
     });
 
-    mapData.on('editable:drawing:end', () => {
-      RegDemActions.addGeomEnd();
+    mapData.on('editable:drawing:commit', (result) => {
+      RegDemActions.addGeomEnd(result.layer);
     });
   },
 
@@ -135,8 +135,8 @@ window.MapFunctions = {
   mapData: function () {
     return mapData;
   },
-  addGeom: function (obektID) {
-    Marker.addGeom(mapData, obektID);
+  addGeom: function (objektID, type) {
+    Marker.addGeom(mapData, objektID, type);
   }
 };
 
