@@ -1,8 +1,8 @@
 .buttons-container {
   position: absolute;
-  bottom: 40px;
+  bottom: 25px;
   right: 20px;
-  z-index: 999;
+  z-index: 1;
 }
 
 .buttons-button {

@@ -1,7 +1,7 @@
 let React = require('react');
 let RegDemActions = require('./actions.js');
 let mui = require('material-ui');
-let { FloatingActionButton, FontIcon, Snackbar, CircularProgress } = require('material-ui');
+let { FloatingActionButton, FontIcon, CircularProgress } = require('material-ui');
 
 //Needed for onTouchTap
 //Can go away when react 1.0 release
@@ -14,15 +14,7 @@ let Colors = mui.Styles.Colors;
 
 let Buttons = React.createClass({
   handleAdd: function () {
-    if (!this.props.data.objektTypeID) {
-      this.refs.snackbar.show();
-    } else {
-      RegDemActions.setObjektID(-1);
-    }
-  },
-
-  handleAction: function () {
-    this.refs.snackbar.dismiss();
+    RegDemActions.setObjektID(-1);
   },
 
   handleChangeMyLocation: function () {
@@ -59,11 +51,6 @@ let Buttons = React.createClass({
         <div className="buttons-button">
           {addButton}
         </div>
-        <Snackbar
-          ref="snackbar"
-          message="Du må først velge en objekttype fra søkefeltet"
-          action="Ok"
-          onActionTouchTap={this.handleAction} />
       </div>
     );
   }

@@ -6,10 +6,17 @@ var OptionTemplate = require('./optiontemplate.jsx');
 
 let RegDemActions = require('./actions');
 
+
+//Needed for onTouchTap
+//Can go away when react 1.0 release
+//Check this repo:
+//https://github.com/zilverline/react-tap-event-plugin
+var injectTapEventPlugin = require('react-tap-event-plugin');
+injectTapEventPlugin();
+
 let Sok = React.createClass({
   getInitialState: function() {
     return {
-      objektTypeSelected: false,
       prevSelectedIndex: null
     };
   },
@@ -19,9 +26,13 @@ let Sok = React.createClass({
     let rightMostIcon = this.renderRemoveIcon();
     let searcFieldClassName = 'search-field';
 
-    if (this.state.objektTypeSelected) {
-      leftMostIcon = (<i className="material-icons search-field-go-back" onTouchTap={this.handleGoBack}>arrow_back</i>);
-      rightMostIcon = (<i className="material-icons search-field-list-icon" onTouchTap={this.handleOpenList}>list</i>);
+    if (this.props.data.objektTypeID) {
+      let listIconClassName = 'material-icons search-field-list-icon';
+      if (this.props.data.list.open) {
+        listIconClassName += ' search-field-list-icon-opened'
+      }
+      // Listen bruker onClick. Får registrert dobbelt trykk ellers
+      leftMostIcon = (<i className={listIconClassName} onClick={this.handleOpenList}>list</i>);
       searcFieldClassName = 'search-field search-field-objekttype-selected';
     }
 
@@ -65,16 +76,25 @@ let Sok = React.createClass({
     );
   },
 
+  componentDidMount: function () {
+    this.getOptions('');
+  },
+
   componentDidUpdate: function (prevProps, prevState) {
-    if (prevState.objektTypeSelected && !this.state.objektTypeSelected) {
+    if (prevProps.data.objektTypeID && !this.props.data.objektTypeID) {
       this.refs.typeahead.showDropdown();
       this.refs.typeahead.focus();
     }
   },
 
   handleInputClick: function(event) {
-    if(this.props.data.search.inputValue === ''){
-      this.handleChange(event);
+    if (this.props.data.objektTypeID) {
+      this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
+      RegDemActions.goBackAndReset(this.refs.typeahead.userInputValue);
+    } else {
+      if (this.props.data.search.inputValue === '') {
+        this.handleChange(event);
+      }
     }
   },
 
@@ -99,14 +119,6 @@ let Sok = React.createClass({
 
   setInputValue: function(value) {
     RegDemActions.setInputValue(value);
-  },
-
-  setLoading: function (val) {
-    if (this.props.data.search.inputValue) {
-      this.setState({
-        loading: val
-      });
-    }
   },
 
   handleHint: function(inputValue, options) {
@@ -145,27 +157,17 @@ let Sok = React.createClass({
   },
 
   executeSearch: function (objektTypeID) {
-    this.setState({
-      objektTypeSelected: true
-    });
     RegDemActions.executeSearch(objektTypeID);
     this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').setAttribute('disabled', 'disabled');
   },
 
   handleRemoveClick: function() {
+    this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
     RegDemActions.resetApp();
   },
 
   handleOpenList: function() {
     RegDemActions.showList();
-  },
-
-  handleGoBack: function() {
-    this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
-    this.setState({
-      objektTypeSelected: false
-    });
-    RegDemActions.goBackAndReset(this.refs.typeahead.userInputValue);
   }
 });
 
