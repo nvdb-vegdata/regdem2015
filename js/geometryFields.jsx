@@ -6,17 +6,10 @@ let { RaisedButton, TextField } = require('material-ui');
 let Geom = React.createClass({
   render: function () {
     return (
-      <div className="Editor-tekst">
-        <TextField
-          floatingLabelText='Geometri'
-          defaultValue='Plassér i kart.'
-          fullWidth={true}
-          disabled={true}
-          className='Editor-geom-field'
-        />
-        <Marker egenskaper={this.props.egenskaper} objektID={this.props.objektID}/>
-        <Strekning egenskaper={this.props.egenskaper} objektID={this.props.objektID}/>
-        <Flate egenskaper={this.props.egenskaper} objektID={this.props.objektID}/>
+      <div className="Editor-geom">
+        <Marker egenskaper={this.props.egenskaper} objektID={this.props.objektID} />
+        <Strekning egenskaper={this.props.egenskaper} objektID={this.props.objektID} />
+        <Flate egenskaper={this.props.egenskaper} objektID={this.props.objektID} />
       </div>
     );
   }
