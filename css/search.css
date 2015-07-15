@@ -107,6 +107,10 @@
   cursor:pointer;
 }
 
+.optionElement:hover {
+  background-color: #f5f5f5;
+}
+
 .optionElement p {
   display:inline-block;
 }

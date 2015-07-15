@@ -51,6 +51,7 @@ let Sok = React.createClass({
                 handleHint={this.handleHint}
                 onFocus={this.handleFocus}
                 autoFocus={this.props.data.search.inputValue ? true : false}
+                hoverSelect={false}
                 ref="typeahead"
               />
               {this.renderIndicator()}
