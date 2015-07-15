@@ -29,7 +29,7 @@ let Sok = React.createClass({
     if (this.props.data.objektTypeID) {
       let listIconClassName = 'material-icons search-field-list-icon';
       if (this.props.data.list.open) {
-        listIconClassName += ' search-field-list-icon-opened'
+        listIconClassName += ' search-field-list-icon-opened';
       }
       // Listen bruker onClick. Får registrert dobbelt trykk ellers
       leftMostIcon = (<i className={listIconClassName} onClick={this.handleOpenList}>list</i>);
@@ -81,7 +81,7 @@ let Sok = React.createClass({
     this.getOptions('');
   },
 
-  componentDidUpdate: function (prevProps, prevState) {
+  componentDidUpdate: function (prevProps) {
     if (prevProps.data.objektTypeID && !this.props.data.objektTypeID) {
       this.refs.typeahead.showDropdown();
       this.refs.typeahead.focus();
@@ -92,10 +92,8 @@ let Sok = React.createClass({
     if (this.props.data.objektTypeID) {
       this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
       RegDemActions.goBackAndReset(this.refs.typeahead.userInputValue);
-    } else {
-      if (this.props.data.search.inputValue === '') {
-        this.handleChange(event);
-      }
+    } else if (this.props.data.search.inputValue === ''){
+      this.handleChange(event);
     }
   },
 

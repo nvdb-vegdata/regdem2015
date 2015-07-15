@@ -100,7 +100,7 @@ module.exports.fetchAPIObjekter = function(objectID, box, callback, extraEgenska
   };
 
   var select = 'objektId,objektTypeId,vegObjektLokasjon/vegReferanser,vegObjektLokasjon/geometriWgs84';
-  
+
   if (extraEgenskap) {
     select = '';
   }
