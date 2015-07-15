@@ -63,13 +63,11 @@ let focusMarker = function ( id ) {
     unfocusMarker();
   } else {
     for (var i in markerList) {
-      if(markerList[i].type == "P"){
         if (id != i) {
-          markerList[i].obj.getLayers()[0].setOpacity(0.5);
+          setGeomOpacity(markerList[i].obj.getLayers()[0], 0.5, markerList[i].type);
         } else {
-          markerList[i].obj.getLayers()[0].setOpacity(1);
+          setGeomOpacity(markerList[i].obj.getLayers()[0], 1, markerList[i].type);
         }
-      }
     }
   }
 }
@@ -77,10 +75,22 @@ let focusMarker = function ( id ) {
 let unfocusMarker = function () {
   if(markerList) {
     for (var i in markerList) {
-      if(markerList[i].type == "P"){
-        markerList[i].obj.getLayers()[0].setOpacity(1);
-      }
+      setGeomOpacity(markerList[i].obj.getLayers()[0], 1, markerList[i].type);
     }
+  }
+}
+
+let setGeomOpacity = function (geom, opacity, type) {
+  switch (type) {
+    case "P":
+      geom.setOpacity(opacity);
+      break;
+    case "L":
+    case "F":
+      geom.setStyle({opacity:opacity/2}); // Linjer og Flaters default opacity er 0,5.
+      break;
+    default:
+      break;
   }
 }
 
@@ -99,7 +109,6 @@ let addGeom = function (kart, id, type) {
   } else {
     currentEditGeom = kart.editTools.startPolygon();
   }
-  console.log(currentEditGeom);
 };
 
 module.exports = {
