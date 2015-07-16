@@ -18,6 +18,7 @@ let _state = {
   objektEdited: null,
   // Hele objektType
   objektType: null,
+  objektEdited: null,
 
   searchResults: null,
   searchResultsFull: null,
@@ -66,25 +67,25 @@ let RegDemStore = assign({}, EventEmitter.prototype, {
    * Get the entire collection of TODOs.
    * @return {object}
    */
-  getAll: function() {
+  getAll: function () {
     return _state;
   },
 
-  emitChange: function() {
+  emitChange: function () {
     this.emit(CHANGE_EVENT);
   },
 
   /**
    * @param {function} callback
    */
-  addChangeListener: function(callback) {
+  addChangeListener: function (callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
   /**
    * @param {function} callback
    */
-  removeChangeListener: function(callback) {
+  removeChangeListener: function (callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
 });
@@ -170,10 +171,11 @@ let getNewData = function () {
 
 /* Funksjoner for actions */
 
-let setObjektID = function (objektId) {
-  if (objektId) {
-    _state.objektId = objektId;
-    MapFunctions.focusMarker(objektId);
+let setObjektID = function (objektID) {
+  if (objektID) {
+    _state.objektID = objektID;
+    MapFunctions.focusMarker(objektID);
+    MapFunctions.clearEditGeom();
     closeList();
     getNewData();
   }
@@ -183,8 +185,14 @@ let closeEditor = function () {
   _state.objektId = null;
   _state.objekt = null;
   _state.objektEdited = null;
+  
   _state.editor.loading = false;
   _state.editor.expanded = false;
+
+  _state.geometry.result = null;
+  _state.geometry.resultType = null;
+
+  MapFunctions.clearEditGeom(); // Fjerner edit-objekt ved lukking av editor.
   MapFunctions.focusMarker(null);
 };
 
@@ -206,7 +214,7 @@ let fetchObjektPositions = function () {
       _state.searchResultsFull = null;
       _state.search.loading = false;
 
-      MapFunctions.updateMarkers(data);
+      MapFunctions.updateMarkers(data, _state.objekt, _state.objektEdited);
 
       RegDemStore.emitChange();
     });
@@ -267,6 +275,7 @@ let executeSearch = function (objektTypeID) {
 
 let resetApp = function () {
   MapFunctions.clearMarkers();
+  MapFunctions.clearEditGeom();
   _state = simpleDeepCopy(_initialState);
   _state.map.myLocation = false;
 };

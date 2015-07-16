@@ -127,7 +127,7 @@ let Editor = React.createClass({
         let geomEgenskaper = {};
         for (var i = 0; i < egenskapsTyper.length; i++) {
           let navn = egenskapsTyper[i].navn;
-          if (navn.indexOf('Geometri') == 0 ) {
+          if (navn.indexOf('Geometri') === 0 ) {
             if (navn.indexOf('punkt') >= 0) {
               geomEgenskaper.punkt = true;
             } else if (navn.indexOf('linje') >= 0) {

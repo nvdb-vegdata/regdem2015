@@ -3,8 +3,7 @@ let Helper = require('./helper.js');
 let RegDemActions = require('./actions.js');
 
 let KeyboardArrowDown = require('material-ui/lib/svg-icons/hardware/keyboard-arrow-down');
-let Clear = require('material-ui/lib/svg-icons/content/clear');
-let { Card, CardActions, CardTitle, CardText, List, ListItem, IconButton, IconMenu, FlatButton } = require('material-ui');
+let { Card, CardText, List, ListItem, IconMenu } = require('material-ui');
 let MenuItem = require('material-ui/lib/menus/menu-item');
 
 
@@ -33,8 +32,6 @@ let ListComponent = React.createClass({
 
       let elements = this.props.data.searchResultsFull || this.props.data.searchResults;
       elements = elements.resultater[0].vegObjekter || [];
-      let size = elements.length;
-
       let egenskapsTyper = this.props.data.objektType ? this.props.data.objektType.egenskapsTyper : [];
 
       let extraEgenskapName = '';
@@ -50,7 +47,7 @@ let ListComponent = React.createClass({
       let iconButtonElement = <div>{[extraEgenskapName || 'Vis ekstra informasjon ', <div className="list-extra-egenskap-choser-icon"><KeyboardArrowDown /></div>]}</div>;
 
       let listOfProperties = egenskapsTyper.filter((egenskap) => {
-        if (egenskap) {
+        if (egenskap) {
           switch (egenskap.type) {
             case 'ENUM':
             case 'Tekst':
@@ -58,11 +55,10 @@ let ListComponent = React.createClass({
             case 'Klokkeslett':
             case 'Dato':
               return true;
-              break;
             default:
               return false;
           }
-        };
+        }
       });
 
       return (
@@ -110,7 +106,7 @@ let ListComponent = React.createClass({
 
 let ListElement = React.createClass({
 
-  handleMouseEnter: function (event) {
+  handleMouseEnter: function () {
     let id = this.props.objekt.objektId;
     RegDemActions.highlightMarker(id);
   },
@@ -119,7 +115,7 @@ let ListElement = React.createClass({
     RegDemActions.highlightMarker(null);
   },
 
-  handleClick: function (event) {
+  handleClick: function () {
     let id = this.props.objekt.objektId;
 
     RegDemActions.closeList();
@@ -149,8 +145,8 @@ let ListElement = React.createClass({
 
       if (egenskapDetails) {
         // Finner ut hvordan man skal hente ut egenskap
-        for (var i = 0; i < this.props.data.objektType.egenskapsTyper.length; i++) {
-          let egenskapDetailFromObjektType = this.props.data.objektType.egenskapsTyper[i];
+        for (var j = 0; j < this.props.data.objektType.egenskapsTyper.length; j++) {
+          let egenskapDetailFromObjektType = this.props.data.objektType.egenskapsTyper[j];
 
           if (egenskapDetailFromObjektType.id === this.props.data.list.extraEgenskap) {
 
