@@ -77,8 +77,13 @@ module.exports.fetchObjektType = function(objektTypeID, callback) {
   requestHTTP(url, callback);
 };
 
-module.exports.fetchObjekt = function(objektID, callback) {
-  var url = 'https://www.vegvesen.no/nvdb/api/vegobjekter/objekt/' + objektID + '/.json';
+module.exports.fetchObjekt = function(objektId, callback) {
+  var url = 'https://www.vegvesen.no/nvdb/api/vegobjekter/objekt/' + objektId + '/.json';
+  requestHTTP(url, callback);
+};
+
+module.exports.fetchKoordinat = function(lon, lat, callback) {
+  var url = 'https://www.vegvesen.no/nvdb/api/vegreferanse/koordinat?lon=' + lon + '&lat=' + lat;
   requestHTTP(url, callback);
 };
 
@@ -100,7 +105,7 @@ module.exports.fetchAPIObjekter = function(objectID, box, callback, extraEgenska
   };
 
   var select = 'objektId,objektTypeId,vegObjektLokasjon/vegReferanser,vegObjektLokasjon/geometriWgs84';
-  
+
   if (extraEgenskap) {
     select = '';
   }
