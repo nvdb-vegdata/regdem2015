@@ -15,6 +15,7 @@ let _state = {
 
   // Hele objektet
   objekt: null,
+  objektEdited: null,
   // Hele objektType
   objektType: null,
 
@@ -49,6 +50,7 @@ let _state = {
     addingMarker: false,
     current: null,
     result: null,
+    // [marker | strekning | flate]
     resultType: null
   }
 };
@@ -122,9 +124,9 @@ let fetchObjektTypeData = function () {
 };
 
 let fetchObjektData = function () {
-  Fetch.fetchObjekt(_state.objektID, (objektData) => {
-    // Siden vi henter ObjektType ved søk trenger vi som oftest ikke å hente denne også
+  Fetch.fetchObjekt(_state.objektId, (objektData) => {
     _state.objekt = objektData;
+    _state.objektEdited = null;
 
     fetchObjektTypeData();
   });
@@ -135,8 +137,11 @@ let getNewData = function () {
   if (_state.objektId === -1) {
     // Har vi oppgitt
     if (_state.objektTypeID) {
-      // Kun hent ObjektType data, sett Objekt data til null
+      // Nullstiller objekt, siden vi skal lage et nytt objekt
       _state.objekt = null;
+      // Lager et objektEdited-objekt med enkel struktur
+      createObjektEdited();
+
       _state.editor.loading = true;
       RegDemStore.emitChange();
 
@@ -177,6 +182,7 @@ let setObjektID = function (objektId) {
 let closeEditor = function () {
   _state.objektId = null;
   _state.objekt = null;
+  _state.objektEdited = null;
   _state.editor.loading = false;
   _state.editor.expanded = false;
   MapFunctions.focusMarker(null);
@@ -249,6 +255,7 @@ let setInputValue = function (inputValue) {
 let executeSearch = function (objektTypeID) {
   _state.objektId = null;
   _state.objekt = null;
+  _state.objektEdited = null;
 
   _state.objektTypeID = objektTypeID;
   _state.objektType = null;
@@ -298,6 +305,7 @@ let addGeomStart = function (id, type) {
 let addGeomEnd = function (result) {
   _state.geometry.result = result;
   _state.geometry.addingMarker = false;
+  updateEditedLocation();
 };
 
 let getCurrentLocation = function () {
@@ -307,6 +315,83 @@ let getCurrentLocation = function () {
 
 let locationHasBeenSet = function () {
   _state.map.myLocation = false;
+};
+
+
+// Initaliserer skaping av objektEdited.
+let createObjektEdited = function () {
+  if (_state.objekt) {
+    _state.objektEdited = simpleDeepCopy(_state.objekt);
+  } else {
+    _state.objektEdited = {
+      objektId: -1,
+      objektTypeId: _state.objektTypeId,
+      egenskaper: [],
+      lokasjon: {
+        geometriWgs84: null,
+        vegLenker: null
+      }
+    };
+  }
+};
+
+let findTypeIdToGeo = function () {
+  let returnId = null;
+  _state.objektType.egenskapsTyper.every((element, index, array) => {
+    if (element.navn.toLowerCase().includes('geometri')) {
+      returnId = element.id;
+      return false;
+    }
+    return true;
+  });
+
+  return returnId;
+};
+
+// Function for each component that we care about. Needs to either create new structure or just edit what's already there
+let updateEditedLocation = function () {
+  if (!_state.objektEdited) {
+    createObjektEdited();
+  }
+
+  if (_state.geometry.result) {
+    switch (_state.geometry.resultType) {
+      case 'marker':
+        let lng = _state.geometry.result._latlng.lng;
+        let lat = _state.geometry.result._latlng.lat;
+        // Lenke ID
+        Fetch.fetchKoordinat(lng, lat, (koorData) => {
+          if (koorData.sokePunktSrid === 'LAT_LON_WGS84') {
+            _state.objektEdited.lokasjon.geometriWgs84 = koorData.sokePunkt;
+          }
+          _state.objektEdited.lokasjon.vegLenker = [
+            {
+              id: koorData.veglenkeId,
+              fra: koorData.veglenkePosisjon,
+              til: koorData.veglenkePosisjon
+            }
+          ];
+        });
+
+        // Egengeometri
+        let WGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [lng, lat]);
+        let typeIdToGeo = findTypeIdToGeo();
+
+        if (typeIdToGeo) {
+          _state.objektEdited.egenskaper.push({
+            typeId: typeIdToGeo,
+            verdi: [
+              'POINT (' + WGS84ToUTM33[0] + ' ' + WGS84ToUTM33[1] + ')'
+            ]
+          });
+        }
+
+        break;
+      default:
+
+    }
+  }
+
 };
 
 // Register callback to handle all updates
