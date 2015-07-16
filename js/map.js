@@ -129,6 +129,9 @@ window.MapFunctions = {
   clearMarkers: function () {
     Marker.clearMarkers();
   },
+  clearEditGeom: function () {
+    Marker.clearEditGeom();
+  },
   getBounds: function () {
     return mapData.getBounds();
   },

@@ -28,6 +28,9 @@ let redIcon = L.icon({
 let clearMarkers = function () {
   markerList = {};
   markers.clearLayers();
+};
+
+let clearEditGeom = function () {
   editLayer.clearLayers();
 };
 
@@ -121,6 +124,7 @@ let addGeom = function (kart, id, type) {
 module.exports = {
   editLayer: editLayer,
   clearMarkers: clearMarkers,
+  clearEditGeom: clearEditGeom,
   update: update,
   displayCurrentPosition: displayCurrentPosition,
   addGeom: addGeom,
