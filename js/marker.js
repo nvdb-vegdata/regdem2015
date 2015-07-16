@@ -112,9 +112,9 @@ let displayCurrentPosition = function (pos, kart) {
 
 let addGeom = function (kart, id, type) {
   editLayer.clearLayers();
-  if (type == 'marker') {
+  if (type === 'marker') {
     currentEditGeom = kart.editTools.startMarker();
-  } else if (type == 'strekning') {
+  } else if (type === 'strekning') {
     currentEditGeom = kart.editTools.startPolyline();
   } else {
     currentEditGeom = kart.editTools.startPolygon();

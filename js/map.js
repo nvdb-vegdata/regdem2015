@@ -135,8 +135,8 @@ window.MapFunctions = {
   mapData: function () {
     return mapData;
   },
-  addGeom: function (objektID, type) {
-    Marker.addGeom(mapData, objektID, type);
+  addGeom: function (objektId, type) {
+    Marker.addGeom(mapData, objektId, type);
   }
 };
 

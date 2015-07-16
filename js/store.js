@@ -10,7 +10,7 @@ let CHANGE_EVENT = 'change';
 
 let _state = {
   // APP
-  objektID: null,
+  objektId: null,
   objektTypeID: null,
 
   // Hele objektet
@@ -132,7 +132,7 @@ let fetchObjektData = function () {
 
 let getNewData = function () {
   // Skal vi lage nytt objekt?
-  if (_state.objektID === -1) {
+  if (_state.objektId === -1) {
     // Har vi oppgitt
     if (_state.objektTypeID) {
       // Kun hent ObjektType data, sett Objekt data til null
@@ -143,11 +143,11 @@ let getNewData = function () {
       fetchObjektTypeData();
     }
   } else {
-    if (!_state.objekt || _state.objektID !== _state.objekt.objektId) {
+    if (!_state.objekt || _state.objektId !== _state.objekt.objektId) {
       // Sjekk om objektet finnes i searchResultsFull
       if (_state.searchResultsFull) {
         for (var i = 0; i < _state.searchResultsFull.resultater[0].vegObjekter.length; i++) {
-          if (_state.searchResultsFull.resultater[0].vegObjekter[i].objektId === _state.objektID) {
+          if (_state.searchResultsFull.resultater[0].vegObjekter[i].objektId === _state.objektId) {
             _state.objekt = _state.searchResultsFull.resultater[0].vegObjekter[i];
             RegDemStore.emitChange();
             return;
@@ -165,17 +165,17 @@ let getNewData = function () {
 
 /* Funksjoner for actions */
 
-let setObjektID = function (objektID) {
-  if (objektID) {
-    _state.objektID = objektID;
-    MapFunctions.focusMarker(objektID);
+let setObjektID = function (objektId) {
+  if (objektId) {
+    _state.objektId = objektId;
+    MapFunctions.focusMarker(objektId);
     closeList();
     getNewData();
   }
 };
 
 let closeEditor = function () {
-  _state.objektID = null;
+  _state.objektId = null;
   _state.objekt = null;
   _state.editor.loading = false;
   _state.editor.expanded = false;
@@ -247,7 +247,7 @@ let setInputValue = function (inputValue) {
 };
 
 let executeSearch = function (objektTypeID) {
-  _state.objektID = null;
+  _state.objektId = null;
   _state.objekt = null;
 
   _state.objektTypeID = objektTypeID;
@@ -276,7 +276,7 @@ let closeList = function () {
 };
 
 let showList = function () {
-  if (_state.objektID) {
+  if (_state.objektId) {
     closeEditor();
   }
   _state.list.open = !_state.list.open;
