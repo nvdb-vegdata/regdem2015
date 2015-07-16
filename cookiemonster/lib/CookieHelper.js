@@ -1,9 +1,7 @@
 module.exports.parseCookies = function (cookies) {
   // Required cookies for apiskriv
   var searchFor = [
-    'iPlanetDirectoryProOAMutv',
-    'www.utv.vegvesen.no-oam',
-    'www.utv.vegvesen.no-443'
+    'iPlanetDirectoryProOAMutv'
   ];
 
   var list = [];

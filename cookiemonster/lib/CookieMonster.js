@@ -3,7 +3,6 @@ var https         = require('https')
 , cookieHelper    = require('./CookieHelper');
 
 var api           = '/nvdb/apiskriv/status'
-, apiCookie       = []
 , config          = require('../config')
 , host            = 'www.utv.vegvesen.no'
 , login           = '/openam/UI/Login?IDToken1=' + config.username + '&IDToken2=' + config.password + '&module=LDAP'
@@ -21,9 +20,7 @@ module.exports = {
 }
 
 
-/* Fetch data - do magic
-
-   Supports calls like:
+/* Fetch data - do magic - Supports calls like:
    - getData(options, callback)
    - getData(callback)
 ------------------------------------------------------------------------------*/
@@ -35,7 +32,7 @@ function getData(options, callback) {
 
   result = [];
 
-  apiReq.request(loginCookie.concat(apiCookie).join(', '), function (res) {
+  apiReq.request(loginCookie.join(', '), function (res) {
     res.on('data', function (data) {
       if (res.statusCode !== 302) {
         result.push(data);
@@ -44,10 +41,8 @@ function getData(options, callback) {
 
     res.on('end', function () {
       if (res.statusCode === 302) {
-        apiCookie = cookieHelper.parseCookies(res.headers['set-cookie']);
-
         // Login request
-        loginReq.request(apiCookie, function (loginRes) {
+        loginReq.request('', function (loginRes) {
           loginRes.on('data', function (data) { });
 
           loginRes.on('end', function () {
