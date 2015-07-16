@@ -37,9 +37,9 @@ let Geom = React.createClass({
   render: function () {
     return (
       <div className="Editor-geom">
-        <Marker egenskaper={this.props.egenskaper} objektID={this.props.objektID} />
-        <Strekning egenskaper={this.props.egenskaper} objektID={this.props.objektID} />
-        <Flate egenskaper={this.props.egenskaper} objektID={this.props.objektID} />
+        <Marker egenskaper={this.props.egenskaper} objektId={this.props.objektId} data={this.props.data} />
+        <Strekning egenskaper={this.props.egenskaper} objektId={this.props.objektId} data={this.props.data} />
+        <Flate egenskaper={this.props.egenskaper} objektId={this.props.objektId} data={this.props.data} />
       </div>
     );
   }
@@ -48,7 +48,7 @@ let Geom = React.createClass({
 let Marker = React.createClass({
 
   handleClick: function () {
-    RegDemActions.addGeomStart(this.props.objektID, 'marker');
+    RegDemActions.addGeomStart(this.props.objektId, 'marker');
   },
 
   render: function () {
@@ -58,7 +58,7 @@ let Marker = React.createClass({
         label="Plassér Punkt"
         className='Editor-geom-button'
         onTouchTap={this.handleClick}
-        disabled = {!this.props.egenskaper.punkt}
+        disabled = {!this.props.egenskaper.punkt || this.props.data.search.loading}
       />
     );
   }
@@ -67,7 +67,7 @@ let Marker = React.createClass({
 let Strekning = React.createClass({
 
   handleClick: function () {
-    RegDemActions.addGeomStart(this.props.objektID, 'strekning');
+    RegDemActions.addGeomStart(this.props.objektId, 'strekning');
   },
 
   render: function () {
@@ -77,7 +77,7 @@ let Strekning = React.createClass({
       label="Plassér Linje"
       className='Editor-geom-button'
       onTouchTap={this.handleClick}
-      disabled = {!this.props.egenskaper.linje}
+      disabled = {!this.props.egenskaper.linje || this.props.data.search.loading}
     />
   );
 }
@@ -86,7 +86,7 @@ let Strekning = React.createClass({
 let Flate = React.createClass({
 
   handleClick: function () {
-    RegDemActions.addGeomStart(this.props.objektID, 'flate');
+    RegDemActions.addGeomStart(this.props.objektId, 'flate');
   },
 
   render: function () {
@@ -96,7 +96,7 @@ let Flate = React.createClass({
       label="Plassér Flate"
       className='Editor-geom-button'
       onTouchTap={this.handleClick}
-      disabled = {!this.props.egenskaper.flate}
+      disabled = {!this.props.egenskaper.flate || this.props.data.search.loading}
     />
   );
 }

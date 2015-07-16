@@ -287,10 +287,12 @@ let highlightMarker = function (id) {
 };
 
 let addGeomStart = function (id, type) {
-  _state.geometry.addingMarker = true;
-  _state.geometry.current = id;
-  _state.geometry.resultType = type;
-  MapFunctions.addGeom(id, type);
+  if (!_state.search.loading) {
+    _state.geometry.addingMarker = true;
+    _state.geometry.current = id;
+    _state.geometry.resultType = type;
+    MapFunctions.addGeom(id, type);
+  }
 };
 
 let addGeomEnd = function (result) {
