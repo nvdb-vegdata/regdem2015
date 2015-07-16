@@ -17,6 +17,7 @@ let _state = {
   objekt: null,
   // Hele objektType
   objektType: null,
+  objektEdited: null,
 
   searchResults: null,
   searchResultsFull: null,
@@ -200,7 +201,7 @@ let fetchObjektPositions = function () {
       _state.searchResultsFull = null;
       _state.search.loading = false;
 
-      MapFunctions.updateMarkers(data, _state.objekt);
+      MapFunctions.updateMarkers(data, _state.objekt, _state.objektEdited);
 
       RegDemStore.emitChange();
     });

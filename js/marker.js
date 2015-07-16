@@ -32,11 +32,14 @@ let clearMarkers = function () {
 };
 
 // Viser listen av objekter på kartet som enten punkt, linje eller flate.
-let displayMarkers = function (kart, objekter, chosenObjekt) {
-  let chosenObjektId = chosenObjekt ? chosenObjekt.objektId : null;
+let displayMarkers = function (kart, objekter, chosenObjekt, editedObjekt) {
+
+  let activeObjekt = editedObjekt ? editedObjekt : (chosenObjekt ? chosenObjekt : null);
+  let activeObjektId = activeObjekt ? activeObjekt.objektId : null;
+
   objekter.forEach(function (vegObjekt) {
-    if (vegObjekt.objektId === chosenObjektId) {
-      vegObjekt = chosenObjekt;
+    if (vegObjekt.objektId === activeObjektId) {
+      vegObjekt = activeObjekt;
     }
     let posisjon = vegObjekt.lokasjon.geometriWgs84;
     let geom = omnivore.wkt.parse(posisjon);
@@ -50,15 +53,15 @@ let displayMarkers = function (kart, objekter, chosenObjekt) {
 
   });
   kart.addLayer(markers);
-  focusMarker(chosenObjektId);
+  focusMarker(activeObjektId);
   kart.addLayer(editLayer);
 };
 
 // ObjektID brukes for å håndtere opacity-endringer.
-let update = function (kart, data, objekt) {
+let update = function (kart, data, objekt, edited) {
   clearMarkers();
   if (data.totaltAntallReturnert > 0) {
-    displayMarkers(kart, data.resultater[0].vegObjekter, objekt);
+    displayMarkers(kart, data.resultater[0].vegObjekter, objekt, edited);
   }
 };
 
