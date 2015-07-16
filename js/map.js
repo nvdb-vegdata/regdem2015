@@ -72,7 +72,7 @@ let MapComponent = React.createClass({
     locationControl = L.control.locate({
       showPopup: false,
       remainActive: true,
-      onLocationError: function(err) {console.log(err.message)},
+      onLocationError: function(err) { console.log(err.message); },
        locateOptions: {
          maxZoom: 15
        }
@@ -81,7 +81,7 @@ let MapComponent = React.createClass({
     locationControl.start();
 
     // Events
-    mapData.on('locationfound', (e) => {
+    mapData.on('locationfound', () => {
       RegDemActions.locationHasBeenSet();
     });
 

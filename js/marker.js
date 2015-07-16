@@ -12,21 +12,10 @@ let markers = new L.MarkerClusterGroup({
 
 //Brukes for å mappe markers til deres IDer.
 let markerList = {};
-let highlightedMarker = null;
 
 // Definerer ikon
 let redIcon = L.icon({
   iconUrl: 'libs/leaflet-0.7.3/images/marker-icon-red.png',
-  shadowUrl: 'libs/leaflet-0.7.3/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-
-  shadowSize: [41, 41]
-});
-
-let blueIcon = L.icon({
-  iconUrl: 'libs/leaflet-0.7.3/images/marker-icon.png',
   shadowUrl: 'libs/leaflet-0.7.3/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -40,7 +29,6 @@ let clearMarkers = function () {
   markerList = {};
   markers.clearLayers();
   editLayer.clearLayers();
-  highlightedMarker = null;
 };
 
 // Viser listen av objekter på kartet som enten punkt, linje eller flate.
@@ -53,7 +41,7 @@ let displayMarkers = function (kart, objekter) {
       RegDemActions.setObjektID(vegObjekt.objektId);
     });
 
-    markerList[vegObjekt.objektId] = {obj:geom, type:posisjon.charAt(0)};
+    markerList[vegObjekt.objektId] = {obj: geom, type: posisjon.charAt(0)};
     markers.addLayer(geom);
 
   });
@@ -80,7 +68,7 @@ let focusMarker = function ( id ) {
         }
     }
   }
-}
+};
 
 let unfocusMarker = function () {
   if(markerList) {
@@ -88,21 +76,21 @@ let unfocusMarker = function () {
       setGeomOpacity(markerList[i].obj.getLayers()[0], 1, markerList[i].type);
     }
   }
-}
+};
 
 let setGeomOpacity = function (geom, opacity, type) {
   switch (type) {
-    case "P":
+    case 'P':
       geom.setOpacity(opacity);
       break;
-    case "L":
-    case "F":
-      geom.setStyle({opacity:opacity/2}); // Linjer og Flaters default opacity er 0,5.
+    case 'L':
+    case 'F':
+      geom.setStyle({opacity: opacity / 2}); // Linjer og Flaters default opacity er 0,5.
       break;
     default:
       break;
   }
-}
+};
 
 let displayCurrentPosition = function (pos, kart) {
   curPosLayer.clearLayers();
@@ -112,9 +100,9 @@ let displayCurrentPosition = function (pos, kart) {
 
 let addGeom = function (kart, id, type) {
   editLayer.clearLayers();
-  if (type == 'marker') {
+  if (type === 'marker') {
     currentEditGeom = kart.editTools.startMarker();
-  } else if (type == 'strekning') {
+  } else if (type === 'strekning') {
     currentEditGeom = kart.editTools.startPolyline();
   } else {
     currentEditGeom = kart.editTools.startPolygon();

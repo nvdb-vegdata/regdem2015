@@ -9,27 +9,27 @@ let Geom = React.createClass({
     return {
       currentGeom: null,
       currentType: null
-    }
+    };
   },
 
   setCurrentGeom: function (val) {
     this.setState({
       currentGeom: val
-    })
+    });
   },
 
   setCurrentType: function (val) {
     this.setState({
       currentType: val
-    })
+    });
   },
 
   componentWillReceiveProps: function (nextProps) {
-    if(this.state.currentGeom != nextProps.result){
+    if(this.state.currentGeom !== nextProps.result){
       this.setCurrentGeom(nextProps.result);
     }
 
-    if (this.state.currentType != nextProps.resultType) {
+    if (this.state.currentType !== nextProps.resultType) {
       this.setCurrentType(nextProps.resultType);
     }
   },
