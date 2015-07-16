@@ -123,8 +123,8 @@ window.MapFunctions = {
     locationControl.stop();
     locationControl.start();
   },
-  updateMarkers: function (searchResult) {
-    Marker.update(mapData, searchResult);
+  updateMarkers: function (searchResult, objekt) {
+    Marker.update(mapData, searchResult, objekt);
   },
   clearMarkers: function () {
     Marker.clearMarkers();

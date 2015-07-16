@@ -200,7 +200,7 @@ let fetchObjektPositions = function () {
       _state.searchResultsFull = null;
       _state.search.loading = false;
 
-      MapFunctions.updateMarkers(data);
+      MapFunctions.updateMarkers(data, _state.objekt);
 
       RegDemStore.emitChange();
     });
