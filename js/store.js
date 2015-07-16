@@ -268,6 +268,7 @@ let executeSearch = function (objektTypeID) {
 
 let resetApp = function () {
   MapFunctions.clearMarkers();
+  MapFunctions.clearEditGeom();
   _state = simpleDeepCopy(_initialState);
   _state.map.myLocation = false;
 };
