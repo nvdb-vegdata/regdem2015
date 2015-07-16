@@ -50,6 +50,7 @@ let displayMarkers = function (kart, objekter, chosenObjekt) {
 
   });
   kart.addLayer(markers);
+  focusMarker(chosenObjektId);
   kart.addLayer(editLayer);
 };
 
