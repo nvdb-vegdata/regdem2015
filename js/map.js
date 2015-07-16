@@ -123,11 +123,14 @@ window.MapFunctions = {
     locationControl.stop();
     locationControl.start();
   },
-  updateMarkers: function (searchResult) {
-    Marker.update(mapData, searchResult);
+  updateMarkers: function (searchResult, objekt, edited) {
+    Marker.update(mapData, searchResult, objekt, edited);
   },
   clearMarkers: function () {
     Marker.clearMarkers();
+  },
+  clearEditGeom: function () {
+    Marker.clearEditGeom();
   },
   getBounds: function () {
     return mapData.getBounds();

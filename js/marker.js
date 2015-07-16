@@ -28,12 +28,22 @@ let redIcon = L.icon({
 let clearMarkers = function () {
   markerList = {};
   markers.clearLayers();
+};
+
+let clearEditGeom = function () {
   editLayer.clearLayers();
 };
 
 // Viser listen av objekter på kartet som enten punkt, linje eller flate.
-let displayMarkers = function (kart, objekter) {
+let displayMarkers = function (kart, objekter, chosenObjekt, editedObjekt) {
+
+  let activeObjekt = editedObjekt ? editedObjekt : (chosenObjekt ? chosenObjekt : null);
+  let activeObjektId = activeObjekt ? activeObjekt.objektId : null;
+
   objekter.forEach(function (vegObjekt) {
+    if (vegObjekt.objektId === activeObjektId) {
+      vegObjekt = activeObjekt;
+    }
     let posisjon = vegObjekt.lokasjon.geometriWgs84;
     let geom = omnivore.wkt.parse(posisjon);
 
@@ -46,13 +56,15 @@ let displayMarkers = function (kart, objekter) {
 
   });
   kart.addLayer(markers);
+  focusMarker(activeObjektId);
   kart.addLayer(editLayer);
 };
 
-let update = function (kart, data) {
+// ObjektID brukes for å håndtere opacity-endringer.
+let update = function (kart, data, objekt, edited) {
   clearMarkers();
   if (data.totaltAntallReturnert > 0) {
-    displayMarkers(kart, data.resultater[0].vegObjekter);
+    displayMarkers(kart, data.resultater[0].vegObjekter, objekt, edited);
   }
 };
 
@@ -112,6 +124,7 @@ let addGeom = function (kart, id, type) {
 module.exports = {
   editLayer: editLayer,
   clearMarkers: clearMarkers,
+  clearEditGeom: clearEditGeom,
   update: update,
   displayCurrentPosition: displayCurrentPosition,
   addGeom: addGeom,

@@ -37,9 +37,21 @@ let Geom = React.createClass({
   render: function () {
     return (
       <div className="Editor-geom">
-        <Marker egenskaper={this.props.egenskaper} objektID={this.props.objektID} />
-        <Strekning egenskaper={this.props.egenskaper} objektID={this.props.objektID} />
-        <Flate egenskaper={this.props.egenskaper} objektID={this.props.objektID} />
+        <Marker
+          enabled={this.props.egenskaper.punkt}
+          objektID={this.props.objektID}
+          selected={this.state.currentType === "marker"}
+        />
+        <Strekning
+          enabled={this.props.egenskaper.linje}
+          objektID={this.props.objektID}
+          selected={this.state.currentType === "strekning"}
+        />
+        <Flate
+          enabled={this.props.egenskaper.flate}
+          objektID={this.props.objektID}
+          selected={this.state.currentType === "flate"}
+        />
       </div>
     );
   }
@@ -58,7 +70,8 @@ let Marker = React.createClass({
         label="Plassér Punkt"
         className='Editor-geom-button'
         onTouchTap={this.handleClick}
-        disabled = {!this.props.egenskaper.punkt}
+        disabled = {!this.props.enabled}
+        primary = {this.props.selected}
       />
     );
   }
@@ -77,7 +90,8 @@ let Strekning = React.createClass({
       label="Plassér Linje"
       className='Editor-geom-button'
       onTouchTap={this.handleClick}
-      disabled = {!this.props.egenskaper.linje}
+      disabled = {!this.props.enabled}
+      primary = {this.props.selected}
     />
   );
 }
@@ -96,7 +110,8 @@ let Flate = React.createClass({
       label="Plassér Flate"
       className='Editor-geom-button'
       onTouchTap={this.handleClick}
-      disabled = {!this.props.egenskaper.flate}
+      disabled = {!this.props.enabled}
+      primary = {this.props.selected}
     />
   );
 }
