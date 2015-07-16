@@ -1,6 +1,7 @@
 let React = require('react/addons');
 let RegDemActions = require('./actions');
 var RegDemConstants = require('./constants');
+var Validator = require('./validator.js');
 let Helper = require('./helper.js');
 
 let GeometryFields = require('./geometryFields.jsx');
@@ -21,6 +22,13 @@ let Editor = React.createClass({
 
   closeDialog: function () {
     RegDemActions.closeEditor();
+  },
+
+  saveObjekt: function () {
+    if (this.props.data.objektId === -1) {
+      // Skal lagre et nytt felt
+      console.log(JSON.stringify(Validator.validateNewObjektAndReturnJSON(this.props.data)));
+    }
   },
 
   expandForm: function () {
@@ -171,7 +179,7 @@ let Editor = React.createClass({
               {EditorFields}
             </CardText>
             <CardActions className={CardActionsClassName}>
-              <FlatButton label="Lagre" primary={true} />
+              <FlatButton label="Lagre" primary={true} onTouchTap={this.saveObjekt} />
               <FlatButton label="Avbryt" onTouchTap={this.closeDialog} />
             </CardActions>
         </Card>
