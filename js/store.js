@@ -170,6 +170,7 @@ let setObjektID = function (objektID) {
   if (objektID) {
     _state.objektID = objektID;
     MapFunctions.focusMarker(objektID);
+    MapFunctions.clearEditGeom(); // Ved bytting av objekt under edit.
     closeList();
     getNewData();
   }
@@ -178,8 +179,14 @@ let setObjektID = function (objektID) {
 let closeEditor = function () {
   _state.objektID = null;
   _state.objekt = null;
+
   _state.editor.loading = false;
   _state.editor.expanded = false;
+
+  _state.geometry.result = null;
+  _state.geometry.resultType = null;
+
+  MapFunctions.clearEditGeom(); // Fjerner edit-objekt ved lukking av editor.
   MapFunctions.focusMarker(null);
 };
 
