@@ -168,7 +168,7 @@
   overflow: scroll;
 }
 
-.Editor-permanentEtikett > label:first-child {
+.Editor-permanentEtikett > label:first-child, .Editor-enum label {
   color: rgba(0, 0, 0, 0.5) !important;
   transform: perspective(1px) scale(0.75) translate3d(0, -18px, 0) !important;
 }
