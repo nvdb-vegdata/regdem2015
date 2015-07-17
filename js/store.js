@@ -171,10 +171,10 @@ let getNewData = function () {
 
 /* Funksjoner for actions */
 
-let setObjektID = function (objektID) {
-  if (objektID) {
-    _state.objektID = objektID;
-    MapFunctions.focusMarker(objektID);
+let setObjektID = function (objektId) {
+  if (objektId) {
+    _state.objektId = objektId;
+    MapFunctions.focusMarker(objektId);
     MapFunctions.clearEditGeom();
     closeList();
     getNewData();
