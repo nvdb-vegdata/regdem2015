@@ -28,7 +28,14 @@ var Helper = {
   },
 
   minstToSiffer: function (i) {
-      return (i < 10) ? '0' + i : '' + i;
+    return (i < 10) ? '0' + i : '' + i;
+  },
+
+  // Tar inn callback fra validering og gir tilbake liste av uoppfylte påkrevde egenskaper.
+  getManglendeEgenskaper: function (validationResult) {
+    let listString = validationResult.substring(validationResult.indexOf(':'));
+
+    return listString.match(/\d+(?=\))/g);
   }
 
 };
