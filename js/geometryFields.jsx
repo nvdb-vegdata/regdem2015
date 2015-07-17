@@ -38,17 +38,17 @@ let Geom = React.createClass({
     return (
       <div className="Editor-geom">
         <Marker
-          enabled={this.props.egenskaper.punkt}
+          enabled={this.props.egenskaper.punkt || this.props.data.search.loading}
           objektID={this.props.objektID}
           selected={this.state.currentType === "marker"}
         />
         <Strekning
-          enabled={this.props.egenskaper.linje}
+          enabled={this.props.egenskaper.linje || this.props.data.search.loading}
           objektID={this.props.objektID}
           selected={this.state.currentType === "strekning"}
         />
         <Flate
-          enabled={this.props.egenskaper.flate}
+          enabled={this.props.egenskaper.flate || this.props.data.search.loading}
           objektID={this.props.objektID}
           selected={this.state.currentType === "flate"}
         />
@@ -60,7 +60,7 @@ let Geom = React.createClass({
 let Marker = React.createClass({
 
   handleClick: function () {
-    RegDemActions.addGeomStart(this.props.objektID, 'marker');
+    RegDemActions.addGeomStart(this.props.objektId, 'marker');
   },
 
   render: function () {
@@ -80,7 +80,7 @@ let Marker = React.createClass({
 let Strekning = React.createClass({
 
   handleClick: function () {
-    RegDemActions.addGeomStart(this.props.objektID, 'strekning');
+    RegDemActions.addGeomStart(this.props.objektId, 'strekning');
   },
 
   render: function () {
@@ -100,7 +100,7 @@ let Strekning = React.createClass({
 let Flate = React.createClass({
 
   handleClick: function () {
-    RegDemActions.addGeomStart(this.props.objektID, 'flate');
+    RegDemActions.addGeomStart(this.props.objektId, 'flate');
   },
 
   render: function () {
