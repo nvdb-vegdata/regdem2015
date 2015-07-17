@@ -96,6 +96,10 @@ let Fields = {
       };
     },
 
+    componentWillReceiveProps: function (nextProps) {
+      console.log('mangler: ', nextProps.manglendeEgenskaper);
+    },
+
     handleChange: function (event) {
       function isNumber(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
