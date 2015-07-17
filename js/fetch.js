@@ -72,13 +72,18 @@ module.exports.fetch = function(input, callback) {
   }
 };
 
-module.exports.fetchObjektType = function(objektTypeID, callback) {
-  var url = 'https://www.vegvesen.no/nvdb/api/datakatalog/objekttyper/' + objektTypeID + '/.json';
+module.exports.fetchObjektType = function(objektTypeId, callback) {
+  var url = 'https://www.vegvesen.no/nvdb/api/datakatalog/objekttyper/' + objektTypeId + '/.json';
   requestHTTP(url, callback);
 };
 
-module.exports.fetchObjekt = function(objektID, callback) {
-  var url = 'https://www.vegvesen.no/nvdb/api/vegobjekter/objekt/' + objektID + '/.json';
+module.exports.fetchObjekt = function(objektId, callback) {
+  var url = 'https://www.vegvesen.no/nvdb/api/vegobjekter/objekt/' + objektId + '/.json';
+  requestHTTP(url, callback);
+};
+
+module.exports.fetchKoordinat = function(lon, lat, callback) {
+  var url = 'https://www.vegvesen.no/nvdb/api/vegreferanse/koordinat?lon=' + lon + '&lat=' + lat;
   requestHTTP(url, callback);
 };
 

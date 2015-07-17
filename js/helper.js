@@ -35,6 +35,12 @@ var Helper = {
   getManglendeEgenskaper: function (validationMessage) {
     let listString = validationMessage.substring(validationMessage.indexOf(':'));
     return listString.match(/\d+(?=\))/g);
+  },
+
+  todaysDate: function () {
+    let date = new Date();
+
+    return date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
   }
 
 };

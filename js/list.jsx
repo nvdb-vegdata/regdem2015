@@ -27,7 +27,7 @@ let ListComponent = React.createClass({
   },
 
   render: function() {
-    // Hvis ingen objektID er satt skal ikke skjemaet vises.
+    // Hvis ingen objektId er satt skal ikke skjemaet vises.
     if (this.props.data.list.open && this.props.data.searchResults) {
 
       let elements = this.props.data.searchResultsFull || this.props.data.searchResults;
@@ -83,7 +83,7 @@ let ListComponent = React.createClass({
               {
                 elements.map((objekt) => {
                   return (
-                    <ListElement objekt={objekt} data={this.props.data} key={objekt.objektID} />
+                    <ListElement objekt={objekt} data={this.props.data} key={objekt.objektId} />
                   );
                 })
               }
@@ -123,7 +123,7 @@ let ListElement = React.createClass({
   },
 
   render: function () {
-    var objektID = this.props.objekt.objektId;
+    var objektId = this.props.objekt.objektId;
     let vegref = '--';
     let extraEgenskap;
 
@@ -174,7 +174,7 @@ let ListElement = React.createClass({
         onMouseOver={this.handleMouseEnter}
         onMouseOut={this.handleMouseLeave}
         onTouchTap={this.handleClick}
-        key={objektID}>
+        key={objektId}>
           <div className="list-vegref">{vegref}</div>
           <div className="list-extra-egenskap">{extraEgenskap}</div>
       </ListItem>

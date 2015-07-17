@@ -10,11 +10,12 @@ let CHANGE_EVENT = 'change';
 
 let _state = {
   // APP
-  objektID: null,
-  objektTypeID: null,
+  objektId: null,
+  objektTypeId: null,
 
   // Hele objektet
   objekt: null,
+  objektEdited: null,
   // Hele objektType
   objektType: null,
   objektEdited: null,
@@ -51,6 +52,7 @@ let _state = {
     addingMarker: false,
     current: null,
     result: null,
+    // [marker | strekning | flate]
     resultType: null
   }
 };
@@ -93,14 +95,14 @@ let RegDemStore = assign({}, EventEmitter.prototype, {
 
 let fetchObjektTypeData = function () {
   // Hvis objektType allerede er lastet, trenger vi ikke hente den igjen
-  if (_state.objektTypeID && _state.objektType && _state.objektType.id === _state.objektTypeID) {
+  if (_state.objektTypeId && _state.objektType && _state.objektType.id === _state.objektTypeId) {
     _state.editor.loading = false;
     _state.editor.expanded = false;
 
     RegDemStore.emitChange();
   } else {
     // Nå som vi har objektet, kan vi hente objekttype
-    Fetch.fetchObjektType(_state.objektTypeID, (objektTypeData) => {
+    Fetch.fetchObjektType(_state.objektTypeId, (objektTypeData) => {
       // Sorterer egenskaper til objekttype etter viktighet og sorteringsnummer
       objektTypeData.egenskapsTyper.sort(function (a, b) {
         let differanseMellomAogB = Helper.objektTypeViktighetTilNummer(a.viktighet) - Helper.objektTypeViktighetTilNummer(b.viktighet);
@@ -124,9 +126,9 @@ let fetchObjektTypeData = function () {
 };
 
 let fetchObjektData = function () {
-  Fetch.fetchObjekt(_state.objektID, (objektData) => {
-    // Siden vi henter ObjektType ved søk trenger vi som oftest ikke å hente denne også
+  Fetch.fetchObjekt(_state.objektId, (objektData) => {
     _state.objekt = objektData;
+    _state.objektEdited = null;
 
     fetchObjektTypeData();
   });
@@ -134,22 +136,25 @@ let fetchObjektData = function () {
 
 let getNewData = function () {
   // Skal vi lage nytt objekt?
-  if (_state.objektID === -1) {
+  if (_state.objektId === -1) {
     // Har vi oppgitt
-    if (_state.objektTypeID) {
-      // Kun hent ObjektType data, sett Objekt data til null
+    if (_state.objektTypeId) {
+      // Nullstiller objekt, siden vi skal lage et nytt objekt
       _state.objekt = null;
+      // Lager et objektEdited-objekt med enkel struktur
+      createObjektEdited();
+
       _state.editor.loading = true;
       RegDemStore.emitChange();
 
       fetchObjektTypeData();
     }
   } else {
-    if (!_state.objekt || _state.objektID !== _state.objekt.objektId) {
+    if (!_state.objekt || _state.objektId !== _state.objekt.objektId) {
       // Sjekk om objektet finnes i searchResultsFull
       if (_state.searchResultsFull) {
         for (var i = 0; i < _state.searchResultsFull.resultater[0].vegObjekter.length; i++) {
-          if (_state.searchResultsFull.resultater[0].vegObjekter[i].objektId === _state.objektID) {
+          if (_state.searchResultsFull.resultater[0].vegObjekter[i].objektId === _state.objektId) {
             _state.objekt = _state.searchResultsFull.resultater[0].vegObjekter[i];
             RegDemStore.emitChange();
             return;
@@ -167,19 +172,20 @@ let getNewData = function () {
 
 /* Funksjoner for actions */
 
-let setObjektID = function (objektID) {
-  if (objektID) {
-    _state.objektID = objektID;
-    MapFunctions.focusMarker(objektID);
-    MapFunctions.clearEditGeom(); // Ved bytting av objekt under edit.
+let setObjektID = function (objektId) {
+  if (objektId) {
+    _state.objektId = objektId;
+    MapFunctions.focusMarker(objektId);
+    MapFunctions.clearEditGeom();
     closeList();
     getNewData();
   }
 };
 
 let closeEditor = function () {
-  _state.objektID = null;
+  _state.objektId = null;
   _state.objekt = null;
+  _state.objektEdited = null;
 
   _state.editor.loading = false;
   _state.editor.expanded = false;
@@ -199,7 +205,7 @@ let fetchObjektPositions = function () {
   _state.search.loading = true;
   RegDemStore.emitChange();
 
-  let id = _state.objektTypeID;
+  let id = _state.objektTypeId;
 
   if (MapFunctions.mapData()) {
     var mapbox = MapFunctions.getBounds();
@@ -224,7 +230,7 @@ let fetchAllDataFromObjektPosition = function (extraEgenskap) {
     _state.search.loading = true;
     RegDemStore.emitChange();
 
-    let id = _state.objektTypeID;
+    let id = _state.objektTypeId;
 
     if (MapFunctions.mapData()) {
       var mapbox = MapFunctions.getBounds();
@@ -255,11 +261,12 @@ let setInputValue = function (inputValue) {
   RegDemStore.emitChange();
 };
 
-let executeSearch = function (objektTypeID) {
-  _state.objektID = null;
+let executeSearch = function (objektTypeId) {
+  _state.objektId = null;
   _state.objekt = null;
+  _state.objektEdited = null;
 
-  _state.objektTypeID = objektTypeID;
+  _state.objektTypeId = objektTypeId;
   _state.objektType = null;
 
   fetchObjektTypeData();
@@ -286,7 +293,7 @@ let closeList = function () {
 };
 
 let showList = function () {
-  if (_state.objektID) {
+  if (_state.objektId) {
     closeEditor();
   }
   _state.list.open = !_state.list.open;
@@ -297,15 +304,18 @@ let highlightMarker = function (id) {
 };
 
 let addGeomStart = function (id, type) {
-  _state.geometry.addingMarker = true;
-  _state.geometry.current = id;
-  _state.geometry.resultType = type;
-  MapFunctions.addGeom(id, type);
+  if (!_state.search.loading) {
+    _state.geometry.addingMarker = true;
+    _state.geometry.current = id;
+    _state.geometry.resultType = type;
+    MapFunctions.addGeom(id, type);
+  }
 };
 
 let addGeomEnd = function (result) {
   _state.geometry.result = result;
   _state.geometry.addingMarker = false;
+  updateEditedLocation();
 };
 
 let getCurrentLocation = function () {
@@ -317,9 +327,86 @@ let locationHasBeenSet = function () {
   _state.map.myLocation = false;
 };
 
+
+// Initaliserer skaping av objektEdited.
+let createObjektEdited = function () {
+  if (_state.objekt) {
+    _state.objektEdited = simpleDeepCopy(_state.objekt);
+  } else {
+    _state.objektEdited = {
+      objektId: -1,
+      objektTypeId: _state.objektTypeId,
+      egenskaper: [],
+      lokasjon: {
+        geometriWgs84: null,
+        vegLenker: null
+      }
+    };
+  }
+};
+
+let findTypeIdToGeo = function () {
+  let returnId = null;
+  _state.objektType.egenskapsTyper.every((element, index, array) => {
+    if (element.navn.toLowerCase().includes('geometri')) {
+      returnId = element.id;
+      return false;
+    }
+    return true;
+  });
+
+  return returnId;
+};
+
+// Function for each component that we care about. Needs to either create new structure or just edit what's already there
+let updateEditedLocation = function () {
+  if (!_state.objektEdited) {
+    createObjektEdited();
+  }
+
+  if (_state.geometry.result) {
+    switch (_state.geometry.resultType) {
+      case 'marker':
+        let lng = _state.geometry.result._latlng.lng;
+        let lat = _state.geometry.result._latlng.lat;
+        // Lenke ID
+        Fetch.fetchKoordinat(lng, lat, (koorData) => {
+          if (koorData.sokePunktSrid === 'LAT_LON_WGS84') {
+            _state.objektEdited.lokasjon.geometriWgs84 = koorData.sokePunkt;
+          }
+          _state.objektEdited.lokasjon.vegLenker = [
+            {
+              id: koorData.veglenkeId,
+              fra: koorData.veglenkePosisjon,
+              til: koorData.veglenkePosisjon
+            }
+          ];
+        });
+
+        // Egengeometri
+        let WGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [lng, lat]);
+        let typeIdToGeo = findTypeIdToGeo();
+
+        if (typeIdToGeo) {
+          _state.objektEdited.egenskaper.push({
+            typeId: typeIdToGeo,
+            verdi: [
+              'POINT (' + WGS84ToUTM33[0] + ' ' + WGS84ToUTM33[1] + ')'
+            ]
+          });
+        }
+
+        break;
+      default:
+
+    }
+  }
+
+};
+
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  let id, objektType, inputValue, userInput, objektTypeID, extraEgenskap, type;
+  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -357,8 +444,8 @@ AppDispatcher.register(function(action) {
       break;
 
     case RegDemConstants.actions.REGDEM_EXECUTE_SEARCH:
-      objektTypeID = action.objektTypeID;
-      executeSearch(objektTypeID);
+      objektTypeId = action.objektTypeId;
+      executeSearch(objektTypeId);
       break;
 
     case RegDemConstants.actions.REGDEM_RESET_APP:

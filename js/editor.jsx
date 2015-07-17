@@ -1,6 +1,7 @@
 let React = require('react/addons');
 let RegDemActions = require('./actions');
 var RegDemConstants = require('./constants');
+var Validator = require('./validator.js');
 let Helper = require('./helper.js');
 
 let GeometryFields = require('./geometryFields.jsx');
@@ -23,6 +24,13 @@ let Editor = React.createClass({
     RegDemActions.closeEditor();
   },
 
+  saveObjekt: function () {
+    if (this.props.data.objektId === -1) {
+      // Skal lagre et nytt felt
+      console.log(JSON.stringify(Validator.validateNewObjektAndReturnJSON(this.props.data)));
+    }
+  },
+
   expandForm: function () {
     if (!this.props.data.editor.expanded) {
       RegDemActions.expandEditor();
@@ -31,10 +39,13 @@ let Editor = React.createClass({
 
   // Finner verdien til egenskapen til objektet. Brukes til å pre-populate egenskapene
   finnVerdi: function (egenskap, returFunksjon) {
-    if (this.props.data.objekt && this.props.data.objekt.egenskaper) {
-      for (var i = 0; i < this.props.data.objekt.egenskaper.length; i++) {
-        if (this.props.data.objekt.egenskaper[i].id === egenskap.id) {
-          return returFunksjon(this.props.data.objekt.egenskaper[i]);
+    let dataTilEgenskap = [];
+    let objekt = this.props.data.objektEdited || this.props.data.objekt;
+
+    if (objekt && objekt.egenskaper) {
+      for (var i = 0; i < objekt.egenskaper.length; i++) {
+        if (objekt.egenskaper[i].id === egenskap.id) {
+          return returFunksjon(objekt.egenskaper[i]);
         }
       }
     }
@@ -50,9 +61,10 @@ let Editor = React.createClass({
   },
 
   render: function() {
+    let objektId = this.props.data.objektId;
+    let objekt = this.props.data.objektEdited || this.props.data.objekt;
     let objektTypeNavn = this.props.data.objektType ? this.props.data.objektType.navn : '';
-    let objektId = this.props.data.objekt ? this.props.data.objekt.objektId : '';
-    let vegreferanse = this.props.data.objekt ? Helper.vegReferanseString(this.props.data.objekt.lokasjon.vegReferanser[0]) : '';
+    let vegreferanse = (objekt && objekt.lokasjon && objekt.lokasjon.vegReferanser) ? Helper.vegReferanseString(objekt.lokasjon.vegReferanser[0]) : '';
     let egenskapsTyper = this.props.data.objektType ? this.props.data.objektType.egenskapsTyper : [];
     let manglendeEgenskaper = this.props.data.editor.validationMessage ? Helper.getManglendeEgenskaper(this.props.data.editor.validationMessage) : [];
 
@@ -67,7 +79,7 @@ let Editor = React.createClass({
     }
 
     let formName, subtitle;
-    if (this.props.data.objektID && this.props.data.objektID !== -1) {
+    if (objektId && objektId !== -1) {
       // Skjemanavn
       formName = 'Rediger objekt';
 
@@ -80,7 +92,7 @@ let Editor = React.createClass({
         </div>
       );
 
-    } else if (this.props.data.objektID === -1) {
+    } else if (objektId === -1) {
       formName = 'Lag nytt objekt';
       subtitle = ( <div style={{fontWeight: 'bold', fontSize: '16px'}}>{objektTypeNavn}</div> );
     }
@@ -110,7 +122,7 @@ let Editor = React.createClass({
     }
 
     // Når objektet er hentet og ikke laster lenger
-    if ((this.props.data.objekt || this.props.data.objektID === -1) && !this.props.data.editor.loading) {
+    if ((objekt || objektId === -1)  && !this.props.data.editor.loading) {
       EditorClassName = 'Editor';
       EditorCloseClassName = 'Editor-lukk';
       EditorCardClassName = 'Editor-Card Editor-Card-loaded';
@@ -137,48 +149,50 @@ let Editor = React.createClass({
         }
 
         GeomFields = (<GeometryFields.Geom
-                        objektID={this.props.data.objektID}
+                        objektId={objektId}
                         egenskaper={geomEgenskaper}
                         result={this.props.data.geometry.result}
                         resultType={this.props.data.geometry.resultType}
+                        data={this.props.data}
                       />);
 
         EditorFields = egenskapsTyper.map((egenskap) => {
                           switch (egenskap.type) {
                             case 'ENUM':
+<<<<<<< HEAD
                               return (<Fields.ENUM
                                         verdi={this.finnENUMVerdi(egenskap)}
                                         egenskaper={egenskap}
                                         manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
-                                        key={this.props.data.objektID + '-' + egenskap.id}
+                                        key={objektId + '-' + egenskap.id}
                                       />);
                             case 'Tekst':
                               return (<Fields.Tekst
                                         verdi={this.finnTekstVerdi(egenskap)}
                                         egenskaper={egenskap}
                                         manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
-                                        key={this.props.data.objektID + '-' + egenskap.id}
+                                        key={objektId + '-' + egenskap.id}
                                       />);
                             case 'Tall':
                               return (<Fields.Tall
                                         verdi={this.finnTekstVerdi(egenskap)}
                                         egenskaper={egenskap}
                                         manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
-                                        key={this.props.data.objektID + '-' + egenskap.id}
+                                        key={objektId + '-' + egenskap.id}
                                       />);
                             case 'Klokkeslett':
                               return (<Fields.Klokkeslett
                                         verdi={this.finnTekstVerdi(egenskap)}
                                         egenskaper={egenskap}
                                         manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
-                                        key={this.props.data.objektID + '-' + egenskap.id}
+                                        key={objektId + '-' + egenskap.id}
                                         />);
                             case 'Dato':
                               return (<Fields.Dato
                                         verdi={this.finnTekstVerdi(egenskap)}
                                         egenskaper={egenskap}
                                         manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
-                                        key={this.props.data.objektID + '-' + egenskap.id}
+                                        key={objektId + '-' + egenskap.id}
                                       />);
                             default:
                               break;
@@ -201,7 +215,7 @@ let Editor = React.createClass({
               {EditorFields}
             </CardText>
             <CardActions className={CardActionsClassName}>
-              <FlatButton label="Lagre" primary={true} />
+              <FlatButton label="Lagre" primary={true} onTouchTap={this.saveObjekt} />
               <FlatButton label="Avbryt" onTouchTap={this.closeDialog} />
             </CardActions>
         </Card>

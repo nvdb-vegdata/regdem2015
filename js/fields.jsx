@@ -42,7 +42,7 @@ let Fields = {
 
       return (
           <div className="Editor-enum">
-            <Fields.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+            <Fields.Viktighet viktighet={egenskaper.viktighet} />
             <SelectField
               valueLink={this.linkState('selectLinkValue')}
               floatingLabelText={egenskaper.navn}
@@ -74,7 +74,7 @@ let Fields = {
 
       return (
         <div className="Editor-tekst">
-          <Fields.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+          <Fields.Viktighet viktighet={egenskaper.viktighet} />
           <TextField
             floatingLabelText={egenskaper.navn}
             valueLink={this.linkState('textLinkValue')}
@@ -130,7 +130,7 @@ let Fields = {
 
       return (
         <div className="Editor-tall">
-          <Fields.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+          <Fields.Viktighet viktighet={egenskaper.viktighet} />
           <TextField
             floatingLabelText={egenskaper.navn}
             value={this.state.numberValue}
@@ -187,7 +187,7 @@ let Fields = {
 
       return (
         <div className="Editor-klokkeslett" >
-          <Fields.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+          <Fields.Viktighet viktighet={egenskaper.viktighet} />
 
           <div className="Editor-timePickerContainer">
             <div className={classNameLabelText}>{egenskaper.navn}</div>
@@ -247,7 +247,7 @@ let Fields = {
 
       return (
         <div className="Editor-klokkeslett">
-          <Fields.Viktighet viktighet={egenskaper.viktighet} byttBeskrivelse={this.toggleDescription} />
+          <Fields.Viktighet viktighet={egenskaper.viktighet} />
 
           <div className="Editor-datePickerContainer">
             <div className={classNameLabelText}>{egenskaper.navn}</div>
