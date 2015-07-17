@@ -159,7 +159,6 @@ let Editor = React.createClass({
         EditorFields = egenskapsTyper.map((egenskap) => {
                           switch (egenskap.type) {
                             case 'ENUM':
-<<<<<<< HEAD
                               return (<Fields.ENUM
                                         verdi={this.finnENUMVerdi(egenskap)}
                                         egenskaper={egenskap}
