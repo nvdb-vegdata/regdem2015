@@ -90,7 +90,7 @@ let MapComponent = React.createClass({
     });
 
     mapData.on('moveend', () => {
-      if (this.props.data.objektTypeID) {
+      if (this.props.data.objektTypeId) {
         RegDemActions.fetchObjektPositions();
       }
     });

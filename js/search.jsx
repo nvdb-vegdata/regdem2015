@@ -26,7 +26,7 @@ let Sok = React.createClass({
     let rightMostIcon = this.renderRemoveIcon();
     let searcFieldClassName = 'search-field';
 
-    if (this.props.data.objektTypeID) {
+    if (this.props.data.objektTypeId) {
       let listIconClassName = 'material-icons search-field-list-icon';
       if (this.props.data.list.open) {
         listIconClassName += ' search-field-list-icon-opened';
@@ -60,7 +60,7 @@ let Sok = React.createClass({
   },
 
   renderRemoveIcon: function() {
-    if ((this.props.data.search.inputValue && this.props.data.search.inputValue.length > 0) || this.props.data.objektTypeID !== null) {
+    if ((this.props.data.search.inputValue && this.props.data.search.inputValue.length > 0) || this.props.data.objektTypeId !== null) {
       return (
         <i
           onTouchTap={this.handleRemoveClick}
@@ -82,14 +82,14 @@ let Sok = React.createClass({
   },
 
   componentDidUpdate: function (prevProps) {
-    if (prevProps.data.objektTypeID && !this.props.data.objektTypeID) {
+    if (prevProps.data.objektTypeId && !this.props.data.objektTypeId) {
       this.refs.typeahead.showDropdown();
       this.refs.typeahead.focus();
     }
   },
 
   handleInputClick: function(event) {
-    if (this.props.data.objektTypeID) {
+    if (this.props.data.objektTypeId) {
       this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
       RegDemActions.goBackAndReset(this.refs.typeahead.userInputValue);
     } else if (this.props.data.search.inputValue === ''){
@@ -155,8 +155,8 @@ let Sok = React.createClass({
     this.state.prevSelectedIndex = selectedIndex;
   },
 
-  executeSearch: function (objektTypeID) {
-    RegDemActions.executeSearch(objektTypeID);
+  executeSearch: function (objektTypeId) {
+    RegDemActions.executeSearch(objektTypeId);
     this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').setAttribute('disabled', 'disabled');
   },
 

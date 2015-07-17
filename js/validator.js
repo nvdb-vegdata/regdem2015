@@ -8,7 +8,7 @@ let validateNewObjektAndReturnJSON = function (data) {
     let punkt = [{ lenkeId: vegLenke.id, posisjon: vegLenke.fra }];
     let lokasjon = { punkt: punkt };
 
-    let typeId = data.objektTypeID;
+    let typeId = data.objektTypeId;
     let tempId = '-1';
 
     let egenskaper = objekt.egenskaper;
