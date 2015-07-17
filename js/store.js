@@ -404,6 +404,10 @@ let updateEditedLocation = function () {
 
 };
 
+let updateValMessage = function (message) {
+  _state.editor.validationMessage = message;
+};
+
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
   let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type;
@@ -497,6 +501,11 @@ AppDispatcher.register(function(action) {
       RegDemStore.emitChange();
       break;
 
+    case RegDemConstants.actions.REGDEM_UPDATE_VAL_MESSAGE:
+      let message = action.message;
+      updateValMessage(message);
+      RegDemStore.emitChange();
+      break;
 
     default:
       // no op

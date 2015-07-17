@@ -96,6 +96,12 @@ var RegDemActions = {
       actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_END,
       result: result
     });
+  },
+  updateValidationMessage: function (message) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_UPDATE_VAL_MESSAGE,
+      message: message
+    });
   }
 };
 
