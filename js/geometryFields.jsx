@@ -39,17 +39,17 @@ let Geom = React.createClass({
       <div className="Editor-geom">
         <Marker
           enabled={this.props.egenskaper.punkt || this.props.data.search.loading}
-          objektID={this.props.objektID}
+          objektId={this.props.objektId}
           selected={this.state.currentType === "marker"}
         />
         <Strekning
           enabled={this.props.egenskaper.linje || this.props.data.search.loading}
-          objektID={this.props.objektID}
+          objektId={this.props.objektId}
           selected={this.state.currentType === "strekning"}
         />
         <Flate
           enabled={this.props.egenskaper.flate || this.props.data.search.loading}
-          objektID={this.props.objektID}
+          objektId={this.props.objektId}
           selected={this.state.currentType === "flate"}
         />
       </div>

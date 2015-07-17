@@ -41,10 +41,10 @@ var RegDemActions = {
       inputValue: inputValue
     });
   },
-  executeSearch: function (objektTypeID) {
+  executeSearch: function (objektTypeId) {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_EXECUTE_SEARCH,
-      objektTypeID: objektTypeID
+      objektTypeId: objektTypeId
     });
   },
   resetApp: function () {

@@ -11,7 +11,7 @@ let CHANGE_EVENT = 'change';
 let _state = {
   // APP
   objektId: null,
-  objektTypeID: null,
+  objektTypeId: null,
 
   // Hele objektet
   objekt: null,
@@ -94,14 +94,14 @@ let RegDemStore = assign({}, EventEmitter.prototype, {
 
 let fetchObjektTypeData = function () {
   // Hvis objektType allerede er lastet, trenger vi ikke hente den igjen
-  if (_state.objektTypeID && _state.objektType && _state.objektType.id === _state.objektTypeID) {
+  if (_state.objektTypeId && _state.objektType && _state.objektType.id === _state.objektTypeId) {
     _state.editor.loading = false;
     _state.editor.expanded = false;
 
     RegDemStore.emitChange();
   } else {
     // Nå som vi har objektet, kan vi hente objekttype
-    Fetch.fetchObjektType(_state.objektTypeID, (objektTypeData) => {
+    Fetch.fetchObjektType(_state.objektTypeId, (objektTypeData) => {
       // Sorterer egenskaper til objekttype etter viktighet og sorteringsnummer
       objektTypeData.egenskapsTyper.sort(function (a, b) {
         let differanseMellomAogB = Helper.objektTypeViktighetTilNummer(a.viktighet) - Helper.objektTypeViktighetTilNummer(b.viktighet);
@@ -137,7 +137,7 @@ let getNewData = function () {
   // Skal vi lage nytt objekt?
   if (_state.objektId === -1) {
     // Har vi oppgitt
-    if (_state.objektTypeID) {
+    if (_state.objektTypeId) {
       // Nullstiller objekt, siden vi skal lage et nytt objekt
       _state.objekt = null;
       // Lager et objektEdited-objekt med enkel struktur
@@ -171,10 +171,10 @@ let getNewData = function () {
 
 /* Funksjoner for actions */
 
-let setObjektID = function (objektID) {
-  if (objektID) {
-    _state.objektID = objektID;
-    MapFunctions.focusMarker(objektID);
+let setObjektID = function (objektId) {
+  if (objektId) {
+    _state.objektId = objektId;
+    MapFunctions.focusMarker(objektId);
     MapFunctions.clearEditGeom();
     closeList();
     getNewData();
@@ -185,7 +185,7 @@ let closeEditor = function () {
   _state.objektId = null;
   _state.objekt = null;
   _state.objektEdited = null;
-  
+
   _state.editor.loading = false;
   _state.editor.expanded = false;
 
@@ -204,7 +204,7 @@ let fetchObjektPositions = function () {
   _state.search.loading = true;
   RegDemStore.emitChange();
 
-  let id = _state.objektTypeID;
+  let id = _state.objektTypeId;
 
   if (MapFunctions.mapData()) {
     var mapbox = MapFunctions.getBounds();
@@ -229,7 +229,7 @@ let fetchAllDataFromObjektPosition = function (extraEgenskap) {
     _state.search.loading = true;
     RegDemStore.emitChange();
 
-    let id = _state.objektTypeID;
+    let id = _state.objektTypeId;
 
     if (MapFunctions.mapData()) {
       var mapbox = MapFunctions.getBounds();
@@ -260,12 +260,12 @@ let setInputValue = function (inputValue) {
   RegDemStore.emitChange();
 };
 
-let executeSearch = function (objektTypeID) {
+let executeSearch = function (objektTypeId) {
   _state.objektId = null;
   _state.objekt = null;
   _state.objektEdited = null;
 
-  _state.objektTypeID = objektTypeID;
+  _state.objektTypeId = objektTypeId;
   _state.objektType = null;
 
   fetchObjektTypeData();
@@ -405,7 +405,7 @@ let updateEditedLocation = function () {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  let id, objektType, inputValue, userInput, objektTypeID, extraEgenskap, type;
+  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -443,8 +443,8 @@ AppDispatcher.register(function(action) {
       break;
 
     case RegDemConstants.actions.REGDEM_EXECUTE_SEARCH:
-      objektTypeID = action.objektTypeID;
-      executeSearch(objektTypeID);
+      objektTypeId = action.objektTypeId;
+      executeSearch(objektTypeId);
       break;
 
     case RegDemConstants.actions.REGDEM_RESET_APP:

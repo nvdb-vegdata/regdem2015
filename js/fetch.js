@@ -72,8 +72,8 @@ module.exports.fetch = function(input, callback) {
   }
 };
 
-module.exports.fetchObjektType = function(objektTypeID, callback) {
-  var url = 'https://www.vegvesen.no/nvdb/api/datakatalog/objekttyper/' + objektTypeID + '/.json';
+module.exports.fetchObjektType = function(objektTypeId, callback) {
+  var url = 'https://www.vegvesen.no/nvdb/api/datakatalog/objekttyper/' + objektTypeId + '/.json';
   requestHTTP(url, callback);
 };
 
