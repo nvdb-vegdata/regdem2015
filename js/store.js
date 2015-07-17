@@ -281,9 +281,9 @@ let resetApp = function () {
 };
 
 let goBackAndReset = function (userInput) {
-  let oldState = simpleDeepCopy(_state);
+  let oldSearchState = simpleDeepCopy(_state.search);
   resetApp();
-  _state.search = oldState.search;
+  _state.search = oldSearchState;
   _state.search.inputValue = userInput;
 };
 
