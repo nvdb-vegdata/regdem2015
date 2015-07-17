@@ -25,9 +25,10 @@ let _state = {
   editor: {
     // Hvorvidt editor har lastet
     loading: false,
-
-    // Hvortvidt editor er collapsed
-    expanded: false
+    // Hvorvidt editor er collapsed
+    expanded: false,
+    // Valideringsresultat
+    validationMessage: null
   },
 
   search: {
