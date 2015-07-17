@@ -32,9 +32,8 @@ var Helper = {
   },
 
   // Tar inn callback fra validering og gir tilbake liste av uoppfylte påkrevde egenskaper.
-  getManglendeEgenskaper: function (validationResult) {
-    let listString = validationResult.substring(validationResult.indexOf(':'));
-
+  getManglendeEgenskaper: function (validationMessage) {
+    let listString = validationMessage.substring(validationMessage.indexOf(':'));
     return listString.match(/\d+(?=\))/g);
   }
 
