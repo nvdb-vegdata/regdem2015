@@ -1,6 +1,6 @@
 let Helper = require('./helper.js');
 
-let validateNewObjektAndReturnJSON = function (data) {
+let validateObjektAndReturnJSON = function (data) {
   if (data && data.objektEdited) {
     let objekt = data.objektEdited;
     let veglenke = objekt.lokasjon.veglenker[0];
@@ -40,4 +40,3 @@ let validateNewObjektAndReturnJSON = function (data) {
 };
 
 
-module.exports.validateNewObjektAndReturnJSON = validateNewObjektAndReturnJSON;
