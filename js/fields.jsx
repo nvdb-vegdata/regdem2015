@@ -15,7 +15,7 @@ let Fields = {
   ENUM: React.createClass({
     getInitialState: function() {
       return {
-        selectLinkValue: this.props.verdi,
+        selectValue: this.props.verdi,
         selectValueErrorText: ''
       };
     },
@@ -86,7 +86,7 @@ let Fields = {
   Tekst: React.createClass({
     getInitialState: function() {
       return {
-        textLinkValue: this.props.verdi,
+        textValue: this.props.verdi,
         textValueErrorText: ''
       };
 
