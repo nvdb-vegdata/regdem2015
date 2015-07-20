@@ -249,7 +249,7 @@ let fetchObjektTypes = function (objektType) {
   _state.search.loading = true;
   RegDemStore.emitChange();
 
-  Fetch.fetch( objektType, function(data) {
+  Fetch.fetchObjektTypes( objektType, function(data) {
     _state.search.options = data;
     _state.search.loading = false;
     RegDemStore.emitChange();

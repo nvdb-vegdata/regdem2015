@@ -51,7 +51,7 @@ let requestHTTP = function (url, callback, onlyOneConnection) {
   }
 };
 
-module.exports.fetch = function(input, callback) {
+module.exports.fetchObjektTypes = function(input, callback) {
   stub = input;
 
   var filterCallback = (responseData) => {
