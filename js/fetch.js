@@ -1,3 +1,5 @@
+var RegDemConstants = require('./constants');
+
 var stub = '';
 var objektListe = null;
 var prevSingleConnection = null;
@@ -49,6 +51,30 @@ let getHTTPRequest = function (url, callback, onlyOneConnection) {
   if (onlyOneConnection) {
     prevSingleConnection = r;
   }
+};
+
+let cookiemonsterApi = function (apiUrl, apiContent, callback) {
+  var r = new XMLHttpRequest();
+
+  r.open('POST', RegDemConstants.values.REGDEM_LOCAL_API_SERVER, true);
+  r.setRequestHeader('Content-type', 'application/json');
+  r.setRequestHeader('Accept', 'application/json');
+  r.setRequestHeader('Access-Control-Allow-Origin', '*');
+
+  r.onreadystatechange = () => {
+    if (r.readyState !== 4 || r.status !== 200) {
+      return;
+    }
+
+    callback(JSON.parse(r.responseText));
+  };
+
+  let queryData = {
+    url: apiUrl,
+    content: apiContent
+  };
+
+  r.send(JSON.stringify(queryData));
 };
 
 module.exports.fetchObjektTypes = function(input, callback) {
