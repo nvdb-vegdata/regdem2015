@@ -25,7 +25,7 @@ var comparator = function (a, b) {
   return 0;
 };
 
-let requestHTTP = function (url, callback, onlyOneConnection) {
+let getHTTPRequest = function (url, callback, onlyOneConnection) {
   if (onlyOneConnection && prevSingleConnection) {
     if (prevSingleConnection.readyState !== 4) {
       prevSingleConnection.abort();
@@ -65,7 +65,7 @@ module.exports.fetchObjektTypes = function(input, callback) {
   if (objektListe) {
     filterCallback(objektListe);
   } else {
-    requestHTTP(url, (responseData) => {
+    getHTTPRequest(url, (responseData) => {
       objektListe = responseData;
       filterCallback(objektListe);
     }, true);
@@ -74,17 +74,17 @@ module.exports.fetchObjektTypes = function(input, callback) {
 
 module.exports.fetchObjektType = function(objektTypeId, callback) {
   var url = 'https://www.vegvesen.no/nvdb/api/datakatalog/objekttyper/' + objektTypeId + '/.json';
-  requestHTTP(url, callback);
+  getHTTPRequest(url, callback);
 };
 
 module.exports.fetchObjekt = function(objektId, callback) {
   var url = 'https://www.vegvesen.no/nvdb/api/vegobjekter/objekt/' + objektId + '/.json';
-  requestHTTP(url, callback);
+  getHTTPRequest(url, callback);
 };
 
 module.exports.fetchKoordinat = function(lon, lat, callback) {
   var url = 'https://www.vegvesen.no/nvdb/api/vegreferanse/koordinat?lon=' + lon + '&lat=' + lat;
-  requestHTTP(url, callback);
+  getHTTPRequest(url, callback);
 };
 
 module.exports.fetchAPIObjekter = function(objectID, box, callback, extraEgenskap) {
@@ -111,5 +111,5 @@ module.exports.fetchAPIObjekter = function(objectID, box, callback, extraEgenska
   }
 
   var url = 'https://www.vegvesen.no/nvdb/api/sok?kriterie=' + encodeURIComponent(JSON.stringify(kriterie)) + '&select=' + encodeURIComponent(select);
-  requestHTTP(url, callback, true);
+  getHTTPRequest(url, callback, true);
 };
