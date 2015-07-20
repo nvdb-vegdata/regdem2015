@@ -27,9 +27,10 @@ let _state = {
   editor: {
     // Hvorvidt editor har lastet
     loading: false,
-
-    // Hvortvidt editor er collapsed
-    expanded: false
+    // Hvorvidt editor er collapsed
+    expanded: false,
+    // Valideringsresultat
+    validationMessage: null
   },
 
   search: {
@@ -563,6 +564,10 @@ let updateEditedLocation = function () {
   }
 };
 
+let updateValMessage = function (message) {
+  _state.editor.validationMessage = message;
+};
+
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
   let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value;
@@ -656,6 +661,12 @@ AppDispatcher.register(function(action) {
       RegDemStore.emitChange();
       break;
 
+    case RegDemConstants.actions.REGDEM_UPDATE_VAL_MESSAGE:
+      let message = action.message;
+      updateValMessage(message);
+      RegDemStore.emitChange();
+      break;
+
     case RegDemConstants.actions.REGDEM_UPDATE_ENUM_VALUE:
       id = action.id;
       value = action.value;
@@ -670,7 +681,6 @@ AppDispatcher.register(function(action) {
       updateFieldValue(id, value, type);
       RegDemStore.emitChange();
       break;
-
 
     default:
       // no op

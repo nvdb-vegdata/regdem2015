@@ -27,6 +27,15 @@ var Helper = {
     }
   },
 
+  minstToSiffer: function (i) {
+    return (i < 10) ? '0' + i : '' + i;
+  },
+
+  // Tar inn callback fra validering og gir tilbake liste av uoppfylte påkrevde egenskaper.
+  getManglendeEgenskaper: function (validationMessage) {
+    let listString = validationMessage.substring(validationMessage.indexOf(':'));
+    return listString.match(/\d+(?=\))/g);
+  },
   twoDigits: function (i) {
       return (i < 10) ? '0' + i : '' + i;
   },
