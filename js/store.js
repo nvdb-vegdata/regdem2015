@@ -405,19 +405,6 @@ let findPositionToEgenskapInObjektEdited = function (egenskapsId) {
 
 // Function for each component that we care about. Needs to either create new structure or just edit what's already there
 let updateENUMValue = function (egenskapsId, enumObj) {
-  // Eksempel
-  // {
-  //     "id": 8074,
-  //     "navn": "Vedlikeholdsansvarlig",
-  //     "verdi": "Statens vegvesen",
-  //     "enumVerdi": {
-  //       "id": 10468,
-  //       "kortVerdi": "SvV",
-  //       "verdi": "Statens vegvesen",
-  //       "sorteringsnummer": 1
-  //     }
-  //   },
-
   if (!_state.objektEdited) {
     createObjektEdited();
   }
@@ -444,40 +431,6 @@ let updateENUMValue = function (egenskapsId, enumObj) {
 };
 
 let updateFieldValue = function (egenskapsId, fieldValue, fieldType) {
-  // Eksempel
-  // Tekst
-  // {
-  //   "id": 1078,
-  //   "navn": "Navn bomstasjon",
-  //   "verdi": "Tempevegen"
-  // },
-
-  // Tall
-  // {
-  //   "id": 1819,
-  //   "navn": "Takst stor bil",
-  //   "verdi": "24.0",
-  //   "enhet": {
-  //     "id": 19,
-  //     "navn": "Kroner",
-  //     "kortNavn": "Kr"
-  //   }
-  // },
-
-  // Tid
-  // {
-  //   "id": 9405,
-  //   "navn": "Utgår_Rushtid ettermiddag, fra",
-  //   "verdi": "15:00"
-  // },
-
-  // Dato
-  // {
-  //   "id": 5127,
-  //   "navn": "Gyldig fra dato",
-  //   "verdi": "1980-01-01"
-  // }
-
   if (!_state.objektEdited) {
     createObjektEdited();
   }
