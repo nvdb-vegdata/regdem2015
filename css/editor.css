@@ -179,3 +179,7 @@
   position: relative !important;
   bottom: 2px !important;
 }
+.Editor-enum .Editor-selectField.Editor-feilmelding ~ div {
+  position:relative !important;
+  margin-top: 22px !important;
+}

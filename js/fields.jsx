@@ -15,7 +15,23 @@ let Fields = {
     mixins: [React.addons.LinkedStateMixin],
 
     getInitialState: function() {
-      return {selectLinkValue: this.props.verdi};
+      return {
+        selectLinkValue: this.props.verdi,
+        selectValueErrorText: ''
+      };
+    },
+
+    componentWillReceiveProps: function (nextProps) {
+      if (nextProps.manglendeEgenskaper) {
+        this.setState({
+          selectValueErrorText: 'Dette feltet må fylles ut.'
+        });
+        console.log('mangler: ', nextProps.manglendeEgenskaper);
+      } else {
+        this.setState({
+          selectValueErrorText: ''
+        })
+      }
     },
 
     render: function() {
@@ -39,6 +55,9 @@ let Fields = {
       if (this.state.selectLinkValue !== '') {
         SelectFieldClassName += ' Editor-endretVerdi';
       }
+      if (this.state.selectValueErrorText !== '') {
+        SelectFieldClassName += ' Editor-feilmelding';
+      }
 
       return (
           <div className="Editor-enum">
@@ -47,6 +66,7 @@ let Fields = {
               valueLink={this.linkState('selectLinkValue')}
               floatingLabelText={egenskaper.navn}
               fullWidth={true}
+              errorText={this.state.selectValueErrorText}
               menuItems={genererMenuItems(egenskaper)}
               className={SelectFieldClassName}
             />
@@ -61,7 +81,10 @@ let Fields = {
     mixins: [React.addons.LinkedStateMixin],
 
     getInitialState: function() {
-      return { textLinkValue: this.props.verdi };
+      return {
+        textLinkValue: this.props.verdi,
+        textValueErrorText: ''
+      };
     },
 
     render: function() {
@@ -97,7 +120,15 @@ let Fields = {
     },
 
     componentWillReceiveProps: function (nextProps) {
-      console.log('mangler: ', nextProps.manglendeEgenskaper);
+      if (nextProps.manglendeEgenskaper) {
+        this.setState({
+          numberValueErrorText: 'Dette feltet må fylles ut.'
+        });
+      } else {
+        this.setState({
+          numberValueErrorText: ''
+        })
+      }
     },
 
     handleChange: function (event) {
