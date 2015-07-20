@@ -1,5 +1,6 @@
 let React = require('react/addons');
 let Helper = require('./helper.js');
+let RegDemActions = require('./actions');
 
 let { SelectField, TextField, TimePicker, DatePicker } = require('material-ui');
 
@@ -12,8 +13,6 @@ injectTapEventPlugin();
 
 let Fields = {
   ENUM: React.createClass({
-    mixins: [React.addons.LinkedStateMixin],
-
     getInitialState: function() {
       return {
         selectLinkValue: this.props.verdi,
@@ -32,6 +31,12 @@ let Fields = {
           selectValueErrorText: ''
         })
       }
+
+    },
+
+    handleChange: function (e) {
+      this.setState({selectValue: e.target.value.payload});
+      RegDemActions.updateENUMValue(this.props.egenskaper.id, e.target.value);
     },
 
     render: function() {
@@ -52,7 +57,7 @@ let Fields = {
       };
 
       let SelectFieldClassName = 'Editor-selectField Editor-permanentEtikett';
-      if (this.state.selectLinkValue !== '') {
+      if (this.state.selectValue !== '') {
         SelectFieldClassName += ' Editor-endretVerdi';
       }
       if (this.state.selectValueErrorText !== '') {
@@ -63,7 +68,8 @@ let Fields = {
           <div className="Editor-enum">
             <Fields.Viktighet viktighet={egenskaper.viktighet} />
             <SelectField
-              valueLink={this.linkState('selectLinkValue')}
+              value={this.state.selectValue}
+              onChange={this.handleChange}
               floatingLabelText={egenskaper.navn}
               fullWidth={true}
               errorText={this.state.selectValueErrorText}
@@ -78,20 +84,24 @@ let Fields = {
   }),
 
   Tekst: React.createClass({
-    mixins: [React.addons.LinkedStateMixin],
-
     getInitialState: function() {
       return {
         textLinkValue: this.props.verdi,
         textValueErrorText: ''
       };
+
+    },
+
+    handleChange: function (e) {
+      this.setState({textValue: e.target.value});
+      RegDemActions.updateFieldValue(this.props.egenskaper.id, e.target.value, 'Tekst');
     },
 
     render: function() {
       let egenskaper = this.props.egenskaper;
 
       let TextFieldClassName = 'Editor-permanentEtikett';
-      if (this.state.textLinkValue !== '') {
+      if (this.state.textValue !== '') {
         TextFieldClassName += ' Editor-endretVerdi';
       }
 
@@ -100,7 +110,8 @@ let Fields = {
           <Fields.Viktighet viktighet={egenskaper.viktighet} />
           <TextField
             floatingLabelText={egenskaper.navn}
-            valueLink={this.linkState('textLinkValue')}
+            value={this.state.textValue}
+            onChange={this.handleChange}
             fullWidth={true}
             className={TextFieldClassName}
           />
@@ -132,17 +143,14 @@ let Fields = {
     },
 
     handleChange: function (event) {
-      function isNumber(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-      }
-
       let newValue = event.target.value;
 
-      if (isNumber(newValue) || newValue === '') {
+      if (Helper.isNumber(newValue) || newValue === '') {
         this.setState({
           numberValue: newValue,
           numberValueErrorText: ''
         });
+        RegDemActions.updateFieldValue(this.props.egenskaper.id, newValue, 'Tall');
       } else {
         this.setState({
           numberValue: newValue,
@@ -188,7 +196,9 @@ let Fields = {
 
     handleChange: function (error, time) {
       let nyTid = new Date(time);
-      this.setState({klokkeVerdi: Helper.minstToSiffer(nyTid.getHours()) + ':' + Helper.minstToSiffer(nyTid.getMinutes())});
+      let timeValue = Helper.twoDigits(nyTid.getHours()) + ':' + Helper.twoDigits(nyTid.getMinutes());
+      this.setState({klokkeVerdi: timeValue});
+      RegDemActions.updateFieldValue(this.props.egenskaper.id, timeValue, 'Tid');
     },
 
     handleClear: function () {
@@ -249,7 +259,9 @@ let Fields = {
 
     handleChange: function (error, dato) {
       let nyDato = new Date(dato);
-      this.setState({datoVerdi: Helper.minstToSiffer(nyDato.getFullYear()) + '-' + Helper.minstToSiffer(nyDato.getMonth() + 1) + '-' + Helper.minstToSiffer(nyDato.getDate())});
+      let dateValue = Helper.twoDigits(nyDato.getFullYear()) + '-' + Helper.twoDigits(nyDato.getMonth() + 1) + '-' + Helper.twoDigits(nyDato.getDate());
+      this.setState({datoVerdi: dateValue});
+      RegDemActions.updateFieldValue(this.props.egenskaper.id, dateValue, 'Dato');
     },
 
     handleClear: function () {

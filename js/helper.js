@@ -2,7 +2,7 @@ var Helper = {
 
   // Tar imot et vegReferanse objekt og lager en streng
   vegReferanseString: function (vegReferanse) {
-    return vegReferanse.fylke + ('0' + vegReferanse.kommune).slice(-2) + ' ' + vegReferanse.kategori + vegReferanse.status + vegReferanse.nummer + ' HP' + vegReferanse.hp + ' m' + vegReferanse.fraMeter;
+    return vegReferanse.fylke + this.twoDigits(vegReferanse.kommune) + ' ' + vegReferanse.kategori + vegReferanse.status + vegReferanse.nummer + ' HP' + vegReferanse.hp + ' m' + vegReferanse.fraMeter;
   },
 
   // Et vegobjekt har egenskaper med ulike viktighet. Denne funskjonen mapper
@@ -36,11 +36,18 @@ var Helper = {
     let listString = validationMessage.substring(validationMessage.indexOf(':'));
     return listString.match(/\d+(?=\))/g);
   },
+  twoDigits: function (i) {
+      return (i < 10) ? '0' + i : '' + i;
+  },
 
   todaysDate: function () {
     let date = new Date();
 
     return date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+  },
+
+  isNumber: function (n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
   }
 
 };
