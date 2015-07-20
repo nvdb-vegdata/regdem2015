@@ -25,6 +25,10 @@ let Editor = React.createClass({
   },
 
   saveObjekt: function () {
+    //==== Mock feedback ======
+    RegDemActions.updateValidationMessage("Objektet, av typen 95 (Skiltpunkt), mangler anbefalte egenskaper: [Antall oppsettingsutstyr (1877), Assosierte Skiltplate (220004), Assosierte Variabelt skilt (220006), Avskjæringsledd (8772), Geometri, punkt (4794), Fundamentering (1671), Oppsettingsutstyr (1876)]");
+    //==== /Mock Feedbak ======
+
     Validator.validateObjekt(this.props.data);
   },
 
@@ -46,7 +50,6 @@ let Editor = React.createClass({
         }
       }
     }
-
     return '';
   },
 
@@ -64,6 +67,17 @@ let Editor = React.createClass({
     let objektTypeNavn = this.props.data.objektType ? this.props.data.objektType.navn : '';
     let vegreferanse = (objekt && objekt.lokasjon && objekt.lokasjon.vegReferanser) ? Helper.vegReferanseString(objekt.lokasjon.vegReferanser[0]) : '';
     let egenskapsTyper = this.props.data.objektType ? this.props.data.objektType.egenskapsTyper : [];
+    let manglendeEgenskaper = this.props.data.editor.validationMessage ? Helper.getManglendeEgenskaper(this.props.data.editor.validationMessage) : [];
+
+    let manglendeEgenskapMap = {};
+    manglendeEgenskaper = manglendeEgenskaper.map(function (obj) {
+      return parseInt(obj);
+    });
+
+    for (var i in egenskapsTyper) {
+      let index = egenskapsTyper[i].id
+      manglendeEgenskapMap[index] = manglendeEgenskaper.indexOf(index) != -1;
+    }
 
     let formName, subtitle;
     if (objektId && objektId !== -1) {
@@ -146,15 +160,40 @@ let Editor = React.createClass({
         EditorFields = egenskapsTyper.map((egenskap) => {
                           switch (egenskap.type) {
                             case 'ENUM':
-                              return (<Fields.ENUM verdi={this.finnENUMVerdi(egenskap)} egenskaper={egenskap} key={objektId + '-' + egenskap.id} />);
+                              return (<Fields.ENUM
+                                        verdi={this.finnENUMVerdi(egenskap)}
+                                        egenskaper={egenskap}
+                                        manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
+                                        key={objektId + '-' + egenskap.id}
+                                      />);
                             case 'Tekst':
-                              return (<Fields.Tekst verdi={this.finnTekstVerdi(egenskap)} egenskaper={egenskap} key={objektId + '-' +egenskap.id} />);
+                              return (<Fields.Tekst
+                                        verdi={this.finnTekstVerdi(egenskap)}
+                                        egenskaper={egenskap}
+                                        manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
+                                        key={objektId + '-' + egenskap.id}
+                                      />);
                             case 'Tall':
-                              return (<Fields.Tall verdi={this.finnTekstVerdi(egenskap)} egenskaper={egenskap} key={objektId + '-' +egenskap.id} />);
+                              return (<Fields.Tall
+                                        verdi={this.finnTekstVerdi(egenskap)}
+                                        egenskaper={egenskap}
+                                        manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
+                                        key={objektId + '-' + egenskap.id}
+                                      />);
                             case 'Klokkeslett':
-                              return (<Fields.Klokkeslett verdi={this.finnTekstVerdi(egenskap)} egenskaper={egenskap} key={objektId + '-' +egenskap.id} />);
+                              return (<Fields.Klokkeslett
+                                        verdi={this.finnTekstVerdi(egenskap)}
+                                        egenskaper={egenskap}
+                                        manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
+                                        key={objektId + '-' + egenskap.id}
+                                        />);
                             case 'Dato':
-                              return (<Fields.Dato verdi={this.finnTekstVerdi(egenskap)} egenskaper={egenskap} key={objektId + '-' +egenskap.id} />);
+                              return (<Fields.Dato
+                                        verdi={this.finnTekstVerdi(egenskap)}
+                                        egenskaper={egenskap}
+                                        manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
+                                        key={objektId + '-' + egenskap.id}
+                                      />);
                             default:
                               break;
                           }

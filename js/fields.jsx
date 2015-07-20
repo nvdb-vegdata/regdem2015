@@ -14,7 +14,24 @@ injectTapEventPlugin();
 let Fields = {
   ENUM: React.createClass({
     getInitialState: function() {
-      return {selectValue: this.props.verdi};
+      return {
+        selectLinkValue: this.props.verdi,
+        selectValueErrorText: ''
+      };
+    },
+
+    componentWillReceiveProps: function (nextProps) {
+      if (nextProps.manglendeEgenskaper) {
+        this.setState({
+          selectValueErrorText: 'Dette feltet må fylles ut.'
+        });
+        console.log('mangler: ', nextProps.manglendeEgenskaper);
+      } else {
+        this.setState({
+          selectValueErrorText: ''
+        })
+      }
+
     },
 
     handleChange: function (e) {
@@ -43,6 +60,9 @@ let Fields = {
       if (this.state.selectValue !== '') {
         SelectFieldClassName += ' Editor-endretVerdi';
       }
+      if (this.state.selectValueErrorText !== '') {
+        SelectFieldClassName += ' Editor-feilmelding';
+      }
 
       return (
           <div className="Editor-enum">
@@ -52,6 +72,7 @@ let Fields = {
               onChange={this.handleChange}
               floatingLabelText={egenskaper.navn}
               fullWidth={true}
+              errorText={this.state.selectValueErrorText}
               menuItems={genererMenuItems(egenskaper)}
               className={SelectFieldClassName}
             />
@@ -64,7 +85,11 @@ let Fields = {
 
   Tekst: React.createClass({
     getInitialState: function() {
-      return { textValue: this.props.verdi };
+      return {
+        textLinkValue: this.props.verdi,
+        textValueErrorText: ''
+      };
+
     },
 
     handleChange: function (e) {
@@ -103,6 +128,18 @@ let Fields = {
         numberValue: this.props.verdi,
         numberValueErrorText: ''
       };
+    },
+
+    componentWillReceiveProps: function (nextProps) {
+      if (nextProps.manglendeEgenskaper) {
+        this.setState({
+          numberValueErrorText: 'Dette feltet må fylles ut.'
+        });
+      } else {
+        this.setState({
+          numberValueErrorText: ''
+        })
+      }
     },
 
     handleChange: function (event) {

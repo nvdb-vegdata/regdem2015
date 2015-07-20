@@ -29,9 +29,10 @@ let _state = {
   editor: {
     // Hvorvidt editor har lastet
     loading: false,
-
-    // Hvortvidt editor er collapsed
-    expanded: false
+    // Hvorvidt editor er collapsed
+    expanded: false,
+    // Valideringsresultat
+    validationMessage: null
   },
 
   search: {
@@ -522,6 +523,10 @@ let updateEditedLocation = function () {
   }
 };
 
+let updateValMessage = function (message) {
+  _state.editor.validationMessage = message;
+};
+
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
   let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value, response;
@@ -612,6 +617,12 @@ AppDispatcher.register(function(action) {
     case RegDemConstants.actions.REGDEM_GO_BACK_AND_RESET:
       userInput = action.userInput;
       goBackAndReset(userInput);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_UPDATE_VAL_MESSAGE:
+      let message = action.message;
+      updateValMessage(message);
       RegDemStore.emitChange();
       break;
 

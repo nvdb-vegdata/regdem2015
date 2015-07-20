@@ -97,6 +97,12 @@ var RegDemActions = {
       result: result
     });
   },
+  updateValidationMessage: function (message) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_UPDATE_VAL_MESSAGE,
+      message: message
+    });
+  },
   updateENUMValue: function (id, value) {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_UPDATE_ENUM_VALUE,
