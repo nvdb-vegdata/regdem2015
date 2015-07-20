@@ -111,6 +111,12 @@ var RegDemActions = {
       value: value,
       type: type
     });
+  },
+  updateValidatorResponse: function (response) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_UPDATE_VALIDATOR_RESPONSE,
+      response: response
+    });
   }
 };
 

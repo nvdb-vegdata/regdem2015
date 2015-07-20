@@ -327,6 +327,9 @@ let locationHasBeenSet = function () {
   _state.map.myLocation = false;
 };
 
+let updateValidatorResponse = function (response) {
+}
+
 
 // Initaliserer skaping av objektEdited.
 let createObjektEdited = function () {
@@ -565,7 +568,7 @@ let updateEditedLocation = function () {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value;
+  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value, response;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -671,6 +674,11 @@ AppDispatcher.register(function(action) {
       RegDemStore.emitChange();
       break;
 
+    case RegDemConstants.actions.REGDEM_UPDATE_VALIDATOR_RESPONSE:
+      response = action.response;
+      updateValidatorResponse(response);
+      RegDemStore.emitChange();
+      break;
 
     default:
       // no op
