@@ -96,6 +96,21 @@ var RegDemActions = {
       actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_END,
       result: result
     });
+  },
+  updateENUMValue: function (id, value) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_UPDATE_ENUM_VALUE,
+      id: id,
+      value: value
+    });
+  },
+  updateFieldValue: function (id, value, type) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_UPDATE_FIELD_VALUE,
+      id: id,
+      value: value,
+      type: type
+    });
   }
 };
 

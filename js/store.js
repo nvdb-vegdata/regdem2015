@@ -3,6 +3,7 @@ let EventEmitter = require('events').EventEmitter;
 let assign = require('object-assign');
 
 let RegDemConstants = require('./constants');
+let omnivore = require('leaflet-omnivore');
 let Helper = require('./helper.js');
 let Fetch = require('./fetch.js');
 
@@ -338,26 +339,174 @@ let createObjektEdited = function () {
       egenskaper: [],
       lokasjon: {
         geometriWgs84: null,
-        vegLenker: null
+        veglenker: null
       }
     };
   }
 };
 
-let findTypeIdToGeo = function () {
-  let returnId = null;
+let findiEgenskapByString = function (egenskap) {
+  let returnEgenskap = null;
   _state.objektType.egenskapsTyper.every((element, index, array) => {
-    if (element.navn.toLowerCase().includes('geometri')) {
-      returnId = element.id;
+    if (element.navn.toLowerCase().includes(egenskap)) {
+      returnEgenskap = element;
       return false;
     }
     return true;
   });
 
-  return returnId;
+  return returnEgenskap;
+};
+
+let findEnumValueFromObjektType = function (egenskapFromObjektType, egenskapsId, enumId) {
+  if (egenskapFromObjektType.type === "ENUM") {
+    for (var testEnumId in egenskapFromObjektType.enumVerdier) {
+      if (String(testEnumId) === String(enumId)) {
+        return egenskapFromObjektType.enumVerdier[enumId];
+      }
+    }
+  }
+
+  return null;
+};
+
+let findEgenskapInObjektType = function (egenskapsId) {
+  if (_state.objektType) {
+    // Finn riktig egenskap
+
+    let egenskapsTyper = _state.objektType.egenskapsTyper;
+
+    for (var i = 0; i < egenskapsTyper.length; i++) {
+      if (String(egenskapsTyper[i].id) === String(egenskapsId)) {
+        return egenskapsTyper[i];
+      }
+    }
+  }
+};
+
+let findPositionToEgenskapInObjektEdited = function (egenskapsId) {
+  if (_state.objektEdited) {
+    // Finn riktig egenskap
+
+    let egenskaper = _state.objektEdited.egenskaper;
+
+    for (var i = 0; i < egenskaper.length; i++) {
+      if (String(egenskaper[i].id) === String(egenskapsId)) {
+        return i;
+      }
+    }
+
+    return egenskaper.length;
+  }
 };
 
 // Function for each component that we care about. Needs to either create new structure or just edit what's already there
+let updateENUMValue = function (egenskapsId, enumObj) {
+  // Eksempel
+  // {
+  //     "id": 8074,
+  //     "navn": "Vedlikeholdsansvarlig",
+  //     "verdi": "Statens vegvesen",
+  //     "enumVerdi": {
+  //       "id": 10468,
+  //       "kortVerdi": "SvV",
+  //       "verdi": "Statens vegvesen",
+  //       "sorteringsnummer": 1
+  //     }
+  //   },
+
+  if (!_state.objektEdited) {
+    createObjektEdited();
+  }
+
+  // Initaliserer verdier
+  let enumId = enumObj.payload;
+  let enumVerdi = enumObj.text;
+
+  let egenskapFromObjektType = findEgenskapInObjektType(egenskapsId);
+  let enumVerdiFromObjektType = findEnumValueFromObjektType(egenskapFromObjektType, egenskapsId, enumId);
+
+  if (enumVerdiFromObjektType) {
+    let newValue = {
+      id: egenskapsId,
+      navn: egenskapFromObjektType.navn,
+      verdi: enumVerdi,
+      enumVerdi: enumVerdiFromObjektType
+    };
+
+    let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(egenskapsId);
+    _state.objektEdited.egenskaper[egenskapPositionFromObjektEdited] = newValue;
+  }
+
+};
+
+let updateFieldValue = function (egenskapsId, fieldValue, fieldType) {
+  // Eksempel
+  // Tekst
+  // {
+  //   "id": 1078,
+  //   "navn": "Navn bomstasjon",
+  //   "verdi": "Tempevegen"
+  // },
+
+  // Tall
+  // {
+  //   "id": 1819,
+  //   "navn": "Takst stor bil",
+  //   "verdi": "24.0",
+  //   "enhet": {
+  //     "id": 19,
+  //     "navn": "Kroner",
+  //     "kortNavn": "Kr"
+  //   }
+  // },
+
+  // Tid
+  // {
+  //   "id": 9405,
+  //   "navn": "Utgår_Rushtid ettermiddag, fra",
+  //   "verdi": "15:00"
+  // },
+
+  // Dato
+  // {
+  //   "id": 5127,
+  //   "navn": "Gyldig fra dato",
+  //   "verdi": "1980-01-01"
+  // }
+
+  if (!_state.objektEdited) {
+    createObjektEdited();
+  }
+
+  let egenskapFromObjektType = findEgenskapInObjektType(egenskapsId);
+
+  if (egenskapFromObjektType) {
+    let newValue = null;
+
+    switch (fieldType) {
+      case 'Tekst':
+      case 'Tall':
+      case 'Tid':
+      case 'Dato':
+        newValue = {
+          id: egenskapsId,
+          navn: egenskapFromObjektType.navn,
+          verdi: fieldValue
+        };
+
+        break;
+      default:
+
+    }
+
+
+    let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(egenskapsId);
+    _state.objektEdited.egenskaper[egenskapPositionFromObjektEdited] = newValue;
+  }
+
+};
+
 let updateEditedLocation = function () {
   if (!_state.objektEdited) {
     createObjektEdited();
@@ -368,12 +517,22 @@ let updateEditedLocation = function () {
       case 'marker':
         let lng = _state.geometry.result._latlng.lng;
         let lat = _state.geometry.result._latlng.lat;
+
         // Lenke ID
         Fetch.fetchKoordinat(lng, lat, (koorData) => {
           if (koorData.sokePunktSrid === 'LAT_LON_WGS84') {
+            let positionObject = omnivore.wkt.parse(koorData.sokePunkt);
+            let positionLatLng = positionObject._layers[Object.keys(positionObject._layers)[0]]._latlng;
+
+            let WGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [positionLatLng.lng, positionLatLng.lat]);
+            let utm33Position = 'POINT (' + WGS84ToUTM33[0] + ' ' + WGS84ToUTM33[1] + ')';
+
+            _state.objektEdited.lokasjon.geometriForenkletUtm33 = utm33Position;
+            _state.objektEdited.lokasjon.geometriForenkletWgs84 = koorData.sokePunkt;
+            _state.objektEdited.lokasjon.geometriUtm33 = utm33Position;
             _state.objektEdited.lokasjon.geometriWgs84 = koorData.sokePunkt;
           }
-          _state.objektEdited.lokasjon.vegLenker = [
+          _state.objektEdited.lokasjon.veglenker = [
             {
               id: koorData.veglenkeId,
               fra: koorData.veglenkePosisjon,
@@ -383,16 +542,18 @@ let updateEditedLocation = function () {
         });
 
         // Egengeometri
+        let geometriEgenskap = findiEgenskapByString('geometri, punkt');
         let WGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [lng, lat]);
-        let typeIdToGeo = findTypeIdToGeo();
 
-        if (typeIdToGeo) {
-          _state.objektEdited.egenskaper.push({
-            typeId: typeIdToGeo,
-            verdi: [
-              'POINT (' + WGS84ToUTM33[0] + ' ' + WGS84ToUTM33[1] + ')'
-            ]
-          });
+        if (geometriEgenskap) {
+          let newValue = {
+            id: geometriEgenskap.id,
+            navn: geometriEgenskap.navn,
+            verdi: 'POINT (' + WGS84ToUTM33[0] + ' ' + WGS84ToUTM33[1] + ')'
+          };
+
+          let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(geometriEgenskap.id);
+          _state.objektEdited.egenskaper[egenskapPositionFromObjektEdited] = newValue;
         }
 
         break;
@@ -400,12 +561,11 @@ let updateEditedLocation = function () {
 
     }
   }
-
 };
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type;
+  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -493,6 +653,21 @@ AppDispatcher.register(function(action) {
     case RegDemConstants.actions.REGDEM_GO_BACK_AND_RESET:
       userInput = action.userInput;
       goBackAndReset(userInput);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_UPDATE_ENUM_VALUE:
+      id = action.id;
+      value = action.value;
+      updateENUMValue(id, value);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_UPDATE_FIELD_VALUE:
+      id = action.id;
+      value = action.value;
+      type = action.type;
+      updateFieldValue(id, value, type);
       RegDemStore.emitChange();
       break;
 

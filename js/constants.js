@@ -17,7 +17,9 @@ module.exports.actions = keyMirror({
   REGDEM_ADD_GEOM_END: null,
   REGDEM_GET_CURRENT_LOCATION: null,
   REGDEM_LOCATION_HAS_BEEN_SET: null,
-  REGDEM_GO_BACK_AND_RESET: null
+  REGDEM_GO_BACK_AND_RESET: null,
+  REGDEM_UPDATE_ENUM_VALUE: null,
+  REGDEM_UPDATE_FIELD_VALUE: null
 });
 
 module.exports.values = {
