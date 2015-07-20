@@ -28,6 +28,8 @@ let Editor = React.createClass({
     if (this.props.data.objektId === -1) {
       // Skal lagre et nytt felt
       console.log(JSON.stringify(Validator.validateNewObjektAndReturnJSON(this.props.data)));
+    } else {
+      console.log(JSON.stringify(Validator.validateNewObjektAndReturnJSON(this.props.data)));
     }
   },
 
