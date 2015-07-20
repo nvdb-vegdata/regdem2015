@@ -1,4 +1,5 @@
 let Helper = require('./helper.js');
+let Fetch = require('./fetch.js');
 
 let validateObjektAndReturnJSON = function (data) {
   if (data && data.objektEdited) {
@@ -39,4 +40,15 @@ let validateObjektAndReturnJSON = function (data) {
   }
 };
 
+let validateObjekt = function (data) {
+  let queryJSON = validateObjektAndReturnJSON(data);
 
+  if (queryJSON) {
+    Fetch.validateObjektSynchronized(queryJSON, (returnData) => {
+      console.log(returnData);
+    });
+  }
+};
+
+
+module.exports.validateObjekt = validateObjekt;
