@@ -25,6 +25,7 @@ let Editor = React.createClass({
   },
 
   saveObjekt: function () {
+    Validator.validateObjekt(this.props.data);
   },
 
   expandForm: function () {
