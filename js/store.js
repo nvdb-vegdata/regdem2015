@@ -24,6 +24,8 @@ let _state = {
   searchResults: null,
   searchResultsFull: null,
 
+  validatorResponse: null,
+
   editor: {
     // Hvorvidt editor har lastet
     loading: false,
@@ -328,6 +330,7 @@ let locationHasBeenSet = function () {
 };
 
 let updateValidatorResponse = function (response) {
+  _state.validatorResponse = response;
 }
 
 
