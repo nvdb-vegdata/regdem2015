@@ -139,3 +139,8 @@ module.exports.fetchAPIObjekter = function(objectID, box, callback, extraEgenska
   var url = 'https://www.vegvesen.no/nvdb/api/sok?kriterie=' + encodeURIComponent(JSON.stringify(kriterie)) + '&select=' + encodeURIComponent(select);
   getHTTPRequest(url, callback, true);
 };
+
+module.exports.validateObjektSynchronized = function(queryJSON, callback) {
+  var url = '/nvdb/apiskriv/v2/endringssett/validator';
+  cookiemonsterApi(url, queryJSON, callback);
+};
