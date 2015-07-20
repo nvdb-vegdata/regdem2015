@@ -356,8 +356,12 @@ let findTypeIdToGeo = function () {
 
   return returnId;
 };
+let findEnumValueFromObjektType = function (egenskapFromObjektType, egenskapsId, enumId) {
+};
 
 // Function for each component that we care about. Needs to either create new structure or just edit what's already there
+let updateENUMValue = function (egenskapsId, enumObj) {
+};
 let updateEditedLocation = function () {
   if (!_state.objektEdited) {
     createObjektEdited();
@@ -405,7 +409,7 @@ let updateEditedLocation = function () {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type;
+  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -493,6 +497,21 @@ AppDispatcher.register(function(action) {
     case RegDemConstants.actions.REGDEM_GO_BACK_AND_RESET:
       userInput = action.userInput;
       goBackAndReset(userInput);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_UPDATE_ENUM_VALUE:
+      id = action.id;
+      value = action.value;
+      updateENUMValue(id, value);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_UPDATE_FIELD_VALUE:
+      id = action.id;
+      value = action.value;
+      type = action.type;
+      updateFieldValue(id, value, type);
       RegDemStore.emitChange();
       break;
 
