@@ -24,6 +24,8 @@ let _state = {
   searchResults: null,
   searchResultsFull: null,
 
+  validatorResponse: null,
+
   editor: {
     // Hvorvidt editor har lastet
     loading: false,
@@ -250,7 +252,7 @@ let fetchObjektTypes = function (objektType) {
   _state.search.loading = true;
   RegDemStore.emitChange();
 
-  Fetch.fetch( objektType, function(data) {
+  Fetch.fetchObjektTypes( objektType, function(data) {
     _state.search.options = data;
     _state.search.loading = false;
     RegDemStore.emitChange();
@@ -328,6 +330,10 @@ let locationHasBeenSet = function () {
   _state.map.myLocation = false;
 };
 
+let updateValidatorResponse = function (response) {
+  _state.validatorResponse = response;
+}
+
 
 // Initaliserer skaping av objektEdited.
 let createObjektEdited = function () {
@@ -403,19 +409,6 @@ let findPositionToEgenskapInObjektEdited = function (egenskapsId) {
 
 // Function for each component that we care about. Needs to either create new structure or just edit what's already there
 let updateENUMValue = function (egenskapsId, enumObj) {
-  // Eksempel
-  // {
-  //     "id": 8074,
-  //     "navn": "Vedlikeholdsansvarlig",
-  //     "verdi": "Statens vegvesen",
-  //     "enumVerdi": {
-  //       "id": 10468,
-  //       "kortVerdi": "SvV",
-  //       "verdi": "Statens vegvesen",
-  //       "sorteringsnummer": 1
-  //     }
-  //   },
-
   if (!_state.objektEdited) {
     createObjektEdited();
   }
@@ -442,40 +435,6 @@ let updateENUMValue = function (egenskapsId, enumObj) {
 };
 
 let updateFieldValue = function (egenskapsId, fieldValue, fieldType) {
-  // Eksempel
-  // Tekst
-  // {
-  //   "id": 1078,
-  //   "navn": "Navn bomstasjon",
-  //   "verdi": "Tempevegen"
-  // },
-
-  // Tall
-  // {
-  //   "id": 1819,
-  //   "navn": "Takst stor bil",
-  //   "verdi": "24.0",
-  //   "enhet": {
-  //     "id": 19,
-  //     "navn": "Kroner",
-  //     "kortNavn": "Kr"
-  //   }
-  // },
-
-  // Tid
-  // {
-  //   "id": 9405,
-  //   "navn": "Utgår_Rushtid ettermiddag, fra",
-  //   "verdi": "15:00"
-  // },
-
-  // Dato
-  // {
-  //   "id": 5127,
-  //   "navn": "Gyldig fra dato",
-  //   "verdi": "1980-01-01"
-  // }
-
   if (!_state.objektEdited) {
     createObjektEdited();
   }
@@ -570,7 +529,7 @@ let updateValMessage = function (message) {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value;
+  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value, response;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -679,6 +638,12 @@ AppDispatcher.register(function(action) {
       value = action.value;
       type = action.type;
       updateFieldValue(id, value, type);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_UPDATE_VALIDATOR_RESPONSE:
+      response = action.response;
+      updateValidatorResponse(response);
       RegDemStore.emitChange();
       break;
 

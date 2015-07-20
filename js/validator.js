@@ -1,6 +1,8 @@
+let RegDemActions = require('./actions');
 let Helper = require('./helper.js');
+let Fetch = require('./fetch.js');
 
-let validateNewObjektAndReturnJSON = function (data) {
+let validateObjektAndReturnJSON = function (data) {
   if (data && data.objektEdited) {
     let objekt = data.objektEdited;
     let veglenke = objekt.lokasjon.veglenker[0];
@@ -39,5 +41,15 @@ let validateNewObjektAndReturnJSON = function (data) {
   }
 };
 
+let validateObjekt = function (data) {
+  let queryJSON = validateObjektAndReturnJSON(data);
 
-module.exports.validateNewObjektAndReturnJSON = validateNewObjektAndReturnJSON;
+  if (queryJSON) {
+    Fetch.validateObjektSynchronized(queryJSON, (returnData) => {
+      RegDemActions.updateValidatorResponse(returnData);
+    });
+  }
+};
+
+
+module.exports.validateObjekt = validateObjekt;

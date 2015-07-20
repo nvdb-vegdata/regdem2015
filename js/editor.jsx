@@ -29,12 +29,7 @@ let Editor = React.createClass({
     RegDemActions.updateValidationMessage("Objektet, av typen 95 (Skiltpunkt), mangler anbefalte egenskaper: [Antall oppsettingsutstyr (1877), Assosierte Skiltplate (220004), Assosierte Variabelt skilt (220006), Avskjæringsledd (8772), Geometri, punkt (4794), Fundamentering (1671), Oppsettingsutstyr (1876)]");
     //==== /Mock Feedbak ======
 
-    if (this.props.data.objektId === -1) {
-      // Skal lagre et nytt felt
-      console.log(JSON.stringify(Validator.validateNewObjektAndReturnJSON(this.props.data)));
-    } else {
-      console.log(JSON.stringify(Validator.validateNewObjektAndReturnJSON(this.props.data)));
-    }
+    Validator.validateObjekt(this.props.data);
   },
 
   expandForm: function () {
@@ -220,7 +215,7 @@ let Editor = React.createClass({
               {EditorFields}
             </CardText>
             <CardActions className={CardActionsClassName}>
-              <FlatButton label="Lagre" primary={true} onTouchTap={this.saveObjekt} />
+              <FlatButton label="Lagre" primary={true} onTouchTap={this.saveObjekt} disabled={!this.props.data.objektEdited} />
               <FlatButton label="Avbryt" onTouchTap={this.closeDialog} />
             </CardActions>
         </Card>
