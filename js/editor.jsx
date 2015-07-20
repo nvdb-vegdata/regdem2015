@@ -181,7 +181,7 @@ let Editor = React.createClass({
               {EditorFields}
             </CardText>
             <CardActions className={CardActionsClassName}>
-              <FlatButton label="Lagre" primary={true} onTouchTap={this.saveObjekt} />
+              <FlatButton label="Lagre" primary={true} onTouchTap={this.saveObjekt} disabled={!this.props.data.objektEdited} />
               <FlatButton label="Avbryt" onTouchTap={this.closeDialog} />
             </CardActions>
         </Card>
