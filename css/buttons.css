@@ -5,9 +5,19 @@
   z-index: 1;
 }
 
+.mini-buttons-container {
+  margin-bottom:25px;
+  transition: height 1s ease;
+}
+
 .buttons-button {
   display: block !important;
   margin-top: 10px;
+}
+
+.buttons-button-mini {
+  margin:7px;
+  margin-top:15px;
 }
 
 .buttons-button-my-location {

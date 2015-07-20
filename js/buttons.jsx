@@ -13,12 +13,32 @@ injectTapEventPlugin();
 let Colors = mui.Styles.Colors;
 
 let Buttons = React.createClass({
+  getInitialState: function () {
+    return {
+      dialOpen: false
+    };
+  },
+
   handleAdd: function () {
     RegDemActions.setObjektID(-1);
   },
 
   handleChangeMyLocation: function () {
     RegDemActions.getCurrentLocation();
+  },
+
+  expand: function () {
+    this.setState({
+      dialOpen: !this.state.dialOpen
+    })
+  },
+
+  showLogin: function () {
+
+  },
+
+  showStatus: function () {
+
   },
 
   render: function() {
@@ -36,20 +56,51 @@ let Buttons = React.createClass({
 
     let myLocationButton = this.props.data.map.myLocation ? loadingLocationButton : passiveLocationButton;
 
+    let dialIcon = (this.state.dialOpen)? 'clear':'keyboard_arrow_up';
 
-    let addButton = (<FloatingActionButton onTouchTap={this.handleAdd}>
+    let dialButton = (<FloatingActionButton onTouchTap={this.expand}>
+                     <FontIcon className="material-icons" color={Colors.white}>{dialIcon}</FontIcon>
+                     </FloatingActionButton>);
+
+    let loginButton = (<FloatingActionButton onTouchTap={this.showLogin} secondary={true} mini={true}>
+                      <FontIcon className="material-icons" color={Colors.white}>vpn_key</FontIcon>
+                      </FloatingActionButton>);
+
+    let statusButton = (<FloatingActionButton onTouchTap={this.showStatus} secondary={true} mini={true}>
+                      <FontIcon className="material-icons" color={Colors.white}>storage</FontIcon>
+                      </FloatingActionButton>);
+
+
+    let addButton = (<FloatingActionButton onTouchTap={this.handleAdd} secondary={true} mini={true}>
                       <FontIcon className="material-icons" color={Colors.white}>add</FontIcon>
-                    </FloatingActionButton>);
+                      </FloatingActionButton>);
 
     addButton = this.props.data.objektType ? addButton : null;
 
+    let dialContainer = (
+      <div className='mini-buttons-container'>
+        <div className="buttons-button buttons-button-mini">
+          {addButton}
+        </div>
+        <div className="buttons-button buttons-button-mini">
+          {loginButton}
+        </div>
+        <div className="buttons-button buttons-button-mini">
+          {statusButton}
+        </div>
+      </div>
+    );
+
+    dialContainer = this.state.dialOpen ? dialContainer : null;
+
     return (
       <div className="buttons-container">
+        {dialContainer}
+        <div className="buttons-button">
+          {dialButton}
+          </div>
         <div className="buttons-button">
           {myLocationButton}
-        </div>
-        <div className="buttons-button">
-          {addButton}
         </div>
       </div>
     );
