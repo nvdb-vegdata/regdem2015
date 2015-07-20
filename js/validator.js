@@ -1,3 +1,4 @@
+let RegDemActions = require('./actions');
 let Helper = require('./helper.js');
 let Fetch = require('./fetch.js');
 
@@ -45,7 +46,7 @@ let validateObjekt = function (data) {
 
   if (queryJSON) {
     Fetch.validateObjektSynchronized(queryJSON, (returnData) => {
-      console.log(returnData);
+      RegDemActions.updateValidatorResponse(returnData);
     });
   }
 };
