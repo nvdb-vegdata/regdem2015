@@ -71,14 +71,10 @@ let Editor = React.createClass({
     let manglendeEgenskaper = this.props.data.editor.validationMessage ? Helper.getManglendeEgenskaper(this.props.data.editor.validationMessage) : [];
     let warnings = this.props.data.validatorResponse ? Parser.extractErrors(this.props.data.validatorResponse) : [];
 
-    let manglendeEgenskapMap = {};
-    manglendeEgenskaper = manglendeEgenskaper.map(function (obj) {
-      return parseInt(obj);
-    });
-
+    let warningsFull = {};
     for (var i in egenskapsTyper) {
       let index = egenskapsTyper[i].id
-      manglendeEgenskapMap[index] = manglendeEgenskaper.indexOf(index) != -1;
+      warningsFull[index] = warnings[index] ? warnings[index].kode : "";
     }
 
     let formName, subtitle;
@@ -165,35 +161,35 @@ let Editor = React.createClass({
                               return (<Fields.ENUM
                                         verdi={this.finnENUMVerdi(egenskap)}
                                         egenskaper={egenskap}
-                                        manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
+                                        warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
                                       />);
                             case 'Tekst':
                               return (<Fields.Tekst
                                         verdi={this.finnTekstVerdi(egenskap)}
                                         egenskaper={egenskap}
-                                        manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
+                                        warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
                                       />);
                             case 'Tall':
                               return (<Fields.Tall
                                         verdi={this.finnTekstVerdi(egenskap)}
                                         egenskaper={egenskap}
-                                        manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
+                                        warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
                                       />);
                             case 'Klokkeslett':
                               return (<Fields.Klokkeslett
                                         verdi={this.finnTekstVerdi(egenskap)}
                                         egenskaper={egenskap}
-                                        manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
+                                        warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
                                         />);
                             case 'Dato':
                               return (<Fields.Dato
                                         verdi={this.finnTekstVerdi(egenskap)}
                                         egenskaper={egenskap}
-                                        manglendeEgenskaper={manglendeEgenskapMap[egenskap.id]}
+                                        warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
                                       />);
                             default:
