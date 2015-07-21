@@ -98,7 +98,7 @@ let Strekning = React.createClass({
       label="Plassér Linje"
       className='Editor-geom-button'
       onTouchTap={this.handleClick}
-      disabled = {!this.props.enabled}
+      disabled = {true || !this.props.enabled} // TODO Midlertidig inaktivt siden vi ikke har implementert lagring av strekning
       primary = {this.props.selected}
     />
   );
@@ -122,7 +122,7 @@ let Flate = React.createClass({
       label="Plassér Flate"
       className='Editor-geom-button'
       onTouchTap={this.handleClick}
-      disabled = {!this.props.enabled}
+      disabled = {true || !this.props.enabled} // TODO Midlertidig inaktivt siden vi ikke har implementert lagring av flate
       primary = {this.props.selected}
     />
   );
