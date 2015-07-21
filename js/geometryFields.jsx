@@ -64,6 +64,10 @@ let Marker = React.createClass({
   },
 
   render: function () {
+    if (!this.props.enabled) {
+      return null;
+    }
+
     return (
       <RaisedButton
         style={{margin: '5px'}}
@@ -84,6 +88,10 @@ let Strekning = React.createClass({
   },
 
   render: function () {
+    if (!this.props.enabled) {
+      return null;
+    }
+
     return (
     <RaisedButton
       style={{margin: '5px'}}
@@ -104,6 +112,10 @@ let Flate = React.createClass({
   },
 
   render: function () {
+    if (!this.props.enabled) {
+      return null;
+    }
+
     return (
     <RaisedButton
       style={{margin: '5px'}}
