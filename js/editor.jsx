@@ -126,7 +126,7 @@ let Editor = React.createClass({
     }
 
     // Når objektet er hentet og ikke laster lenger
-    if ((objekt || objektId === -1)  && !this.props.data.editor.loading) {
+    if ((objekt || objektId === -1)  && !this.props.data.editor.loading && !this.props.data.geometry.addingMarker) {
       EditorClassName = 'Editor';
       EditorCloseClassName = 'Editor-lukk';
       EditorCardClassName = 'Editor-Card Editor-Card-loaded';
