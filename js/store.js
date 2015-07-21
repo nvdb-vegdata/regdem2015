@@ -314,6 +314,13 @@ let addGeomStart = function (id, type) {
   }
 };
 
+let abortGeomAdd = function () {
+  _state.geometry.addingMarker = false;
+  _state.geometry.current = null;
+  _state.geometry.result = null;
+  _state.geometry.resultType = null;
+};
+
 let addGeomEnd = function (result) {
   _state.geometry.result = result;
   _state.geometry.addingMarker = false;
@@ -534,7 +541,7 @@ let updateValMessage = function (message) {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value, response;
+  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value, response, result;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -603,8 +610,13 @@ AppDispatcher.register(function(action) {
       RegDemStore.emitChange();
       break;
 
+    case RegDemConstants.actions.REGDEM_ABORT_GEOM_ADD:
+      abortGeomAdd();
+      RegDemStore.emitChange();
+      break;
+
     case RegDemConstants.actions.REGDEM_ADD_GEOM_END:
-      let result = action.result;
+      result = action.result;
       addGeomEnd(result);
       RegDemStore.emitChange();
       break;

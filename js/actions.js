@@ -91,6 +91,11 @@ var RegDemActions = {
       type: type
     });
   },
+  abortGeomAdd: function () {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_ABORT_GEOM_ADD
+    });
+  },
   addGeomEnd: function (result) {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_END,

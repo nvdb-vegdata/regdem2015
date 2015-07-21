@@ -14,6 +14,7 @@ module.exports.actions = keyMirror({
   REGDEM_SHOW_LIST: null,
   REGDEM_HIGHLIGHT_MARKER: null,
   REGDEM_ADD_GEOM_START: null,
+  REGDEM_ABORT_GEOM_ADD: null,
   REGDEM_ADD_GEOM_END: null,
   REGDEM_GET_CURRENT_LOCATION: null,
   REGDEM_LOCATION_HAS_BEEN_SET: null,
