@@ -6,6 +6,7 @@ let Colors = mui.Styles.Colors;
 
 let MapComponent = require('./map.js');
 let Editor = require('./editor.jsx');
+let EditGeometry = require('./editGeometry.jsx');
 let List = require('./list.jsx');
 let Search = require('./search.jsx');
 let Buttons = require('./buttons.jsx');
@@ -50,6 +51,7 @@ let RegDemApp = React.createClass({
   render: function() {
     return (
       <div>
+        <EditGeometry data={this.state} />
         <Editor data={this.state} />
         <MapComponent data={this.state} />
         <Search data={this.state} />

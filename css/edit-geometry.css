@@ -1,0 +1,16 @@
+.edit-geometry {
+  position: absolute;
+  z-index: 10 !important;
+  left: 0;
+  right: 0;
+  top: 0;
+  margin: auto;
+  max-width: 500px;
+  text-align: center;
+}
+
+@media (min-width: 500px) {
+  .edit-geometry {
+    margin: 10px auto;
+  }
+}

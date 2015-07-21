@@ -3,6 +3,7 @@
 @import (inline) 'editor.css';
 @import (inline) 'list.css';
 @import (inline) 'buttons.css';
+@import (inline) 'edit-geometry.css';
 
 html, body {
   font-family: 'Roboto', sans-serif;
