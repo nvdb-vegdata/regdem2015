@@ -3,6 +3,7 @@ let RegDemActions = require('./actions');
 var RegDemConstants = require('./constants');
 var Validator = require('./validator.js');
 let Helper = require('./helper.js');
+let Parser = require('./parser.js');
 
 let GeometryFields = require('./geometryFields.jsx');
 let Fields = require('./fields.jsx');
@@ -68,7 +69,7 @@ let Editor = React.createClass({
     let vegreferanse = (objekt && objekt.lokasjon && objekt.lokasjon.vegReferanser) ? Helper.vegReferanseString(objekt.lokasjon.vegReferanser[0]) : '';
     let egenskapsTyper = this.props.data.objektType ? this.props.data.objektType.egenskapsTyper : [];
     let manglendeEgenskaper = this.props.data.editor.validationMessage ? Helper.getManglendeEgenskaper(this.props.data.editor.validationMessage) : [];
-    let warnings = this.props.data.validatorResponse ? Helper.extractErrors(this.props.data.validatorResponse) : [];
+    let warnings = this.props.data.validatorResponse ? Parser.extractErrors(this.props.data.validatorResponse) : [];
 
     let manglendeEgenskapMap = {};
     manglendeEgenskaper = manglendeEgenskaper.map(function (obj) {
