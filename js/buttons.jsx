@@ -41,7 +41,7 @@ let Buttons = React.createClass({
                       <FontIcon className="material-icons" color={Colors.white}>add</FontIcon>
                     </FloatingActionButton>);
 
-    addButton = this.props.data.objektType ? addButton : null;
+    addButton = (this.props.data.objektType && !this.props.data.geometry.addingMarker) ? addButton : null;
 
     return (
       <div className="buttons-container">
