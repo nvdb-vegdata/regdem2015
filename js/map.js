@@ -1,6 +1,7 @@
 let React = require('react');
 let Marker = require('./marker');
 let RegDemActions = require('./actions');
+var RegDemConstants = require('./constants');
 let Editable = require('leaflet-editable');
 let mapData = null;
 let locationControl = null;
@@ -65,7 +66,9 @@ let MapComponent = React.createClass({
     });
 
     // PLassering av zoom kontrollene
-    new L.Control.Zoom( {position: 'bottomleft'}).addTo(mapData);
+    if (window.matchMedia('(min-width: ' + RegDemConstants.values.REGDEM_SIZE_DESKTOP + 'px)').matches) {
+      new L.Control.Zoom( {position: 'bottomleft'}).addTo(mapData);
+    }
 
     // Min posisjon
 
