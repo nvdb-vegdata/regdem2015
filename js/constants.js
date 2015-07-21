@@ -20,9 +20,11 @@ module.exports.actions = keyMirror({
   REGDEM_GO_BACK_AND_RESET: null,
   REGDEM_UPDATE_VAL_MESSAGE: null,
   REGDEM_UPDATE_ENUM_VALUE: null,
-  REGDEM_UPDATE_FIELD_VALUE: null
+  REGDEM_UPDATE_FIELD_VALUE: null,
+  REGDEM_UPDATE_VALIDATOR_RESPONSE: null
 });
 
 module.exports.values = {
-  REGDEM_SIZE_DESKTOP: 800
+  REGDEM_SIZE_DESKTOP: 800,
+  REGDEM_LOCAL_API_SERVER: 'http://localhost:8085/api/'
 };
