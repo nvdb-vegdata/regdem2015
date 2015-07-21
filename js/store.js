@@ -175,7 +175,7 @@ let getNewData = function () {
 
 let setObjektID = function (objektId) {
   if (objektId) {
-    closeEditor();
+    resetObjekt();
     closeList();
     _state.objektId = objektId;
     MapFunctions.focusMarker(objektId);
@@ -185,20 +185,9 @@ let setObjektID = function (objektId) {
 };
 
 let closeEditor = function () {
-  _state.objektId = null;
-  _state.objekt = null;
-  _state.objektEdited = null;
-
+  resetObjekt();
   _state.editor.loading = false;
   _state.editor.expanded = false;
-
-  _state.geometry.result = null;
-  _state.geometry.resultType = null;
-
-  _state.validatorResponse = null;
-
-  MapFunctions.clearEditGeom(); // Fjerner edit-objekt ved lukking av editor.
-  MapFunctions.focusMarker(null);
 };
 
 let expandEditor = function () {
@@ -284,6 +273,21 @@ let resetApp = function () {
   _state = simpleDeepCopy(_initialState);
   _state.map.myLocation = false;
 };
+
+let resetObjekt = function () {
+  _state.objektId = null;
+  _state.objekt = null;
+  _state.objektEdited = null;
+
+  _state.geometry.result = null;
+  _state.geometry.resultType = null;
+
+  _state.validatorResponse = null;
+
+  MapFunctions.clearEditGeom(); // Fjerner edit-objekt ved lukking av editor.
+  MapFunctions.focusMarker(null);
+};
+
 
 let goBackAndReset = function (userInput) {
   let oldSearchState = simpleDeepCopy(_state.search);
