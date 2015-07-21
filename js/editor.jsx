@@ -62,6 +62,7 @@ let Editor = React.createClass({
   },
 
   render: function() {
+    // Initaliserer variabler
     let objektId = this.props.data.objektId;
     let objekt = this.props.data.objektEdited || this.props.data.objekt;
     let objektTypeNavn = this.props.data.objektType ? this.props.data.objektType.navn : '';
@@ -69,6 +70,7 @@ let Editor = React.createClass({
     let egenskapsTyper = this.props.data.objektType ? this.props.data.objektType.egenskapsTyper : [];
     let manglendeEgenskaper = this.props.data.editor.validationMessage ? Helper.getManglendeEgenskaper(this.props.data.editor.validationMessage) : [];
 
+    // Forbereder validering
     let manglendeEgenskapMap = {};
     manglendeEgenskaper = manglendeEgenskaper.map(function (obj) {
       return parseInt(obj);
@@ -79,6 +81,7 @@ let Editor = React.createClass({
       manglendeEgenskapMap[index] = manglendeEgenskaper.indexOf(index) != -1;
     }
 
+    // Forbereder tittel og subtittel
     let formName, subtitle;
     if (objektId && objektId !== -1) {
       // Skjemanavn
