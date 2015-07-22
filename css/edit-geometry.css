@@ -10,9 +10,9 @@
 }
 
 .edit-geometry-hidden {
-visibility: hidden;
-transform: translateY(-200px);
   z-index: -1;
+  visibility: hidden;
+  transform: translateY(-200px);
 }
 
 @media (min-width: 500px) {
