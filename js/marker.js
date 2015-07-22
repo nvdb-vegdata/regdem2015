@@ -35,9 +35,10 @@ let clearEditGeom = function () {
 };
 
 // Viser listen av objekter på kartet som enten punkt, linje eller flate.
-let displayMarkers = function (kart, objekter, chosenObjekt, editedObjekt) {
+let displayMarkers = function (kart, state) {
 
-  let activeObjekt = editedObjekt ? editedObjekt : (chosenObjekt ? chosenObjekt : null);
+  let objekter = state.searchResults.resultater[0].vegObjekter;
+  let activeObjekt = state.objektEdited ? state.objektEdited : (state.objekt ? state.objekt : null);
   let activeObjektId = activeObjekt ? activeObjekt.objektId : null;
 
   objekter.forEach(function (vegObjekt) {
@@ -61,10 +62,10 @@ let displayMarkers = function (kart, objekter, chosenObjekt, editedObjekt) {
 };
 
 // ObjektID brukes for å håndtere opacity-endringer.
-let update = function (kart, data, objekt, edited) {
+let update = function (kart, state) {
   clearMarkers();
-  if (data.totaltAntallReturnert > 0) {
-    displayMarkers(kart, data.resultater[0].vegObjekter, objekt, edited);
+  if (state.searchResults.totaltAntallReturnert > 0) {
+    displayMarkers(kart, state);
   }
 };
 
@@ -110,7 +111,7 @@ let displayCurrentPosition = function (pos, kart) {
   kart.addLayer(curPosLayer);
 };
 
-let addGeom = function (kart, id, type) {
+let addGeom = function (kart, type, state) {
   editLayer.clearLayers();
   if (type === 'marker') {
     currentEditGeom = kart.editTools.startMarker();

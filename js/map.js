@@ -149,8 +149,8 @@ window.MapFunctions = {
     locationControl.stop();
     locationControl.start();
   },
-  updateMarkers: function (searchResult, objekt, edited) {
-    Marker.update(mapData, searchResult, objekt, edited);
+  updateMarkers: function (state) {
+    Marker.update(mapData, state);
   },
   clearMarkers: function () {
     Marker.clearMarkers();
@@ -164,8 +164,9 @@ window.MapFunctions = {
   mapData: function () {
     return mapData;
   },
-  addGeom: function (objektId, type) {
-    Marker.addGeom(mapData, objektId, type);
+  addGeom: function (type, state) {
+    Marker.addGeom(mapData, type, state);
+  },
   }
 };
 

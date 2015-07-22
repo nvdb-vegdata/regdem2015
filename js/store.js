@@ -197,6 +197,7 @@ let closeEditor = function () {
 
   MapFunctions.clearEditGeom(); // Fjerner edit-objekt ved lukking av editor.
   MapFunctions.focusMarker(null);
+  MapFunctions.updateMarkers(_state);
 };
 
 let expandEditor = function () {
@@ -217,7 +218,7 @@ let fetchObjektPositions = function () {
       _state.searchResultsFull = null;
       _state.search.loading = false;
 
-      MapFunctions.updateMarkers(data, _state.objekt, _state.objektEdited);
+      MapFunctions.updateMarkers(_state);
 
       RegDemStore.emitChange();
     });
@@ -310,7 +311,7 @@ let addGeomStart = function (id, type) {
     _state.geometry.addingMarker = true;
     _state.geometry.current = id;
     _state.geometry.resultType = type;
-    MapFunctions.addGeom(id, type);
+    MapFunctions.addGeom(type, _state);
   }
 };
 
