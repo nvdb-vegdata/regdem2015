@@ -610,7 +610,7 @@ AppDispatcher.register(function(action) {
       break;
 
     case RegDemConstants.actions.REGDEM_ABORT_GEOM_ADD:
-      abortGeomAdd();
+      addGeomAbort();
       RegDemStore.emitChange();
       break;
 
