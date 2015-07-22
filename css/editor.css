@@ -13,7 +13,8 @@
 }
 .Editor-Visible-Hidden {
   visibility: hidden;
-  transform: translateX(-600px);
+  margin-left: -600px;
+  margin-right: 600px;
 }
 .Editor-Card {
   overflow: auto !important;
@@ -155,9 +156,6 @@
   font: inherit;
   box-sizing: border-box;
   margin-top: 23px;
-}
-.Editor-datePicker + div, .Editor-timePicker + div {
-  -webkit-transform: translateZ(0);
 }
 .Editor-etikett {
   position: absolute;
