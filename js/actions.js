@@ -91,7 +91,7 @@ var RegDemActions = {
       type: type
     });
   },
-  abortGeomAdd: function () {
+  addGeomAbort: function () {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_ABORT_GEOM_ADD
     });

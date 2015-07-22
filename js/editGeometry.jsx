@@ -11,7 +11,7 @@ injectTapEventPlugin();
 
 let EditGeometry = React.createClass({
   handleCancel: function () {
-    RegDemActions.abortGeomAdd();
+    RegDemActions.addGeomAbort();
   },
 
   handleSave: function () {

@@ -314,7 +314,7 @@ let addGeomStart = function (id, type) {
   }
 };
 
-let abortGeomAdd = function () {
+let addGeomAbort = function () {
   _state.geometry.addingMarker = false;
   _state.geometry.current = null;
   _state.geometry.result = null;
