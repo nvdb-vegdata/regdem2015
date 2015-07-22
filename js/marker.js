@@ -91,6 +91,15 @@ let unfocusMarker = function () {
   }
 };
 
+let centerAroundMarker = function (id) {
+  for (var i in markerList) {
+      if (id == i) {
+        MapFunctions.mapData().panTo(markerList[i].obj.getLayers()[0]._latlng);
+        break;
+      }
+  }
+};
+
 let setGeomOpacity = function (geom, opacity, type) {
   switch (type) {
     case 'P':
