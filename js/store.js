@@ -19,7 +19,6 @@ let _state = {
   objektEdited: null,
   // Hele objektType
   objektType: null,
-  objektEdited: null,
 
   searchResults: null,
   searchResultsFull: null,
