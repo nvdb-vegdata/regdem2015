@@ -21,17 +21,15 @@ let Fields = {
     },
 
     componentWillReceiveProps: function (nextProps) {
-      if (nextProps.manglendeEgenskaper) {
+      if (nextProps.warning) {
         this.setState({
-          selectValueErrorText: 'Dette feltet må fylles ut.'
+          selectValueErrorText: nextProps.warning
         });
-        console.log('mangler: ', nextProps.manglendeEgenskaper);
       } else {
         this.setState({
           selectValueErrorText: ''
         })
       }
-
     },
 
     handleChange: function (e) {
@@ -89,7 +87,18 @@ let Fields = {
         textValue: this.props.verdi,
         textValueErrorText: ''
       };
+    },
 
+    componentWillReceiveProps: function (nextProps) {
+      if (nextProps.warning) {
+        this.setState({
+          textValueErrorText: nextProps.warning
+        });
+      } else {
+        this.setState({
+          textValueErrorText: ''
+        })
+      }
     },
 
     handleChange: function (e) {
@@ -104,6 +113,9 @@ let Fields = {
       if (this.state.textValue !== '') {
         TextFieldClassName += ' Editor-endretVerdi';
       }
+      if (this.state.textValueErrorText !== '') {
+        TextFieldClassName += ' Editor-feilmelding';
+      }
 
       return (
         <div className="Editor-tekst">
@@ -112,6 +124,7 @@ let Fields = {
             floatingLabelText={egenskaper.navn}
             value={this.state.textValue}
             onChange={this.handleChange}
+            errorText={this.state.textValueErrorText}
             fullWidth={true}
             className={TextFieldClassName}
           />
@@ -131,11 +144,11 @@ let Fields = {
     },
 
     componentWillReceiveProps: function (nextProps) {
-      if (nextProps.manglendeEgenskaper) {
+      if (nextProps.warning) {
         this.setState({
-          numberValueErrorText: 'Dette feltet må fylles ut.'
+          numberValueErrorText: nextProps.warning
         });
-      } else {
+      }  else {
         this.setState({
           numberValueErrorText: ''
         })
@@ -191,7 +204,22 @@ let Fields = {
 
   Klokkeslett: React.createClass({
     getInitialState: function() {
-      return {klokkeVerdi: ''};
+      return {
+        klokkeVerdi: '',
+        klokkeVerdiErrorText: ''
+        };
+    },
+
+    componentWillReceiveProps: function (nextProps) {
+      if (nextProps.warning) {
+        this.setState({
+          klokkeVerdiErrorText: nextProps.warning
+        });
+      }  else {
+        this.setState({
+          klokkeVerdieErrorText: ''
+        })
+      }
     },
 
     handleChange: function (error, time) {
@@ -229,6 +257,9 @@ let Fields = {
       if (this.state.klokkeVerdi !== '') {
         TimePickerClassName += ' Editor-endretVerdi';
       }
+      if (this.state.klokkeVerdiErrorText !== '') {
+        classNameLabelText += ' Editor-feilmelding';
+      }
 
       return (
         <div className="Editor-klokkeslett" >
@@ -244,7 +275,11 @@ let Fields = {
               className={TimePickerClassName}
             />
           </div>
-          <Fields.TomFelt tomFelt={this.handleClear} tomt={(this.state.klokkeVerdi.length === 0)} />
+          <Fields.TomFelt
+            tomFelt={this.handleClear}
+            tomt={(this.state.klokkeVerdi.length === 0)}
+            errorText={this.state.klokkeVerdierrorText}
+          />
           <Fields.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
       );
@@ -254,7 +289,22 @@ let Fields = {
 
   Dato: React.createClass({
     getInitialState: function() {
-      return {datoVerdi: this.props.verdi};
+      return {
+        datoVerdi: this.props.verdi,
+        datoVerdiErrorText: ''
+      };
+    },
+
+    componentWillReceiveProps: function (nextProps) {
+      if (nextProps.warning) {
+        this.setState({
+          datoVerdiErrorText: nextProps.warning
+        });
+      }  else {
+        this.setState({
+          datoVerdiErrorText: ''
+        })
+      }
     },
 
     handleChange: function (error, dato) {
@@ -291,6 +341,9 @@ let Fields = {
       if (this.state.datoVerdi !== '') {
         DatePickerClassName += ' Editor-endretVerdi';
       }
+      if (this.state.datoVerdiErrorText !== '') {
+        classNameLabelText += ' Editor-feilmelding';
+      }
 
       return (
         <div className="Editor-klokkeslett">
@@ -306,7 +359,11 @@ let Fields = {
               className={DatePickerClassName}
             />
           </div>
-          <Fields.TomFelt tomFelt={this.handleClear} tomt={(this.state.datoVerdi.length === 0)} />
+          <Fields.TomFelt
+            tomFelt={this.handleClear}
+            tomt={(this.state.datoVerdi.length === 0)}
+            errorText={this.state.datoVerdiErrorText}
+          />
           <Fields.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
       );
