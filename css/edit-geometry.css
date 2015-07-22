@@ -1,6 +1,5 @@
 .edit-geometry {
   position: absolute;
-  z-index: 10 !important;
   left: 0;
   right: 0;
   top: 0;
@@ -13,6 +12,7 @@
 .edit-geometry-hidden {
 visibility: hidden;
 transform: translateY(-200px);
+  z-index: -1;
 }
 
 @media (min-width: 500px) {
