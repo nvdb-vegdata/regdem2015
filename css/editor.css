@@ -17,6 +17,8 @@
 }
 .Editor-Card {
   overflow: auto !important;
+  min-height: 100px;
+  max-height: 200px;
   text-align: left;
   padding: 5px;
   box-sizing: border-box;
