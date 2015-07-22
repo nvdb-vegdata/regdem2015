@@ -26,10 +26,6 @@ let Editor = React.createClass({
   },
 
   saveObjekt: function () {
-    //==== Mock feedback ======
-    //RegDemActions.updateValidationMessage("Objektet, av typen 95 (Skiltpunkt), mangler anbefalte egenskaper: [Antall oppsettingsutstyr (1877), Assosierte Skiltplate (220004), Assosierte Variabelt skilt (220006), Avskjæringsledd (8772), Geometri, punkt (4794), Fundamentering (1671), Oppsettingsutstyr (1876)]");
-    //==== /Mock Feedbak ======
-
     Validator.validateObjekt(this.props.data);
   },
 

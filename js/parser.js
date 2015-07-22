@@ -14,8 +14,8 @@ var Parser = {
   extractErrors: function (response) {
     let parser = this;
     let errors = {};
-    var feil = response.resultat.vegObjekter[0].feil;
-    var advarsler = response.resultat.vegObjekter[0].advarsel;
+    var feil = response.resultat.vegObjekter[0].feil || [];
+    var advarsler = response.resultat.vegObjekter[0].advarsel || [];
 
     // Legger til feil i listen.
     feil.forEach( function (obj) {

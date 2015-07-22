@@ -20,6 +20,10 @@ let validateObjektAndReturnJSON = function (data) {
       };
     });
 
+    egenskaper = egenskaper.filter(function (egenskap) {
+      return egenskap.verdi[0];
+    });
+
     let effektDato = Helper.todaysDate();
     let datakatalogversjon = '2.03';
 

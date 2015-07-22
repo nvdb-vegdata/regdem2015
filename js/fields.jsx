@@ -231,7 +231,11 @@ let Fields = {
 
     handleClear: function () {
       this.refs.tidvelger.refs.input.clearValue();
-      this.replaceState(this.getInitialState());
+      this.setState({
+        klokkeVerdi: '',
+        klokkeVerdiErrorText: ''
+      });
+      RegDemActions.updateFieldValue(this.props.egenskaper.id, '', 'Tid');
     },
 
     componentDidMount: function () {
@@ -258,7 +262,7 @@ let Fields = {
         TimePickerClassName += ' Editor-endretVerdi';
       }
       if (this.state.klokkeVerdiErrorText !== '') {
-        classNameLabelText += ' Editor-feilmelding';
+        TimePickerClassName += ' Editor-feilmelding';
       }
 
       return (
@@ -272,13 +276,13 @@ let Fields = {
               ref="tidvelger"
               format="24hr"
               onChange={this.handleChange}
+              errorText={this.state.klokkeVerdierrorText}
               className={TimePickerClassName}
             />
           </div>
           <Fields.TomFelt
             tomFelt={this.handleClear}
             tomt={(this.state.klokkeVerdi.length === 0)}
-            errorText={this.state.klokkeVerdierrorText}
           />
           <Fields.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
@@ -310,13 +314,20 @@ let Fields = {
     handleChange: function (error, dato) {
       let nyDato = new Date(dato);
       let dateValue = Helper.twoDigits(nyDato.getFullYear()) + '-' + Helper.twoDigits(nyDato.getMonth() + 1) + '-' + Helper.twoDigits(nyDato.getDate());
-      this.setState({datoVerdi: dateValue});
+      this.setState({
+        datoVerdi: dateValue,
+        datoVerdiErrorText: ''
+      });
       RegDemActions.updateFieldValue(this.props.egenskaper.id, dateValue, 'Dato');
     },
 
     handleClear: function () {
       this.refs.datovelger.refs.input.clearValue();
-      this.replaceState(this.getInitialState());
+      this.setState({
+        datoVerdi: '',
+        datoVerdiErrorText: ''
+      });
+      RegDemActions.updateFieldValue(this.props.egenskaper.id, '', 'Dato');
     },
 
     componentDidMount: function () {
@@ -342,7 +353,7 @@ let Fields = {
         DatePickerClassName += ' Editor-endretVerdi';
       }
       if (this.state.datoVerdiErrorText !== '') {
-        classNameLabelText += ' Editor-feilmelding';
+        DatePickerClassName += ' Editor-feilmelding';
       }
 
       return (
@@ -356,13 +367,13 @@ let Fields = {
               ref="datovelger"
               showYearSelector={true}
               onChange={this.handleChange}
+              errorText={this.state.datoVerdiErrorText}
               className={DatePickerClassName}
             />
           </div>
           <Fields.TomFelt
             tomFelt={this.handleClear}
             tomt={(this.state.datoVerdi.length === 0)}
-            errorText={this.state.datoVerdiErrorText}
           />
           <Fields.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
         </div>
