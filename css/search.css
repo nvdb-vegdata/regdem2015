@@ -1,6 +1,6 @@
 .search-field, .objekttype-selected {
   position: absolute;
-  z-index: 10;
+  z-index: 5;
   left: 0;
   right: 0;
   top: 0;
@@ -11,7 +11,7 @@
 
 .search-field-search-icon, .search-field-clear-icon, .search-field-list-icon, .search-field-indicator {
   position:absolute;
-  z-index: 10;
+  z-index: 5;
   padding:14px;
   font-size:24px;
   color:#999;
@@ -43,7 +43,7 @@
   position:absolute;
   top:-18px;
   right:25px;
-  z-index:10;
+  z-index:5;
   pointer-events: none;
 }
 
