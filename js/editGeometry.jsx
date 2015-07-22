@@ -19,12 +19,14 @@ let EditGeometry = React.createClass({
   },
 
   render: function() {
+    let editGeometryClassName = 'edit-geometry';
+
     if (!this.props.data.geometry.addingMarker) {
-      return null;
+      editGeometryClassName = ' edit-geometry-hidden';
     }
 
     return (
-      <Card className="edit-geometry">
+      <Card className={editGeometryClassName}>
         <CardActions>
           <FlatButton label="Avbryt" onTouchTap={this.handleCancel} />
           <FlatButton label="Lagre Plassering" primary={true} onTouchTap={this.handleSave} />

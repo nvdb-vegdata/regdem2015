@@ -7,6 +7,11 @@
   margin: 10px;
   max-width: 500px;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+  transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+}
+
+.search-field-hidden {
+  transform: translateY(-200px);
 }
 
 .search-field-search-icon, .search-field-clear-icon, .search-field-list-icon, .search-field-indicator {

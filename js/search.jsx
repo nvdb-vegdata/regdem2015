@@ -37,7 +37,7 @@ let Sok = React.createClass({
     }
 
     if (this.props.data.geometry.addingMarker) {
-      return (<div className={searcFieldClassName}></div>);
+      searcFieldClassName += ' search-field-hidden';
     }
 
     return (<div className={searcFieldClassName}>
