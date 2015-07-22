@@ -63,7 +63,7 @@ let displayMarkers = function (kart, state) {
     markers.addLayer(geom);
   }
 
-  if (activeObjektId === -1 && activeObjekt.lokasjon.geometriWgs84) {
+  if (activeObjektId === -1 && activeObjekt.lokasjon.geometriWgs84 && !addingMarker && !savingMarker) {
     let posisjon = activeObjekt.lokasjon.geometriWgs84;
     let geom = omnivore.wkt.parse(posisjon);
 
