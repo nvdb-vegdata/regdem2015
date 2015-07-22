@@ -114,7 +114,3 @@
   top: 17px;
   color: rgba(0, 0, 0, .40) !important;
 }
-
-.list-toolbar-dropdown div:last-child {
-  z-index: 10 !important;
-}
