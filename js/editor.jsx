@@ -152,12 +152,25 @@ let Editor = React.createClass({
           }
         }
 
+        let actualGeomEgenskaper = {};
+        for (var i = 0; i < objekt.egenskaper.length; i++) {
+          let navn = objekt.egenskaper[i].navn;
+          if (navn.indexOf('Geometri') === 0 ) {
+            if (navn.indexOf('punkt') >= 0) {
+              actualGeomEgenskaper.punkt = true;
+            } else if (navn.indexOf('linje') >= 0) {
+              actualGeomEgenskaper.linje = true;
+            } else if (navn.indexOf('flate') >= 0) {
+              actualGeomEgenskaper.flate = true;
+            }
+          }
+        }
+
         if (geomEgenskaper) {
           GeomFields = (<GeometryFields.Geom
                           objektId={objektId}
                           egenskaper={geomEgenskaper}
-                          result={this.props.data.geometry.result}
-                          resultType={this.props.data.geometry.resultType}
+                          actualEgenskaper={actualGeomEgenskaper}
                           data={this.props.data}
                         />);
         }

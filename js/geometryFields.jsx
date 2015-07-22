@@ -12,35 +12,6 @@ injectTapEventPlugin();
 
 let Geom = React.createClass({
 
-  getInitialState: function () {
-    return {
-      currentGeom: null,
-      currentType: null
-    };
-  },
-
-  setCurrentGeom: function (val) {
-    this.setState({
-      currentGeom: val
-    });
-  },
-
-  setCurrentType: function (val) {
-    this.setState({
-      currentType: val
-    });
-  },
-
-  componentWillReceiveProps: function (nextProps) {
-    if(this.state.currentGeom !== nextProps.result){
-      this.setCurrentGeom(nextProps.result);
-    }
-
-    if (this.state.currentType !== nextProps.resultType) {
-      this.setCurrentType(nextProps.resultType);
-    }
-  },
-
   render: function () {
     return (
       <div className="Editor-geom">
@@ -48,19 +19,19 @@ let Geom = React.createClass({
           enabled={this.props.egenskaper.punkt}
           objektId={this.props.objektId}
           data={this.props.data}
-          selected={this.state.currentType === "marker"}
+          selected={this.props.actualEgenskaper.punkt}
         />
         <Strekning
           enabled={this.props.egenskaper.linje}
           objektId={this.props.objektId}
           data={this.props.data}
-          selected={this.state.currentType === "strekning"}
+          selected={this.props.actualEgenskaper.linje}
         />
         <Flate
           enabled={this.props.egenskaper.flate}
           objektId={this.props.objektId}
           data={this.props.data}
-          selected={this.state.currentType === "flate"}
+          selected={this.props.actualEgenskaper.flate}
         />
       </div>
     );
