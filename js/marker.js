@@ -44,7 +44,8 @@ let displayMarkers = function (kart, state) {
   let activeObjekt = state.objektEdited ? state.objektEdited : (state.objekt ? state.objekt : null);
   let activeObjektId = activeObjekt ? activeObjekt.objektId : null;
 
-  for (let vegObjekt of objekter) {
+  for (let index in objekter) {
+    let vegObjekt = objekter[index];
     if ((addingMarker && activeObjektId && vegObjekt.objektId === activeObjektId) || (savingMarker && vegObjekt.objektId === activeObjektId)) {
       continue;
     }
