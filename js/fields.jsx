@@ -231,7 +231,11 @@ let Fields = {
 
     handleClear: function () {
       this.refs.tidvelger.refs.input.clearValue();
-      this.replaceState(this.getInitialState());
+      this.setState({
+        klokkeVerdi: '',
+        klokkeVerdiErrorText: ''
+      });
+      RegDemActions.updateFieldValue(this.props.egenskaper.id, '', 'Tid');
     },
 
     componentDidMount: function () {
@@ -319,7 +323,11 @@ let Fields = {
 
     handleClear: function () {
       this.refs.datovelger.refs.input.clearValue();
-      this.replaceState(this.getInitialState());
+      this.setState({
+        datoVerdi: '',
+        datoVerdiErrorText: ''
+      });
+      RegDemActions.updateFieldValue(this.props.egenskaper.id, '', 'Dato');
     },
 
     componentDidMount: function () {
