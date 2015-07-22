@@ -28,8 +28,8 @@ let EditGeometry = React.createClass({
     return (
       <Card className={editGeometryClassName}>
         <CardActions>
-          <FlatButton label="Avbryt" onTouchTap={this.handleCancel} />
           <FlatButton label="Lagre Plassering" primary={true} onTouchTap={this.handleSave} />
+          <FlatButton label="Avbryt" onTouchTap={this.handleCancel} />
         </CardActions>
       </Card>
     );
