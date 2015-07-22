@@ -105,12 +105,6 @@ let setGeomOpacity = function (geom, opacity, type) {
   }
 };
 
-let displayCurrentPosition = function (pos, kart) {
-  curPosLayer.clearLayers();
-  curPosLayer.addLayer(L.marker(pos.latlng, {icon: redIcon}));
-  kart.addLayer(curPosLayer);
-};
-
 let addGeom = function (kart, type, state) {
   editLayer.clearLayers();
   if (type === 'marker') {
@@ -127,7 +121,6 @@ module.exports = {
   clearMarkers: clearMarkers,
   clearEditGeom: clearEditGeom,
   update: update,
-  displayCurrentPosition: displayCurrentPosition,
   addGeom: addGeom,
   focusMarker: focusMarker,
   unfocusMarker: unfocusMarker,
