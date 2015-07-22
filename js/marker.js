@@ -116,12 +116,29 @@ let addGeom = function (kart, type, state) {
   }
 };
 
+let removeGeom = function (kart, state) {
+  kart.options.scrollWheelZoom = true;
+  kart.options.doubleClickZoom = true;
+
+  if (currentEditGeom) {
+    kart.removeLayer(currentEditGeom);
+    currentEditGeom = null;
+  }
+
+  update(kart, state);
+};
+
+let returnCurrentEditGeom = function () {
+  return currentEditGeom;
+};
+
 module.exports = {
   editLayer: editLayer,
   clearMarkers: clearMarkers,
   clearEditGeom: clearEditGeom,
   update: update,
   addGeom: addGeom,
+  removeGeom: removeGeom,
   focusMarker: focusMarker,
   unfocusMarker: unfocusMarker,
   currentEditGeom: currentEditGeom
