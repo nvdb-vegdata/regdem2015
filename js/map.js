@@ -103,33 +103,6 @@ let MapComponent = React.createClass({
         RegDemActions.fetchObjektPositions();
       }
     });
-
-    mapData.on('editable:drawing:start', () => {
-      console.log('start');
-    });
-
-    mapData.on('editable:drawing:end', () => {
-      console.log('end');
-    });
-
-    mapData.on('editable:drawing:cancel', () => {
-      console.log('cancel');
-    });
-
-    mapData.on('editable:drawing:commit', () => {
-      console.log('commit');
-    });
-
-    mapData.on('editable:drawing:click', () => {
-      console.log('click');
-    });
-
-    mapData.on('editable:drawing:clicked', () => {
-      console.log('clicked');
-    });
-    // mapData.on('editable:drawing:commit', (result) => {
-    //   RegDemActions.addGeomEnd(result.layer);
-    // });
   },
 
   shouldComponentUpdate: function () {
