@@ -36,6 +36,10 @@ let Sok = React.createClass({
       searcFieldClassName = 'search-field search-field-objekttype-selected';
     }
 
+    if (this.props.data.geometry.addingMarker) {
+      searcFieldClassName += ' search-field-hidden';
+    }
+
     return (<div className={searcFieldClassName}>
               {leftMostIcon}
               <Typeahead

@@ -6,6 +6,7 @@ let Colors = mui.Styles.Colors;
 
 let MapComponent = require('./map.js');
 let Editor = require('./editor.jsx');
+let EditGeometry = require('./editGeometry.jsx');
 let List = require('./list.jsx');
 let Search = require('./search.jsx');
 let Buttons = require('./buttons.jsx');
@@ -32,10 +33,10 @@ let RegDemApp = React.createClass({
 
   componentWillMount: function() {
     ThemeManager.setPalette({
-      primary1Color: Colors.orange500,
-      primary2Color: Colors.orange700,
-      primary3Color: Colors.orange100,
-      accent1Color: Colors.orange500
+      primary1Color: '#008ec2',
+      primary2Color: '#008ec2',
+      primary3Color: '#008ec2',
+      accent1Color: '#008ec2'
     });
   },
 
@@ -50,6 +51,7 @@ let RegDemApp = React.createClass({
   render: function() {
     return (
       <div>
+        <EditGeometry data={this.state} />
         <Editor data={this.state} />
         <MapComponent data={this.state} />
         <Search data={this.state} />

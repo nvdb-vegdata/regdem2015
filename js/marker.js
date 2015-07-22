@@ -35,12 +35,20 @@ let clearEditGeom = function () {
 };
 
 // Viser listen av objekter på kartet som enten punkt, linje eller flate.
-let displayMarkers = function (kart, objekter, chosenObjekt, editedObjekt) {
+let displayMarkers = function (kart, state) {
 
-  let activeObjekt = editedObjekt ? editedObjekt : (chosenObjekt ? chosenObjekt : null);
+  let objekter = state.searchResults.resultater[0].vegObjekter;
+  let addingMarker = state.geometry.addingMarker;
+  let savingMarker = state.geometry.savingMarker;
+
+  let activeObjekt = state.objektEdited ? state.objektEdited : (state.objekt ? state.objekt : null);
   let activeObjektId = activeObjekt ? activeObjekt.objektId : null;
 
-  objekter.forEach(function (vegObjekt) {
+  for (let vegObjekt of objekter) {
+    if ((addingMarker && activeObjektId && vegObjekt.objektId === activeObjektId) || (savingMarker && vegObjekt.objektId === activeObjektId)) {
+      continue;
+    }
+
     if (vegObjekt.objektId === activeObjektId) {
       vegObjekt = activeObjekt;
     }
@@ -53,18 +61,30 @@ let displayMarkers = function (kart, objekter, chosenObjekt, editedObjekt) {
 
     markerList[vegObjekt.objektId] = {obj: geom, type: posisjon.charAt(0)};
     markers.addLayer(geom);
+  }
 
-  });
+  if (activeObjektId === -1 && activeObjekt.lokasjon.geometriWgs84 && !addingMarker && !savingMarker) {
+    let posisjon = activeObjekt.lokasjon.geometriWgs84;
+    let geom = omnivore.wkt.parse(posisjon);
+
+    geom.on('click', () => {
+      RegDemActions.setObjektID(activeObjekt.objektId);
+    });
+
+    markerList[activeObjekt.objektId] = {obj: geom, type: posisjon.charAt(0)};
+    markers.addLayer(geom);
+  }
+
   kart.addLayer(markers);
   focusMarker(activeObjektId);
   kart.addLayer(editLayer);
 };
 
 // ObjektID brukes for å håndtere opacity-endringer.
-let update = function (kart, data, objekt, edited) {
+let update = function (kart, state) {
   clearMarkers();
-  if (data.totaltAntallReturnert > 0) {
-    displayMarkers(kart, data.resultater[0].vegObjekter, objekt, edited);
+  if (state.searchResults.totaltAntallReturnert > 0) {
+    displayMarkers(kart, state);
   }
 };
 
@@ -90,6 +110,15 @@ let unfocusMarker = function () {
   }
 };
 
+let centerAroundMarker = function (id) {
+  for (var i in markerList) {
+      if (id == i) {
+        MapFunctions.mapData().panTo(markerList[i].obj.getLayers()[0]._latlng);
+        break;
+      }
+  }
+};
+
 let setGeomOpacity = function (geom, opacity, type) {
   switch (type) {
     case 'P':
@@ -104,16 +133,16 @@ let setGeomOpacity = function (geom, opacity, type) {
   }
 };
 
-let displayCurrentPosition = function (pos, kart) {
-  curPosLayer.clearLayers();
-  curPosLayer.addLayer(L.marker(pos.latlng, {icon: redIcon}));
-  kart.addLayer(curPosLayer);
-};
-
-let addGeom = function (kart, id, type) {
+let addGeom = function (kart, type, state) {
   editLayer.clearLayers();
   if (type === 'marker') {
-    currentEditGeom = kart.editTools.startMarker();
+
+    kart.options.scrollWheelZoom = 'center';
+    kart.options.doubleClickZoom = 'center';
+
+    centerAroundMarker(state.geometry.current);
+    currentEditGeom = L.marker(kart.getCenter(), {icon: redIcon}).addTo(kart);
+    update(kart, state);
   } else if (type === 'strekning') {
     currentEditGeom = kart.editTools.startPolyline();
   } else {
@@ -121,14 +150,30 @@ let addGeom = function (kart, id, type) {
   }
 };
 
+let removeGeom = function (kart, state) {
+  kart.options.scrollWheelZoom = true;
+  kart.options.doubleClickZoom = true;
+
+  if (currentEditGeom) {
+    kart.removeLayer(currentEditGeom);
+    currentEditGeom = null;
+  }
+
+  update(kart, state);
+};
+
+let returnCurrentEditGeom = function () {
+  return currentEditGeom;
+};
+
 module.exports = {
   editLayer: editLayer,
   clearMarkers: clearMarkers,
   clearEditGeom: clearEditGeom,
   update: update,
-  displayCurrentPosition: displayCurrentPosition,
   addGeom: addGeom,
+  removeGeom: removeGeom,
   focusMarker: focusMarker,
   unfocusMarker: unfocusMarker,
-  currentEditGeom: currentEditGeom
+  currentEditGeom: returnCurrentEditGeom
 };

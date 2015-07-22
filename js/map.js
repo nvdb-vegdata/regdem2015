@@ -1,6 +1,7 @@
 let React = require('react');
 let Marker = require('./marker');
 let RegDemActions = require('./actions');
+var RegDemConstants = require('./constants');
 let Editable = require('leaflet-editable');
 let mapData = null;
 let locationControl = null;
@@ -65,7 +66,9 @@ let MapComponent = React.createClass({
     });
 
     // PLassering av zoom kontrollene
-    new L.Control.Zoom( {position: 'bottomleft'}).addTo(mapData);
+    if (window.matchMedia('(min-width: ' + RegDemConstants.values.REGDEM_SIZE_DESKTOP + 'px)').matches) {
+      new L.Control.Zoom( {position: 'bottomleft'}).addTo(mapData);
+    }
 
     // Min posisjon
 
@@ -89,14 +92,16 @@ let MapComponent = React.createClass({
       RegDemActions.locationHasBeenSet();
     });
 
+    mapData.on('move', () => {
+      if (Marker.currentEditGeom()) {
+        Marker.currentEditGeom().setLatLng(mapData.getCenter());
+      }
+    });
+
     mapData.on('moveend', () => {
       if (this.props.data.objektTypeId) {
         RegDemActions.fetchObjektPositions();
       }
-    });
-
-    mapData.on('editable:drawing:commit', (result) => {
-      RegDemActions.addGeomEnd(result.layer);
     });
   },
 
@@ -123,8 +128,8 @@ window.MapFunctions = {
     locationControl.stop();
     locationControl.start();
   },
-  updateMarkers: function (searchResult, objekt, edited) {
-    Marker.update(mapData, searchResult, objekt, edited);
+  updateMarkers: function (state) {
+    Marker.update(mapData, state);
   },
   clearMarkers: function () {
     Marker.clearMarkers();
@@ -138,8 +143,14 @@ window.MapFunctions = {
   mapData: function () {
     return mapData;
   },
-  addGeom: function (objektId, type) {
-    Marker.addGeom(mapData, objektId, type);
+  addGeom: function (type, state) {
+    Marker.addGeom(mapData, type, state);
+  },
+  removeGeom: function (state) {
+    Marker.removeGeom(mapData, state);
+  },
+  getCurrentEditGeom: function () {
+    return Marker.currentEditGeom();
   }
 };
 

@@ -53,6 +53,7 @@ let _state = {
 
   geometry: {
     addingMarker: false,
+    savingMarker: false,
     current: null,
     result: null, // Denne inneholder hele geometriobjektet. Hvis du på et senere tidspunkt ønsker å lagre hele _state som f eks JSON, må du passe på å endre innholdet i denne varaibelen
     resultType: null // [marker | strekning | flate]
@@ -173,7 +174,7 @@ let getNewData = function () {
 /* Funksjoner for actions */
 
 let setObjektID = function (objektId) {
-  if (objektId) {
+  if (objektId && !_state.geometry.addingMarker) {
     resetObjekt();
     closeList();
     _state.objektId = objektId;
@@ -207,7 +208,7 @@ let fetchObjektPositions = function () {
       _state.searchResultsFull = null;
       _state.search.loading = false;
 
-      MapFunctions.updateMarkers(data, _state.objekt, _state.objektEdited);
+      MapFunctions.updateMarkers(_state);
 
       RegDemStore.emitChange();
     });
@@ -285,6 +286,7 @@ let resetObjekt = function () {
 
   MapFunctions.clearEditGeom(); // Fjerner edit-objekt ved lukking av editor.
   MapFunctions.focusMarker(null);
+  MapFunctions.updateMarkers(_state);
 };
 
 
@@ -315,12 +317,21 @@ let addGeomStart = function (id, type) {
     _state.geometry.addingMarker = true;
     _state.geometry.current = id;
     _state.geometry.resultType = type;
-    MapFunctions.addGeom(id, type);
+    MapFunctions.addGeom(type, _state);
   }
 };
 
-let addGeomEnd = function (result) {
-  _state.geometry.result = result;
+let addGeomAbort = function () {
+  _state.geometry.addingMarker = false;
+  _state.geometry.current = null;
+  _state.geometry.result = null;
+  _state.geometry.resultType = null;
+  MapFunctions.removeGeom(_state);
+};
+
+let addGeomEnd = function () {
+  _state.geometry.savingMarker = true;
+  _state.geometry.result = MapFunctions.getCurrentEditGeom();
   _state.geometry.addingMarker = false;
   updateEditedLocation();
 };
@@ -482,6 +493,21 @@ let updateEditedLocation = function () {
         let lng = _state.geometry.result._latlng.lng;
         let lat = _state.geometry.result._latlng.lat;
 
+        // Egengeometri
+        let geometriEgenskap = findiEgenskapByString('geometri, punkt');
+        let WGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [lng, lat]);
+
+        if (geometriEgenskap) {
+          let newValue = {
+            id: geometriEgenskap.id,
+            navn: geometriEgenskap.navn,
+            verdi: 'POINT (' + WGS84ToUTM33[0] + ' ' + WGS84ToUTM33[1] + ')'
+          };
+
+          let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(geometriEgenskap.id);
+          _state.objektEdited.egenskaper[egenskapPositionFromObjektEdited] = newValue;
+        }
+
         // Lenke ID
         Fetch.fetchKoordinat(lng, lat, (koorData) => {
           if (koorData.sokePunktSrid === 'LAT_LON_WGS84') {
@@ -503,22 +529,12 @@ let updateEditedLocation = function () {
               til: koorData.veglenkePosisjon
             }
           ];
+
+          _state.geometry.savingMarker = false;
+          MapFunctions.removeGeom(_state);
+          RegDemStore.emitChange();
         });
 
-        // Egengeometri
-        let geometriEgenskap = findiEgenskapByString('geometri, punkt');
-        let WGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [lng, lat]);
-
-        if (geometriEgenskap) {
-          let newValue = {
-            id: geometriEgenskap.id,
-            navn: geometriEgenskap.navn,
-            verdi: 'POINT (' + WGS84ToUTM33[0] + ' ' + WGS84ToUTM33[1] + ')'
-          };
-
-          let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(geometriEgenskap.id);
-          _state.objektEdited.egenskaper[egenskapPositionFromObjektEdited] = newValue;
-        }
 
         break;
       case 'strekning':
@@ -539,7 +555,7 @@ let updateValMessage = function (message) {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value, response;
+  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value, response, result;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -608,9 +624,13 @@ AppDispatcher.register(function(action) {
       RegDemStore.emitChange();
       break;
 
+    case RegDemConstants.actions.REGDEM_ABORT_GEOM_ADD:
+      addGeomAbort();
+      RegDemStore.emitChange();
+      break;
+
     case RegDemConstants.actions.REGDEM_ADD_GEOM_END:
-      let result = action.result;
-      addGeomEnd(result);
+      addGeomEnd();
       RegDemStore.emitChange();
       break;
 

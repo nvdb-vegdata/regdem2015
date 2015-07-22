@@ -3,14 +3,14 @@ let RegDemActions = require('./actions.js');
 let mui = require('material-ui');
 let { FloatingActionButton, FontIcon, CircularProgress } = require('material-ui');
 
+let Colors = mui.Styles.Colors;
+
 //Needed for onTouchTap
 //Can go away when react 1.0 release
 //Check this repo:
 //https://github.com/zilverline/react-tap-event-plugin
 var injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
-
-let Colors = mui.Styles.Colors;
 
 let Buttons = React.createClass({
   handleAdd: function () {
@@ -31,7 +31,7 @@ let Buttons = React.createClass({
                                 </FloatingActionButton>);
 
     let passiveLocationButton = (<FloatingActionButton onTouchTap={this.handleChangeMyLocation} className="buttons-button-my-location">
-                                    <FontIcon className="material-icons" color={Colors.orange700}>my_location</FontIcon>
+                                    <FontIcon className="material-icons" color="#008ec2">my_location</FontIcon>
                                 </FloatingActionButton>);
 
     let myLocationButton = this.props.data.map.myLocation ? loadingLocationButton : passiveLocationButton;
@@ -41,7 +41,7 @@ let Buttons = React.createClass({
                       <FontIcon className="material-icons" color={Colors.white}>add</FontIcon>
                     </FloatingActionButton>);
 
-    addButton = this.props.data.objektType ? addButton : null;
+    addButton = (this.props.data.objektType && !this.props.data.geometry.addingMarker) ? addButton : null;
 
     return (
       <div className="buttons-container">

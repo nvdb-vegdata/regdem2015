@@ -63,6 +63,7 @@ let Editor = React.createClass({
   },
 
   render: function() {
+    // Initaliserer variabler
     let objektId = this.props.data.objektId;
     let objekt = this.props.data.objektEdited || this.props.data.objekt;
     let objektTypeNavn = this.props.data.objektType ? this.props.data.objektType.navn : '';
@@ -71,12 +72,14 @@ let Editor = React.createClass({
     let manglendeEgenskaper = this.props.data.editor.validationMessage ? Helper.getManglendeEgenskaper(this.props.data.editor.validationMessage) : [];
     let warnings = this.props.data.validatorResponse ? Parser.extractErrors(this.props.data.validatorResponse) : [];
 
+    // Forbereder validering
     let warningsFull = {};
     for (var i in egenskapsTyper) {
       let index = egenskapsTyper[i].id
       warningsFull[index] = warnings[index] ? warnings[index].kode : "";
     }
 
+    // Forbereder tittel og subtittel
     let formName, subtitle;
     if (objektId && objektId !== -1) {
       // Skjemanavn
@@ -121,7 +124,7 @@ let Editor = React.createClass({
     }
 
     // Når objektet er hentet og ikke laster lenger
-    if ((objekt || objektId === -1)  && !this.props.data.editor.loading) {
+    if ((objekt || objektId === -1)  && !this.props.data.editor.loading && !this.props.data.geometry.addingMarker) {
       EditorClassName = 'Editor';
       EditorCloseClassName = 'Editor-lukk';
       EditorCardClassName = 'Editor-Card Editor-Card-loaded';
@@ -147,13 +150,28 @@ let Editor = React.createClass({
           }
         }
 
-        GeomFields = (<GeometryFields.Geom
-                        objektId={objektId}
-                        egenskaper={geomEgenskaper}
-                        result={this.props.data.geometry.result}
-                        resultType={this.props.data.geometry.resultType}
-                        data={this.props.data}
-                      />);
+        let actualGeomEgenskaper = {};
+        for (var i = 0; i < objekt.egenskaper.length; i++) {
+          let navn = objekt.egenskaper[i].navn;
+          if (navn.indexOf('Geometri') === 0 ) {
+            if (navn.indexOf('punkt') >= 0) {
+              actualGeomEgenskaper.punkt = true;
+            } else if (navn.indexOf('linje') >= 0) {
+              actualGeomEgenskaper.linje = true;
+            } else if (navn.indexOf('flate') >= 0) {
+              actualGeomEgenskaper.flate = true;
+            }
+          }
+        }
+
+        if (geomEgenskaper) {
+          GeomFields = (<GeometryFields.Geom
+                          objektId={objektId}
+                          egenskaper={geomEgenskaper}
+                          actualEgenskaper={actualGeomEgenskaper}
+                          data={this.props.data}
+                        />);
+        }
 
         EditorFields = egenskapsTyper.map((egenskap) => {
                           switch (egenskap.type) {
