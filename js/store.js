@@ -53,6 +53,7 @@ let _state = {
 
   geometry: {
     addingMarker: false,
+    savingMarker: false,
     current: null,
     result: null, // Denne inneholder hele geometriobjektet. Hvis du på et senere tidspunkt ønsker å lagre hele _state som f eks JSON, må du passe på å endre innholdet i denne varaibelen
     resultType: null // [marker | strekning | flate]
@@ -175,7 +176,7 @@ let getNewData = function () {
 /* Funksjoner for actions */
 
 let setObjektID = function (objektId) {
-  if (objektId) {
+  if (objektId && !_state.geometry.addingMarker) {
     _state.objektId = objektId;
     MapFunctions.focusMarker(objektId);
     MapFunctions.clearEditGeom();
@@ -320,9 +321,12 @@ let addGeomAbort = function () {
   _state.geometry.current = null;
   _state.geometry.result = null;
   _state.geometry.resultType = null;
+  MapFunctions.removeGeom(_state);
 };
 
 let addGeomEnd = function () {
+  _state.geometry.savingMarker = true;
+  _state.geometry.result = MapFunctions.getCurrentEditGeom();
   _state.geometry.addingMarker = false;
   updateEditedLocation();
 };
@@ -484,6 +488,21 @@ let updateEditedLocation = function () {
         let lng = _state.geometry.result._latlng.lng;
         let lat = _state.geometry.result._latlng.lat;
 
+        // Egengeometri
+        let geometriEgenskap = findiEgenskapByString('geometri, punkt');
+        let WGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [lng, lat]);
+
+        if (geometriEgenskap) {
+          let newValue = {
+            id: geometriEgenskap.id,
+            navn: geometriEgenskap.navn,
+            verdi: 'POINT (' + WGS84ToUTM33[0] + ' ' + WGS84ToUTM33[1] + ')'
+          };
+
+          let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(geometriEgenskap.id);
+          _state.objektEdited.egenskaper[egenskapPositionFromObjektEdited] = newValue;
+        }
+
         // Lenke ID
         Fetch.fetchKoordinat(lng, lat, (koorData) => {
           if (koorData.sokePunktSrid === 'LAT_LON_WGS84') {
@@ -505,22 +524,12 @@ let updateEditedLocation = function () {
               til: koorData.veglenkePosisjon
             }
           ];
+
+          _state.geometry.savingMarker = false;
+          MapFunctions.removeGeom(_state);
+          RegDemStore.emitChange();
         });
 
-        // Egengeometri
-        let geometriEgenskap = findiEgenskapByString('geometri, punkt');
-        let WGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [lng, lat]);
-
-        if (geometriEgenskap) {
-          let newValue = {
-            id: geometriEgenskap.id,
-            navn: geometriEgenskap.navn,
-            verdi: 'POINT (' + WGS84ToUTM33[0] + ' ' + WGS84ToUTM33[1] + ')'
-          };
-
-          let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(geometriEgenskap.id);
-          _state.objektEdited.egenskaper[egenskapPositionFromObjektEdited] = newValue;
-        }
 
         break;
       case 'strekning':

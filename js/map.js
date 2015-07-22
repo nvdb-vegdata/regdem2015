@@ -146,6 +146,11 @@ window.MapFunctions = {
   addGeom: function (type, state) {
     Marker.addGeom(mapData, type, state);
   },
+  removeGeom: function (state) {
+    Marker.removeGeom(mapData, state);
+  },
+  getCurrentEditGeom: function () {
+    return Marker.currentEditGeom();
   }
 };
 
