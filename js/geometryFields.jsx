@@ -64,6 +64,10 @@ let Marker = React.createClass({
   },
 
   render: function () {
+    if (!this.props.enabled) {
+      return null;
+    }
+
     return (
       <RaisedButton
         style={{margin: '5px'}}
@@ -84,13 +88,17 @@ let Strekning = React.createClass({
   },
 
   render: function () {
+    if (!this.props.enabled) {
+      return null;
+    }
+
     return (
     <RaisedButton
       style={{margin: '5px'}}
       label="Plassér Linje"
       className='Editor-geom-button'
       onTouchTap={this.handleClick}
-      disabled = {!this.props.enabled}
+      disabled = {true || !this.props.enabled} // TODO Midlertidig inaktivt siden vi ikke har implementert lagring av strekning
       primary = {this.props.selected}
     />
   );
@@ -104,13 +112,17 @@ let Flate = React.createClass({
   },
 
   render: function () {
+    if (!this.props.enabled) {
+      return null;
+    }
+
     return (
     <RaisedButton
       style={{margin: '5px'}}
       label="Plassér Flate"
       className='Editor-geom-button'
       onTouchTap={this.handleClick}
-      disabled = {!this.props.enabled}
+      disabled = {true || !this.props.enabled} // TODO Midlertidig inaktivt siden vi ikke har implementert lagring av flate
       primary = {this.props.selected}
     />
   );

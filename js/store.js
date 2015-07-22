@@ -54,9 +54,8 @@ let _state = {
   geometry: {
     addingMarker: false,
     current: null,
-    result: null,
-    // [marker | strekning | flate]
-    resultType: null
+    result: null, // Denne inneholder hele geometriobjektet. Hvis du på et senere tidspunkt ønsker å lagre hele _state som f eks JSON, må du passe på å endre innholdet i denne varaibelen
+    resultType: null // [marker | strekning | flate]
   }
 };
 
@@ -337,7 +336,7 @@ let locationHasBeenSet = function () {
 
 let updateValidatorResponse = function (response) {
   _state.validatorResponse = response;
-}
+};
 
 
 // Initaliserer skaping av objektEdited.
@@ -521,6 +520,12 @@ let updateEditedLocation = function () {
           _state.objektEdited.egenskaper[egenskapPositionFromObjektEdited] = newValue;
         }
 
+        break;
+      case 'strekning':
+        // TODO Implementer korrekt lagring av egengeometri og veglenke av strekning. Fjern også permanent inaktivt flagg på "Plasser Linje"-knapp
+        break;
+      case 'flate':
+        // TODO Implementer korrekt lagring av egengeometri og veglenke av flate. Fjern også permanent inaktivt flagg på "Plasser Flate"-knapp
         break;
       default:
 
