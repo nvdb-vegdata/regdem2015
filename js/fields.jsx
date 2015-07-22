@@ -357,7 +357,7 @@ let Fields = {
       }
 
       return (
-        <div className="Editor-klokkeslett">
+        <div className="Editor-datePicker">
           <Fields.Viktighet viktighet={egenskaper.viktighet} />
 
           <div className="Editor-datePickerContainer">
