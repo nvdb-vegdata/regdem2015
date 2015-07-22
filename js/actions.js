@@ -96,10 +96,9 @@ var RegDemActions = {
       actionType: RegDemConstants.actions.REGDEM_ABORT_GEOM_ADD
     });
   },
-  addGeomEnd: function (result) {
+  addGeomEnd: function () {
     AppDispatcher.dispatch({
-      actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_END,
-      result: result
+      actionType: RegDemConstants.actions.REGDEM_ADD_GEOM_END
     });
   },
   updateValidationMessage: function (message) {

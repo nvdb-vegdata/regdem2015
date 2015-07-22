@@ -15,7 +15,7 @@ let EditGeometry = React.createClass({
   },
 
   handleSave: function () {
-    RegDemActions.addGeomEnd(null);
+    RegDemActions.addGeomEnd();
   },
 
   render: function() {

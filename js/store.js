@@ -321,8 +321,7 @@ let addGeomAbort = function () {
   _state.geometry.resultType = null;
 };
 
-let addGeomEnd = function (result) {
-  _state.geometry.result = result;
+let addGeomEnd = function () {
   _state.geometry.addingMarker = false;
   updateEditedLocation();
 };
@@ -616,8 +615,7 @@ AppDispatcher.register(function(action) {
       break;
 
     case RegDemConstants.actions.REGDEM_ADD_GEOM_END:
-      result = action.result;
-      addGeomEnd(result);
+      addGeomEnd();
       RegDemStore.emitChange();
       break;
 
