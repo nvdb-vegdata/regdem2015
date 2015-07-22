@@ -92,6 +92,12 @@ let MapComponent = React.createClass({
       RegDemActions.locationHasBeenSet();
     });
 
+    mapData.on('move', () => {
+      if (Marker.currentEditGeom()) {
+        Marker.currentEditGeom().setLatLng(mapData.getCenter());
+      }
+    });
+
     mapData.on('moveend', () => {
       if (this.props.data.objektTypeId) {
         RegDemActions.fetchObjektPositions();
