@@ -1,7 +1,7 @@
 let React = require('react/addons');
 let RegDemActions = require('./actions');
 var RegDemConstants = require('./constants');
-var Validator = require('./validator.js');
+var Writer = require('./writer.js');
 let Helper = require('./helper.js');
 let Parser = require('./parser.js');
 
@@ -26,7 +26,7 @@ let Editor = React.createClass({
   },
 
   saveObjekt: function () {
-    Validator.validateObjekt(this.props.data);
+    Writer.validateObjekt(this.props.data);
   },
 
   expandForm: function () {
