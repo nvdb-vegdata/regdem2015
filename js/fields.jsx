@@ -21,7 +21,7 @@ let Fields = {
     },
 
     componentWillReceiveProps: function (nextProps) {
-      if (nextProps.warning) {
+      if (nextProps.warning && this.props.verdi === nextProps.verdi) {
         this.setState({
           selectValueErrorText: nextProps.warning
         });
@@ -85,12 +85,13 @@ let Fields = {
     getInitialState: function() {
       return {
         textValue: this.props.verdi,
-        textValueErrorText: ''
+        textValueErrorText: '',
+        //currentValueIsValidated: false
       };
     },
 
     componentWillReceiveProps: function (nextProps) {
-      if (nextProps.warning) {
+      if (this.props.verdi === nextProps.verdi && nextProps.warning) {
         this.setState({
           textValueErrorText: nextProps.warning
         });
@@ -102,7 +103,9 @@ let Fields = {
     },
 
     handleChange: function (e) {
-      this.setState({textValue: e.target.value});
+      this.setState({
+        textValue: e.target.value,
+      });
       RegDemActions.updateFieldValue(this.props.egenskaper.id, e.target.value, 'Tekst');
     },
 
