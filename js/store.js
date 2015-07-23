@@ -122,6 +122,8 @@ let initializeStates = function () {
   setActiveState(newStatePosition);
 };
 
+initializeStates();
+
 /*
 ===================== RegDemStore =====================
 */
