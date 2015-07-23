@@ -71,6 +71,7 @@ let cookiemonsterApi = function (apiUrl, apiContent, callback) {
 
   let queryData = {
     url: apiUrl,
+    dryrun: true,
     content: apiContent
   };
 
