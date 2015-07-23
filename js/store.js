@@ -31,6 +31,7 @@ let _emptyState = {
   searchResultsFull: null,
 
   validatorResponse: null,
+  writeStatus: null,
 
   editor: {
     // Hvorvidt editor har lastet
