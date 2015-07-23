@@ -625,7 +625,8 @@ let updateEditedLocation = function (_state) {
 
 // TODO: Make each action call on an action with correct reference to the state it wants to edit
 AppDispatcher.register(function(action) {
-  let listPosition, id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value, response, result;
+  let listPosition, _state, id, objektType, inputValue, userInput, objektTypeId;
+  let extraEgenskap, type, value, response, result;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
