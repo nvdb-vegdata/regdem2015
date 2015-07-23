@@ -9,7 +9,14 @@ let Fetch = require('./fetch.js');
 
 let CHANGE_EVENT = 'change';
 
-let _state = {
+/*
+===================== Empty State =====================
+*/
+
+let _emptyState = {
+  listPosition: null,
+  active: false,
+
   // APP
   objektId: null,
   objektTypeId: null,
@@ -62,18 +69,74 @@ let _state = {
 /*
 ===================== Object that includes all states =====================
 */
+
+let _states = {
+  activeState: null,
+  list: []
+};
+
 let simpleDeepCopy = function (oldObject) {
   return JSON.parse(JSON.stringify(oldObject));
 };
 
-let _initialState = simpleDeepCopy(_state);
+let createNewState = function () {
+  let indexPosition = _states.list.push(simpleDeepCopy(_emptyState)) - 1;
+  _states.list[indexPosition].listPosition = indexPosition;
+  return indexPosition;
+};
+
+let deleteState = function (index) {
+  _states.list[index] = null;
+};
+
+let getAllStates = function () {
+  return _states.list;
+};
+
+let getStateAtIndex = function (index) {
+  return _states.list[index];
+};
+
+let getActiveState = function () {
+  return _states.list[_states.activeState];
+};
+
+let setActiveState = function (index) {
+  if (_states.activeState) {
+    _states.list[_states.activeState].active = false;
+  }
+
+  _states.activeState = index;
+
+  _states.list[_states.activeState].active = true;
+};
+
+let getInactiveState = function () {
+  return _states.list.filter((value, index) => {
+    return (index !== _states.activeState && value);
+  });
+};
+
+let initializeStates = function () {
+  let newStatePosition = createNewState();
+  setActiveState(newStatePosition);
+};
+
 /*
 ===================== RegDemStore =====================
 */
 
 let RegDemStore = assign({}, EventEmitter.prototype, {
   getAll: function () {
-    return _state;
+    return getAllStates();
+  },
+
+  getActiveState: function () {
+    return getActiveState();
+  },
+
+  getInactiveState: function () {
+    return getInactiveState();
   },
 
   emitChange: function () {

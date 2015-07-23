@@ -15,13 +15,16 @@ let RegDemStore = require('./store.js');
 // For React developer tools
 window.React = React;
 
-// Get current App state
 let getRegDemState = function () {
-  return RegDemStore.getAll();
+  return {
+    active: RegDemStore.getActiveState(),
+    inactive: RegDemStore.getInactiveState(),
+    all: RegDemStore.getAll()
+  };
 };
 
 let RegDemApp = React.createClass({
-  getInitialState: function() {
+  getInitialState: function () {
     return getRegDemState();
   },
 
@@ -51,12 +54,16 @@ let RegDemApp = React.createClass({
   render: function() {
     return (
       <div>
-        <EditGeometry data={this.state} />
-        <Editor data={this.state} />
-        <MapComponent data={this.state} />
-        <Search data={this.state} />
-        <List data={this.state} />
-        <Buttons data={this.state} />
+        <EditGeometry data={this.state.active} />
+        {
+          this.state.all.map(function (obj) {
+            return (<Editor data={obj} key={'listNo-' + obj.listPosition} />);
+          })
+        }
+        <MapComponent data={this.state.active} />
+        <Search data={this.state.active} />
+        <List data={this.state.active} />
+        <Buttons data={this.state.active} />
       </div>
     );
   },
