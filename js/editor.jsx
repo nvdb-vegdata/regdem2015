@@ -120,8 +120,11 @@ let Editor = React.createClass({
     }
 
     // Når objektet er hentet og ikke laster lenger
-    if ((objekt || objektId === -1)  && !this.props.data.editor.loading && !this.props.data.geometry.addingMarker) {
+    if ((objekt || objektId === -1)  && !this.props.data.editor.loading && !this.props.data.geometry.addingMarker && this.props.data.active) {
       EditorClassName = 'Editor';
+      if (this.props.numberOfInactive > 0) {
+        EditorClassName += ' Editor-other-inactive';
+      }
       EditorCloseClassName = 'Editor-lukk';
       EditorCardClassName = 'Editor-Card Editor-Card-loaded';
       CircularProgressClassName = 'Editor-loader Editor-hidden';
@@ -218,6 +221,14 @@ let Editor = React.createClass({
       } else {
         EditorCardClassName += ' Editor-pointer';
       }
+    }
+
+    if (!this.props.data.active) {
+      EditorClassName = 'Editor Editor-inactive Editor-inactive-pos-' + this.props.inactiveNumber;
+      EditorCloseClassName = 'Editor-lukk Editor-hidden';
+      EditorCardClassName = 'Editor-Card Editor-Card-loaded Editor-pointer';
+      CircularProgressClassName = 'Editor-loader Editor-hidden';
+      CardTitleClassName = 'Editor-CardTitle';
     }
 
     return (

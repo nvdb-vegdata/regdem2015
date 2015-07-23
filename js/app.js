@@ -52,18 +52,23 @@ let RegDemApp = React.createClass({
   },
 
   render: function() {
+    let numberOfInactive = this.state.inactive.length;
+
     return (
       <div>
-        <EditGeometry data={this.state.active} />
+        <div>
         {
-          this.state.all.map(function (obj) {
-            return (<Editor data={obj} key={'listNo-' + obj.listPosition} />);
+          this.state.all.map((obj) => {
+            let inactiveNumber = obj.listPosition + (this.state.active.listPosition <= obj.listPosition ? -1 : 0);
+            return (<Editor data={obj} numberOfInactive={numberOfInactive} inactiveNumber={inactiveNumber} key={'listNo-' + obj.listPosition} />);
           })
         }
+        </div>
         <MapComponent data={this.state.active} />
         <Search data={this.state.active} />
         <List data={this.state.active} />
         <Buttons data={this.state.active} />
+        <EditGeometry data={this.state.active} />
       </div>
     );
   },
