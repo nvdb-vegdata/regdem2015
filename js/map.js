@@ -67,7 +67,7 @@ let MapComponent = React.createClass({
 
     // PLassering av zoom kontrollene
     if (window.matchMedia('(min-width: ' + RegDemConstants.values.REGDEM_SIZE_DESKTOP + 'px)').matches) {
-      new L.Control.Zoom( {position: 'bottomleft'}).addTo(mapData);
+      new L.Control.Zoom( {position: 'topright'}).addTo(mapData);
     }
 
     // Min posisjon
