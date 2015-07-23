@@ -2,7 +2,7 @@ let RegDemActions = require('./actions');
 let Helper = require('./helper.js');
 let Fetch = require('./fetch.js');
 
-let validateObjektAndReturnJSON = function (data) {
+let createJSONFromState = function (data) {
   if (data && data.objektEdited) {
     let objekt = data.objektEdited;
     let veglenke = objekt.lokasjon.veglenker[0];
@@ -46,7 +46,7 @@ let validateObjektAndReturnJSON = function (data) {
 };
 
 let validateObjekt = function (data) {
-  let queryJSON = validateObjektAndReturnJSON(data);
+  let queryJSON = createJSONFromState(data);
 
   if (queryJSON) {
     Fetch.validateObjektSynchronized(queryJSON, (returnData) => {
@@ -55,5 +55,29 @@ let validateObjekt = function (data) {
   }
 };
 
+let registerObjekt = function (data) {
+  let queryJSON = createJSONFromState(data);
 
-module.exports.validateObjekt = validateObjekt;
+  console.log('Start registration: ', queryJSON);
+  Fetch.registrerEndringssett(queryJSON, (returnData) => {
+    console.log(returnData);
+    let startURL = returnData[1].src.substring(27);
+    let statusURL = returnData[4].src.substring(27);
+    console.log(startURL);
+    Fetch.startBehandlingAvEndringssett('POST', startURL, (response) => {
+      console.log('Skrevet. Snakkes.', response);
+    });
+    setInterval(function () {
+      Fetch.startBehandlingAvEndringssett('GET', statusURL, (response) => {
+        console.log(response);
+      });
+    }, 2000);
+
+  });
+};
+
+
+module.exports = {
+  validateObjekt: validateObjekt,
+  registerObjekt: registerObjekt
+}
