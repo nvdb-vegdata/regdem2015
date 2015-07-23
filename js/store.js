@@ -59,17 +59,19 @@ let _state = {
   }
 };
 
+/*
+===================== Object that includes all states =====================
+*/
 let simpleDeepCopy = function (oldObject) {
   return JSON.parse(JSON.stringify(oldObject));
 };
 
 let _initialState = simpleDeepCopy(_state);
+/*
+===================== RegDemStore =====================
+*/
 
 let RegDemStore = assign({}, EventEmitter.prototype, {
-  /**
-   * Get the entire collection of TODOs.
-   * @return {object}
-   */
   getAll: function () {
     return _state;
   },
@@ -78,22 +80,18 @@ let RegDemStore = assign({}, EventEmitter.prototype, {
     this.emit(CHANGE_EVENT);
   },
 
-  /**
-   * @param {function} callback
-   */
   addChangeListener: function (callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
-  /**
-   * @param {function} callback
-   */
   removeChangeListener: function (callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
 });
 
-/* Helpers for actions */
+/*
+===================== Helpers for actions =====================
+*/
 
 let fetchObjektTypeData = function () {
   // Hvis objektType allerede er lastet, trenger vi ikke hente den igjen
@@ -170,7 +168,9 @@ let getNewData = function () {
   }
 };
 
-/* Funksjoner for actions */
+/*
+===================== Functions called by Actions =====================
+*/
 
 let setObjektID = function (objektId) {
   if (objektId && !_state.geometry.addingMarker) {
@@ -349,8 +349,11 @@ let updateValidatorResponse = function (response) {
 };
 
 
-// Initaliserer skaping av objektEdited.
 let createObjektEdited = function () {
+/*
+===================== Create or update the model =====================
+*/
+
   if (_state.objekt) {
     _state.objektEdited = simpleDeepCopy(_state.objekt);
   } else {
@@ -551,8 +554,11 @@ let updateEditedLocation = function () {
 let updateValMessage = function (message) {
   _state.editor.validationMessage = message;
 };
+/*
+===================== Actions =====================
+*/
 
-// Register callback to handle all updates
+// TODO: Make each action call on an action with correct reference to the state it wants to edit
 AppDispatcher.register(function(action) {
   let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value, response, result;
 
