@@ -41,7 +41,7 @@ let Editor = React.createClass({
     let objekt = this.props.data.objektEdited || this.props.data.objekt;
 
     if (objekt && objekt.egenskaper) {
-      for (var i = 0; i < objekt.egenskaper.length; i++) {
+      for (let i = 0; i < objekt.egenskaper.length; i++) {
         if (objekt.egenskaper[i].id === egenskap.id) {
           return returFunksjon(objekt.egenskaper[i]);
         }
@@ -70,7 +70,7 @@ let Editor = React.createClass({
 
     // Forbereder validering
     let warningsFull = {};
-    for (var i in egenskapsTyper) {
+    for (let i in egenskapsTyper) {
       let index = egenskapsTyper[i].id
       warningsFull[index] = warnings[index] ? warnings[index].kode : "";
     }
@@ -133,7 +133,7 @@ let Editor = React.createClass({
         CardActionsClassName = 'Editor-knapp-container';
 
         let geomEgenskaper = {};
-        for (var i = 0; i < egenskapsTyper.length; i++) {
+        for (let i = 0; i < egenskapsTyper.length; i++) {
           let navn = egenskapsTyper[i].navn;
           if (navn.indexOf('Geometri') === 0 ) {
             if (navn.indexOf('punkt') >= 0) {
@@ -147,7 +147,7 @@ let Editor = React.createClass({
         }
 
         let actualGeomEgenskaper = {};
-        for (var i = 0; i < objekt.egenskaper.length; i++) {
+        for (let i = 0; i < objekt.egenskaper.length; i++) {
           let navn = objekt.egenskaper[i].navn;
           if (navn.indexOf('Geometri') === 0 ) {
             if (navn.indexOf('punkt') >= 0) {
