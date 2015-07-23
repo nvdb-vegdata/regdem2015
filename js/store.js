@@ -118,6 +118,7 @@ let getInactiveState = function () {
 };
 
 let initializeStates = function () {
+  createNewState();
   let newStatePosition = createNewState();
   setActiveState(newStatePosition);
 };
@@ -195,7 +196,7 @@ let fetchObjektData = function (_state) {
     _state.objekt = objektData;
     _state.objektEdited = null;
 
-    fetchObjektTypeData();
+    fetchObjektTypeData(_state);
   });
 };
 
@@ -524,7 +525,7 @@ let updateFieldValue = function (_state, egenskapsId, fieldValue, fieldType) {
     createObjektEdited(_state);
   }
 
-  let egenskapFromObjektType = findEgenskapInObjektType(egenskapsId);
+  let egenskapFromObjektType = findEgenskapInObjektType(_state, egenskapsId);
 
   if (egenskapFromObjektType) {
     let newValue = null;
@@ -564,7 +565,7 @@ let updateEditedLocation = function (_state) {
         let lat = _state.geometry.result._latlng.lat;
 
         // Egengeometri
-        let geometriEgenskap = findiEgenskapByString('geometri, punkt');
+        let geometriEgenskap = findiEgenskapByString(_state, 'geometri, punkt');
         let WGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [lng, lat]);
 
         if (geometriEgenskap) {

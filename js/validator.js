@@ -50,7 +50,7 @@ let validateObjekt = function (data) {
 
   if (queryJSON) {
     Fetch.validateObjektSynchronized(queryJSON, (returnData) => {
-      RegDemActions.updateValidatorResponse(this.props.data.listPosition, returnData);
+      RegDemActions.updateValidatorResponse(data.listPosition, returnData);
     });
   }
 };

@@ -177,6 +177,7 @@ let Editor = React.createClass({
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
+                                        data={this.props.data}
                                       />);
                             case 'Tekst':
                               return (<Fields.Tekst
@@ -184,6 +185,7 @@ let Editor = React.createClass({
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
+                                        data={this.props.data}
                                       />);
                             case 'Tall':
                               return (<Fields.Tall
@@ -191,6 +193,7 @@ let Editor = React.createClass({
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
+                                        data={this.props.data}
                                       />);
                             case 'Klokkeslett':
                               return (<Fields.Klokkeslett
@@ -198,6 +201,7 @@ let Editor = React.createClass({
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
+                                        data={this.props.data}
                                         />);
                             case 'Dato':
                               return (<Fields.Dato
@@ -205,6 +209,7 @@ let Editor = React.createClass({
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
+                                        data={this.props.data}
                                       />);
                             default:
                               break;
