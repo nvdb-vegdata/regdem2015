@@ -85,11 +85,11 @@ let MapComponent = React.createClass({
 
     // Events
     mapData.on('locationfound', () => {
-      RegDemActions.locationHasBeenSet();
+      RegDemActions.locationHasBeenSet(this.props.data.listPosition);
     });
 
     mapData.on('locationerror', () => {
-      RegDemActions.locationHasBeenSet();
+      RegDemActions.locationHasBeenSet(this.props.data.listPosition);
     });
 
     mapData.on('move', () => {
@@ -100,7 +100,7 @@ let MapComponent = React.createClass({
 
     mapData.on('moveend', () => {
       if (this.props.data.objektTypeId) {
-        RegDemActions.fetchObjektPositions();
+        RegDemActions.fetchObjektPositions(this.props.data.listPosition);
       }
     });
   },

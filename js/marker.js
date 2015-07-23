@@ -57,7 +57,7 @@ let displayMarkers = function (kart, state) {
     let geom = omnivore.wkt.parse(posisjon);
 
     geom.on('click', () => {
-      RegDemActions.setObjektID(vegObjekt.objektId);
+      RegDemActions.setObjektID(this.props.data.listPosition, vegObjekt.objektId);
     });
 
     markerList[vegObjekt.objektId] = {obj: geom, type: posisjon.charAt(0)};
@@ -69,7 +69,7 @@ let displayMarkers = function (kart, state) {
     let geom = omnivore.wkt.parse(posisjon);
 
     geom.on('click', () => {
-      RegDemActions.setObjektID(activeObjekt.objektId);
+      RegDemActions.setObjektID(this.props.data.listPosition, activeObjekt.objektId);
     });
 
     markerList[activeObjekt.objektId] = {obj: geom, type: posisjon.charAt(0)};

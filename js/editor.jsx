@@ -22,7 +22,7 @@ let Editor = React.createClass({
   mixins: [React.addons.LinkedStateMixin],
 
   closeDialog: function () {
-    RegDemActions.closeEditor();
+    RegDemActions.closeEditor(this.props.data.listPosition);
   },
 
   saveObjekt: function () {
@@ -31,7 +31,7 @@ let Editor = React.createClass({
 
   expandForm: function () {
     if (!this.props.data.editor.expanded) {
-      RegDemActions.expandEditor();
+      RegDemActions.expandEditor(this.props.data.listPosition);
     }
   },
 

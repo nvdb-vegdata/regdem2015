@@ -14,11 +14,11 @@ injectTapEventPlugin();
 
 let Buttons = React.createClass({
   handleAdd: function () {
-    RegDemActions.setObjektID(-1);
+    RegDemActions.setObjektID(this.props.data.listPosition, -1);
   },
 
   handleChangeMyLocation: function () {
-    RegDemActions.getCurrentLocation();
+    RegDemActions.getCurrentLocation(this.props.data.listPosition);
   },
 
   render: function() {
