@@ -84,7 +84,7 @@ let displayMarkers = function (kart, state) {
 // ObjektID brukes for å håndtere opacity-endringer.
 let update = function (kart, state) {
   clearMarkers();
-  if (state.searchResults.totaltAntallReturnert > 0) {
+  if (state.searchResults && state.searchResults.totaltAntallReturnert > 0) {
     displayMarkers(kart, state);
   }
 };
