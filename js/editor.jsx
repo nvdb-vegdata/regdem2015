@@ -242,7 +242,7 @@ let Editor = React.createClass({
             <CircularProgress mode="indeterminate" className={CircularProgressClassName} />
 
             <CardText className={MinimizedStatusClassName}>
-              {this.props.data.objektId}
+              {this.props.data.objektId + '-' + (this.props.data.progressStatus.length > 0 ? this.props.data.progressStatus[this.props.data.progressStatus.length-1] : '')}
             </CardText>
             <CardTitle title={formName} subtitle={subtitle} className={CardTitleClassName} />
             <CardText className={CardTextClassName}>
