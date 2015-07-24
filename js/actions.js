@@ -169,15 +169,17 @@ var RegDemActions = {
       listPosition: listPosition
     });
   },
-  updateWriteStatus: function (status) {
+  updateWriteStatus: function (listPosition, status) {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_UPDATE_WRITE_STATUS,
+      listPosition: listPosition,
       status: status
     })
   },
-  updateProgressStatus: function (status) {
+  updateProgressStatus: function (listPosition, status) {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_UPDATE_PROGRESS_STATUS,
+      listPosition: listPosition,
       status: status
     })
   }

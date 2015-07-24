@@ -128,10 +128,6 @@ let updateState = function (index, _state) {
 };
 
 let initializeStates = function () {
-  createNewState();
-  createNewState();
-  createNewState();
-  createNewState();
   let newStatePosition = createNewState();
   setActiveState(newStatePosition);
 };
@@ -450,10 +446,10 @@ let locationHasBeenSet = function (_state) {
 let updateValidatorResponse = function (_state, response) {
   _state.validatorResponse = response;
   if(evaluateResponse(response)) {
-    updateWriteStatus('processing');
+    updateWriteStatus(_state, 'processing');
     Writer.registerObjekt(_state);
   } else {
-    updateWriteStatus('error');
+    updateWriteStatus(_state, 'error');
   }
 };
 
@@ -484,11 +480,21 @@ let terminateState = function (_state) {
   }
 };
 
-let updateWriteStatus = function (status) {
+let updateWriteStatus = function (_state, status) {
+  switch (status) {
+    case 'processing':
+      minimizeEditor();
+      break;
+    case 'done':
+      // terminateState(_state);
+      break;
+    default:
+  }
+
   _state.writeStatus = status;
 };
 
-let updateProgressStatus = function (status) {
+let updateProgressStatus = function (_state, status) {
   _state.progressStatus.push(status);
 };
 
@@ -700,7 +706,7 @@ let updateEditedLocation = function (_state) {
 
 AppDispatcher.register(function(action) {
   let listPosition, _state, id, objektType, inputValue, userInput, objektTypeId;
-  let selectedIndex, extraEgenskap, type, value, response, result;
+  let selectedIndex, extraEgenskap, type, value, response, result, status;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -889,14 +895,18 @@ AppDispatcher.register(function(action) {
       break;
 
     case RegDemConstants.actions.REGDEM_UPDATE_WRITE_STATUS:
-      let status = action.status;
-      updateWriteStatus(status);
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      status = action.status;
+      updateWriteStatus(_state, status);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_UPDATE_PROGRESS_STATUS:
-      let status = action.status;
-      updateProgressStatus(status);
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      status = action.status;
+      updateProgressStatus(_state, status);
       RegDemStore.emitChange();
       break;
 
