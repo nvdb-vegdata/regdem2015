@@ -6,6 +6,7 @@ let RegDemConstants = require('./constants');
 let omnivore = require('leaflet-omnivore');
 let Helper = require('./helper.js');
 let Fetch = require('./fetch.js');
+let Writer = require('./writer.js');
 
 let CHANGE_EVENT = 'change';
 
@@ -31,7 +32,8 @@ let _emptyState = {
   searchResultsFull: null,
 
   validatorResponse: null,
-  writeStatus: null,
+  writeStatus: null,  // "error", "processing", "done"
+
   progressStatus: [],
 
   editor: {
@@ -245,6 +247,13 @@ let getNewData = function (_state) {
   }
 };
 
+let evaluateResponse = function (response) {
+  // Antar at vi sender ét objekt av gangen.
+  let result = response.resultat.vegObjekter[0];
+  return !(result.feil || result.advarsel);
+
+}
+
 let rebuildFromState = function (_state) {
   // Markører
   MapFunctions.clearEditGeom();
@@ -440,6 +449,12 @@ let locationHasBeenSet = function (_state) {
 
 let updateValidatorResponse = function (_state, response) {
   _state.validatorResponse = response;
+  if(evaluateResponse(response)) {
+    updateWriteStatus('processing');
+    Writer.registerObjekt(_state);
+  } else {
+    updateWriteStatus('error');
+  }
 };
 
 let updateValMessage = function (_state, message) {
@@ -469,6 +484,13 @@ let terminateState = function (_state) {
   }
 };
 
+let updateWriteStatus = function (status) {
+  _state.writeStatus = status;
+};
+
+let updateProgressStatus = function (status) {
+  _state.progressStatus.push(status);
+};
 
 /*
 ===================== Create or update the model =====================
@@ -676,7 +698,6 @@ let updateEditedLocation = function (_state) {
 ===================== Actions =====================
 */
 
-// TODO: Make each action call on an action with correct reference to the state it wants to edit
 AppDispatcher.register(function(action) {
   let listPosition, _state, id, objektType, inputValue, userInput, objektTypeId;
   let selectedIndex, extraEgenskap, type, value, response, result;
@@ -864,6 +885,18 @@ AppDispatcher.register(function(action) {
       listPosition = action.listPosition;
       _state = getStateAtIndex(listPosition);
       terminateState(_state);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_UPDATE_WRITE_STATUS:
+      let status = action.status;
+      updateWriteStatus(status);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_UPDATE_PROGRESS_STATUS:
+      let status = action.status;
+      updateProgressStatus(status);
       RegDemStore.emitChange();
       break;
 

@@ -53,7 +53,7 @@ let getHTTPRequest = function (url, callback, onlyOneConnection) {
   }
 };
 
-let cookiemonsterApi = function (apiUrl, apiContent, callback) {
+let cookiemonsterApi = function (method, apiUrl, apiContent, callback) {
   var r = new XMLHttpRequest();
 
   r.open('POST', RegDemConstants.values.REGDEM_LOCAL_API_SERVER, true);
@@ -65,15 +65,16 @@ let cookiemonsterApi = function (apiUrl, apiContent, callback) {
     if (r.readyState !== 4 || r.status !== 200) {
       return;
     }
-
     callback(JSON.parse(r.responseText));
   };
 
   let queryData = {
     url: apiUrl,
     dryrun: true,
-    content: apiContent
+    content: apiContent,
+    method: method
   };
+
 
   r.send(JSON.stringify(queryData));
 };
@@ -141,7 +142,6 @@ module.exports.fetchAPIObjekter = function(objectID, box, callback, extraEgenska
   getHTTPRequest(url, callback, true);
 };
 
-module.exports.validateObjektSynchronized = function(queryJSON, callback) {
-  var url = '/nvdb/apiskriv/v2/endringssett/validator';
-  cookiemonsterApi(url, queryJSON, callback);
-};
+module.exports.sendQuery = function (method, url, queryJSON, callback) {
+  cookiemonsterApi(method, url, queryJSON, callback);
+}

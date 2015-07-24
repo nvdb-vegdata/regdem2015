@@ -84,7 +84,7 @@ let Sok = React.createClass({
     if (prevProps.data.listPosition !== this.props.data.listPosition) {
       this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
     }
-    
+
     if (prevProps.data.objektTypeId && !this.props.data.objektTypeId) {
       this.refs.typeahead.showDropdown();
       this.refs.typeahead.focus();
@@ -165,7 +165,7 @@ let Sok = React.createClass({
 
   handleRemoveClick: function() {
     this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
-    RegDemActions.resetApp(this.props.data.listPosition);
+    RegDemActions.terminateState(this.props.data.listPosition);
   },
 
   handleOpenList: function() {
