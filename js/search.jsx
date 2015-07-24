@@ -15,11 +15,6 @@ var injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
 let Sok = React.createClass({
-  getInitialState: function() {
-    return {
-      prevSelectedIndex: null
-    };
-  },
 
   render: function() {
     let leftMostIcon = (<i className="material-icons search-field-search-icon">search</i>);
@@ -141,7 +136,7 @@ let Sok = React.createClass({
   },
 
   handleKeyDown: function(event, optionData, selectedIndex) {
-    if (selectedIndex === -1 && this.state.prevSelectedIndex !== selectedIndex) {
+    if (selectedIndex === -1 && this.props.data.search.selectedIndex !== selectedIndex) {
       this.setInputValue(optionData);
     }
     if (event.keyCode === 13) {
@@ -156,7 +151,7 @@ let Sok = React.createClass({
         }
       }
     }
-    this.state.prevSelectedIndex = selectedIndex;
+    RegDemActions.setPrevSelectedIndex(this.props.data.listPosition, selectedIndex);
   },
 
   executeSearch: function (objektTypeId) {

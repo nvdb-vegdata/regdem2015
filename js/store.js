@@ -45,7 +45,8 @@ let _emptyState = {
   search: {
     inputValue: '',
     options: [],
-    loading: false
+    loading: false,
+    selectedIndex: null
   },
 
   list: {
@@ -419,6 +420,10 @@ let updateValMessage = function (_state, message) {
 };
 
 
+let setPrevSelectedIndex = function (_state, selectedIndex) {
+  _state.search.selectedIndex = selectedIndex;
+};
+
 /*
 ===================== Create or update the model =====================
 */
@@ -628,7 +633,7 @@ let updateEditedLocation = function (_state) {
 // TODO: Make each action call on an action with correct reference to the state it wants to edit
 AppDispatcher.register(function(action) {
   let listPosition, _state, id, objektType, inputValue, userInput, objektTypeId;
-  let extraEgenskap, type, value, response, result;
+  let selectedIndex, extraEgenskap, type, value, response, result;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -794,6 +799,14 @@ AppDispatcher.register(function(action) {
       RegDemStore.emitChange();
       break;
 
+
+    case RegDemConstants.actions.REGDEM_SET_PREV_SELECTED_INDEX:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      selectedIndex = action.selectedIndex;
+      setPrevSelectedIndex(_state, selectedIndex);
+      RegDemStore.emitChange();
+      break;
     default:
       // no op
   }

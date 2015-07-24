@@ -149,6 +149,13 @@ var RegDemActions = {
       listPosition: listPosition,
       response: response
     });
+  },
+  setPrevSelectedIndex: function (listPosition, selectedIndex) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_SET_PREV_SELECTED_INDEX,
+      listPosition: listPosition,
+      selectedIndex: selectedIndex
+    });
   }
 };
 
