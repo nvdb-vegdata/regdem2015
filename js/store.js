@@ -6,10 +6,18 @@ let RegDemConstants = require('./constants');
 let omnivore = require('leaflet-omnivore');
 let Helper = require('./helper.js');
 let Fetch = require('./fetch.js');
+let Writer = require('./writer.js');
 
 let CHANGE_EVENT = 'change';
 
-let _state = {
+/*
+===================== Empty State =====================
+*/
+
+let _emptyState = {
+  listPosition: null,
+  active: false,
+
   // APP
   objektId: null,
   objektTypeId: null,
@@ -19,12 +27,14 @@ let _state = {
   objektEdited: null,
   // Hele objektType
   objektType: null,
-  objektEdited: null,
 
   searchResults: null,
   searchResultsFull: null,
 
   validatorResponse: null,
+  writeStatus: null,  // "error", "processing", "done"
+
+  progressStatus: [],
 
   editor: {
     // Hvorvidt editor har lastet
@@ -38,7 +48,8 @@ let _state = {
   search: {
     inputValue: '',
     options: [],
-    loading: false
+    loading: false,
+    selectedIndex: null
   },
 
   list: {
@@ -60,43 +71,104 @@ let _state = {
   }
 };
 
+/*
+===================== Object that includes all states =====================
+*/
+
+let _states = {
+  activeState: null,
+  list: []
+};
+
 let simpleDeepCopy = function (oldObject) {
   return JSON.parse(JSON.stringify(oldObject));
 };
 
-let _initialState = simpleDeepCopy(_state);
+let createNewState = function () {
+  let indexPosition = _states.list.push(simpleDeepCopy(_emptyState)) - 1;
+  _states.list[indexPosition].listPosition = indexPosition;
+  return indexPosition;
+};
+
+let deleteState = function (index) {
+  _states.list[index] = null;
+};
+
+let getAllStates = function () {
+  return _states.list;
+};
+
+let getStateAtIndex = function (index) {
+  return _states.list[index];
+};
+
+let getActiveState = function () {
+  return _states.list[_states.activeState];
+};
+
+let setActiveState = function (index) {
+  if (_states.activeState) {
+    _states.list[_states.activeState].active = false;
+  }
+
+  _states.activeState = index;
+
+  _states.list[_states.activeState].active = true;
+};
+
+let getInactiveState = function () {
+  return _states.list.filter((value, index) => {
+    return (index !== _states.activeState && value);
+  });
+};
+
+let updateState = function (index, _state) {
+  _states.list[index] = _state;
+  return _states.list[index];
+};
+
+let initializeStates = function () {
+  let newStatePosition = createNewState();
+  setActiveState(newStatePosition);
+};
+
+initializeStates();
+
+/*
+===================== RegDemStore =====================
+*/
 
 let RegDemStore = assign({}, EventEmitter.prototype, {
-  /**
-   * Get the entire collection of TODOs.
-   * @return {object}
-   */
   getAll: function () {
-    return _state;
+    return getAllStates();
+  },
+
+  getActiveState: function () {
+    return getActiveState();
+  },
+
+  getInactiveState: function () {
+    return getInactiveState();
   },
 
   emitChange: function () {
     this.emit(CHANGE_EVENT);
   },
 
-  /**
-   * @param {function} callback
-   */
   addChangeListener: function (callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
-  /**
-   * @param {function} callback
-   */
   removeChangeListener: function (callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
 });
 
-/* Helpers for actions */
+/*
+===================== Helpers for actions =====================
+*/
 
-let fetchObjektTypeData = function () {
+let fetchObjektTypeData = function (_state) {
   // Hvis objektType allerede er lastet, trenger vi ikke hente den igjen
   if (_state.objektTypeId && _state.objektType && _state.objektType.id === _state.objektTypeId) {
     _state.editor.loading = false;
@@ -128,27 +200,27 @@ let fetchObjektTypeData = function () {
   }
 };
 
-let fetchObjektData = function () {
+let fetchObjektData = function (_state) {
   Fetch.fetchObjekt(_state.objektId, (objektData) => {
     _state.objekt = objektData;
     _state.objektEdited = null;
 
-    fetchObjektTypeData();
+    fetchObjektTypeData(_state);
   });
 };
 
-let getNewData = function () {
+let getNewData = function (_state) {
   // Skal vi lage nytt objekt?
   if (_state.objektId === -1) {
     // Har vi oppgitt
     if (_state.objektTypeId) {
       // Lager et objektEdited-objekt med enkel struktur
-      createObjektEdited();
+      createObjektEdited(_state);
 
       _state.editor.loading = true;
       RegDemStore.emitChange();
 
-      fetchObjektTypeData();
+      fetchObjektTypeData(_state);
     }
   } else {
     if (!_state.objekt || _state.objektId !== _state.objekt.objektId) {
@@ -166,42 +238,60 @@ let getNewData = function () {
       _state.editor.loading = true;
       RegDemStore.emitChange();
 
-      fetchObjektData();
+      fetchObjektData(_state);
     }
   }
 };
 
-/* Funksjoner for actions */
+let evaluateResponse = function (response) {
+  // Antar at vi sender ét objekt av gangen.
+  let result = response.resultat.vegObjekter[0];
+  return !(result.feil || result.advarsel);
 
-let setObjektID = function (objektId) {
+}
+
+let rebuildFromState = function (_state) {
+  // Markører
+  MapFunctions.clearEditGeom();
+  MapFunctions.updateMarkers(_state);
+
+  // GPS
+  _state.map.myLocation = false;
+};
+
+/*
+===================== Functions called by Actions =====================
+*/
+
+let setObjektID = function (_state, objektId) {
   if (objektId && !_state.geometry.addingMarker) {
-    resetObjekt();
-    closeList();
+    resetObjekt(_state);
+    closeList(_state);
     _state.objektId = objektId;
     MapFunctions.focusMarker(objektId);
     MapFunctions.clearEditGeom();
-    getNewData();
+    getNewData(_state);
   }
 };
 
-let closeEditor = function () {
-  resetObjekt();
+let closeEditor = function (_state) {
+  resetObjekt(_state);
   _state.editor.loading = false;
   _state.editor.expanded = false;
 };
 
-let expandEditor = function () {
+let expandEditor = function (_state) {
   _state.editor.expanded = true;
 };
 
-let fetchObjektPositions = function () {
+let fetchObjektPositions = function (_state) {
   _state.search.loading = true;
   RegDemStore.emitChange();
 
   let id = _state.objektTypeId;
 
   if (MapFunctions.mapData()) {
-    var mapbox = MapFunctions.getBounds();
+    let mapbox = MapFunctions.getBounds();
 
     Fetch.fetchAPIObjekter(id, mapbox, (data) => {
       _state.searchResults = data;
@@ -215,7 +305,7 @@ let fetchObjektPositions = function () {
   }
 };
 
-let fetchAllDataFromObjektPosition = function (extraEgenskap) {
+let fetchAllDataFromObjektPosition = function (_state, extraEgenskap) {
   if (_state.searchResultsFull) {
     _state.list.extraEgenskap = extraEgenskap;
     RegDemStore.emitChange();
@@ -238,7 +328,7 @@ let fetchAllDataFromObjektPosition = function (extraEgenskap) {
   }
 };
 
-let fetchObjektTypes = function (objektType) {
+let fetchObjektTypes = function (_state, objektType) {
   _state.search.loading = true;
   RegDemStore.emitChange();
 
@@ -249,12 +339,12 @@ let fetchObjektTypes = function (objektType) {
   });
 };
 
-let setInputValue = function (inputValue) {
+let setInputValue = function (_state, inputValue) {
   _state.search.inputValue = inputValue;
   RegDemStore.emitChange();
 };
 
-let executeSearch = function (objektTypeId) {
+let executeSearch = function (_state, objektTypeId) {
   _state.objektId = null;
   _state.objekt = null;
   _state.objektEdited = null;
@@ -262,19 +352,28 @@ let executeSearch = function (objektTypeId) {
   _state.objektTypeId = objektTypeId;
   _state.objektType = null;
 
-  fetchObjektTypeData();
+  fetchObjektTypeData(_state);
 
-  fetchObjektPositions();
+  fetchObjektPositions(_state);
 };
 
-let resetApp = function () {
+let resetApp = function (_state) {
   MapFunctions.clearMarkers();
   MapFunctions.clearEditGeom();
-  _state = simpleDeepCopy(_initialState);
+
+  let listPosition = _state.listPosition;
+  let active = _state.active;
+
+  _state = updateState(listPosition, simpleDeepCopy(_emptyState));
+
+  _state.listPosition = listPosition;
+  _state.active = active;
   _state.map.myLocation = false;
+
+  return _state;
 };
 
-let resetObjekt = function () {
+let resetObjekt = function (_state) {
   _state.objektId = null;
   _state.objekt = null;
   _state.objektEdited = null;
@@ -289,21 +388,20 @@ let resetObjekt = function () {
   MapFunctions.updateMarkers(_state);
 };
 
-
-let goBackAndReset = function (userInput) {
+let goBackAndReset = function (_state, userInput) {
   let oldSearchState = simpleDeepCopy(_state.search);
-  resetApp();
+  _state = resetApp(_state);
   _state.search = oldSearchState;
   _state.search.inputValue = userInput;
 };
 
-let closeList = function () {
+let closeList = function (_state) {
   _state.list.open = false;
 };
 
-let showList = function () {
+let showList = function (_state) {
   if (_state.objektId) {
-    closeEditor();
+    closeEditor(_state);
   }
   _state.list.open = !_state.list.open;
 };
@@ -312,7 +410,7 @@ let highlightMarker = function (id) {
   MapFunctions.focusMarker(id);
 };
 
-let addGeomStart = function (id, type) {
+let addGeomStart = function (_state, id, type) {
   if (!_state.search.loading) {
     _state.geometry.addingMarker = true;
     _state.geometry.current = id;
@@ -321,7 +419,7 @@ let addGeomStart = function (id, type) {
   }
 };
 
-let addGeomAbort = function () {
+let addGeomAbort = function (_state) {
   _state.geometry.addingMarker = false;
   _state.geometry.current = null;
   _state.geometry.result = null;
@@ -329,29 +427,82 @@ let addGeomAbort = function () {
   MapFunctions.removeGeom(_state);
 };
 
-let addGeomEnd = function () {
+let addGeomEnd = function (_state) {
   _state.geometry.savingMarker = true;
   _state.geometry.result = MapFunctions.getCurrentEditGeom();
   _state.geometry.addingMarker = false;
-  updateEditedLocation();
+  updateEditedLocation(_state);
 };
 
-let getCurrentLocation = function () {
+let getCurrentLocation = function (_state) {
   _state.map.myLocation = true;
   MapFunctions.findMyPosition();
 };
 
-let locationHasBeenSet = function () {
+let locationHasBeenSet = function (_state) {
   _state.map.myLocation = false;
 };
 
-let updateValidatorResponse = function (response) {
+let updateValidatorResponse = function (_state, response) {
   _state.validatorResponse = response;
+  if(evaluateResponse(response)) {
+    updateWriteStatus(_state, 'processing');
+    Writer.registerObjekt(_state);
+  } else {
+    updateWriteStatus(_state, 'error');
+  }
 };
 
+let updateValMessage = function (_state, message) {
+  _state.editor.validationMessage = message;
+};
 
-// Initaliserer skaping av objektEdited.
-let createObjektEdited = function () {
+let makeThisStateActive = function (_state) {
+  setActiveState(_state.listPosition);
+  rebuildFromState(_state);
+};
+
+let setPrevSelectedIndex = function (_state, selectedIndex) {
+  _state.search.selectedIndex = selectedIndex;
+};
+
+let minimizeEditor = function () {
+  let newState = createNewState();
+  setActiveState(newState);
+};
+
+let terminateState = function (_state) {
+  deleteState(_state.listPosition);
+
+  if (getActiveState.length === 0) {
+    let newState = createNewState();
+    setActiveState(newState);
+  }
+};
+
+let updateWriteStatus = function (_state, status) {
+  switch (status) {
+    case 'processing':
+      minimizeEditor();
+      break;
+    case 'done':
+      // terminateState(_state);
+      break;
+    default:
+  }
+
+  _state.writeStatus = status;
+};
+
+let updateProgressStatus = function (_state, status) {
+  _state.progressStatus.push(status);
+};
+
+/*
+===================== Create or update the model =====================
+*/
+
+let createObjektEdited = function (_state) {
   if (_state.objekt) {
     _state.objektEdited = simpleDeepCopy(_state.objekt);
   } else {
@@ -367,10 +518,10 @@ let createObjektEdited = function () {
   }
 };
 
-let findiEgenskapByString = function (egenskap) {
+let findiEgenskapByString = function (_state, egenskap) {
   let returnEgenskap = null;
   _state.objektType.egenskapsTyper.every((element, index, array) => {
-    if (element.navn.toLowerCase().includes(egenskap)) {
+    if (element.navn && element.navn.toLowerCase().indexOf(egenskap) !== -1) {
       returnEgenskap = element;
       return false;
     }
@@ -380,7 +531,7 @@ let findiEgenskapByString = function (egenskap) {
   return returnEgenskap;
 };
 
-let findEnumValueFromObjektType = function (egenskapFromObjektType, egenskapsId, enumId) {
+let findEnumValueFromObjektType = function (_state, egenskapFromObjektType, egenskapsId, enumId) {
   if (egenskapFromObjektType.type === "ENUM") {
     for (var testEnumId in egenskapFromObjektType.enumVerdier) {
       if (String(testEnumId) === String(enumId)) {
@@ -392,7 +543,7 @@ let findEnumValueFromObjektType = function (egenskapFromObjektType, egenskapsId,
   return null;
 };
 
-let findEgenskapInObjektType = function (egenskapsId) {
+let findEgenskapInObjektType = function (_state, egenskapsId) {
   if (_state.objektType) {
     // Finn riktig egenskap
 
@@ -406,7 +557,7 @@ let findEgenskapInObjektType = function (egenskapsId) {
   }
 };
 
-let findPositionToEgenskapInObjektEdited = function (egenskapsId) {
+let findPositionToEgenskapInObjektEdited = function (_state, egenskapsId) {
   if (_state.objektEdited) {
     // Finn riktig egenskap
 
@@ -423,17 +574,17 @@ let findPositionToEgenskapInObjektEdited = function (egenskapsId) {
 };
 
 // Function for each component that we care about. Needs to either create new structure or just edit what's already there
-let updateENUMValue = function (egenskapsId, enumObj) {
+let updateENUMValue = function (_state, egenskapsId, enumObj) {
   if (!_state.objektEdited) {
-    createObjektEdited();
+    createObjektEdited(_state);
   }
 
   // Initaliserer verdier
   let enumId = enumObj.payload;
   let enumVerdi = enumObj.text;
 
-  let egenskapFromObjektType = findEgenskapInObjektType(egenskapsId);
-  let enumVerdiFromObjektType = findEnumValueFromObjektType(egenskapFromObjektType, egenskapsId, enumId);
+  let egenskapFromObjektType = findEgenskapInObjektType(_state, egenskapsId);
+  let enumVerdiFromObjektType = findEnumValueFromObjektType(_state, egenskapFromObjektType, egenskapsId, enumId);
 
   if (enumVerdiFromObjektType) {
     let newValue = {
@@ -443,18 +594,18 @@ let updateENUMValue = function (egenskapsId, enumObj) {
       enumVerdi: enumVerdiFromObjektType
     };
 
-    let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(egenskapsId);
+    let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(_state, egenskapsId);
     _state.objektEdited.egenskaper[egenskapPositionFromObjektEdited] = newValue;
   }
 
 };
 
-let updateFieldValue = function (egenskapsId, fieldValue, fieldType) {
+let updateFieldValue = function (_state, egenskapsId, fieldValue, fieldType) {
   if (!_state.objektEdited) {
-    createObjektEdited();
+    createObjektEdited(_state);
   }
 
-  let egenskapFromObjektType = findEgenskapInObjektType(egenskapsId);
+  let egenskapFromObjektType = findEgenskapInObjektType(_state, egenskapsId);
 
   if (egenskapFromObjektType) {
     let newValue = null;
@@ -476,15 +627,15 @@ let updateFieldValue = function (egenskapsId, fieldValue, fieldType) {
     }
 
 
-    let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(egenskapsId);
+    let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(_state, egenskapsId);
     _state.objektEdited.egenskaper[egenskapPositionFromObjektEdited] = newValue;
   }
 
 };
 
-let updateEditedLocation = function () {
+let updateEditedLocation = function (_state) {
   if (!_state.objektEdited) {
-    createObjektEdited();
+    createObjektEdited(_state);
   }
 
   if (_state.geometry.result) {
@@ -494,7 +645,7 @@ let updateEditedLocation = function () {
         let lat = _state.geometry.result._latlng.lat;
 
         // Egengeometri
-        let geometriEgenskap = findiEgenskapByString('geometri, punkt');
+        let geometriEgenskap = findiEgenskapByString(_state, 'geometri, punkt');
         let WGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [lng, lat]);
 
         if (geometriEgenskap) {
@@ -504,7 +655,7 @@ let updateEditedLocation = function () {
             verdi: 'POINT (' + WGS84ToUTM33[0] + ' ' + WGS84ToUTM33[1] + ')'
           };
 
-          let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(geometriEgenskap.id);
+          let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(_state, geometriEgenskap.id);
           _state.objektEdited.egenskaper[egenskapPositionFromObjektEdited] = newValue;
         }
 
@@ -549,131 +700,213 @@ let updateEditedLocation = function () {
   }
 };
 
-let updateValMessage = function (message) {
-  _state.editor.validationMessage = message;
-};
+/*
+===================== Actions =====================
+*/
 
-// Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value, response, result;
+  let listPosition, _state, id, objektType, inputValue, userInput, objektTypeId;
+  let selectedIndex, extraEgenskap, type, value, response, result, status;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
       id = action.id;
-      setObjektID(id);
+      setObjektID(_state, id);
       break;
 
     case RegDemConstants.actions.REGDEM_CLOSE_EDITOR:
-      closeEditor();
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      closeEditor(_state);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_EXPAND_EDITOR:
-      expandEditor();
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      expandEditor(_state);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_FETCH_OBJEKT_POSITIONS:
-      fetchObjektPositions();
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      fetchObjektPositions(_state);
       break;
 
     case RegDemConstants.actions.REGDEM_SELECT_EXTRA_EGENSKAP:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
       extraEgenskap = action.extraEgenskap;
-      fetchAllDataFromObjektPosition(extraEgenskap);
+      fetchAllDataFromObjektPosition(_state, extraEgenskap);
       break;
 
     case RegDemConstants.actions.REGDEM_FETCH_OBJEKT_TYPES:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
       objektType = action.objektType;
-      fetchObjektTypes(objektType);
+      fetchObjektTypes(_state, objektType);
       break;
 
     case RegDemConstants.actions.REGDEM_SET_INPUT_VALUE:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
       inputValue = action.inputValue;
-      setInputValue(inputValue);
+      setInputValue(_state, inputValue);
       break;
 
     case RegDemConstants.actions.REGDEM_EXECUTE_SEARCH:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
       objektTypeId = action.objektTypeId;
-      executeSearch(objektTypeId);
+      executeSearch(_state, objektTypeId);
       break;
 
     case RegDemConstants.actions.REGDEM_RESET_APP:
-      resetApp();
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      resetApp(_state);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_CLOSE_LIST:
-      closeList();
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      closeList(_state);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_SHOW_LIST:
-      showList();
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      showList(_state);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_HIGHLIGHT_MARKER:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
       id = action.id;
-      highlightMarker(id);
+      highlightMarker(_state, id);
       break;
 
     case RegDemConstants.actions.REGDEM_ADD_GEOM_START:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
       id = action.id;
       type = action.type;
-      addGeomStart(id, type);
+      addGeomStart(_state, id, type);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_ABORT_GEOM_ADD:
-      addGeomAbort();
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      addGeomAbort(_state);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_ADD_GEOM_END:
-      addGeomEnd();
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      addGeomEnd(_state);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_GET_CURRENT_LOCATION:
-      getCurrentLocation();
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      getCurrentLocation(_state);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_LOCATION_HAS_BEEN_SET:
-      locationHasBeenSet();
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      locationHasBeenSet(_state);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_GO_BACK_AND_RESET:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
       userInput = action.userInput;
-      goBackAndReset(userInput);
+      goBackAndReset(_state, userInput);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_UPDATE_VAL_MESSAGE:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
       let message = action.message;
-      updateValMessage(message);
+      updateValMessage(_state, message);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_UPDATE_ENUM_VALUE:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
       id = action.id;
       value = action.value;
-      updateENUMValue(id, value);
+      updateENUMValue(_state, id, value);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_UPDATE_FIELD_VALUE:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
       id = action.id;
       value = action.value;
       type = action.type;
-      updateFieldValue(id, value, type);
+      updateFieldValue(_state, id, value, type);
       RegDemStore.emitChange();
       break;
 
     case RegDemConstants.actions.REGDEM_UPDATE_VALIDATOR_RESPONSE:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
       response = action.response;
-      updateValidatorResponse(response);
+      updateValidatorResponse(_state, response);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_MAKE_THIS_STATE_ACTIVE:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      makeThisStateActive(_state);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_SET_PREV_SELECTED_INDEX:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      selectedIndex = action.selectedIndex;
+      setPrevSelectedIndex(_state, selectedIndex);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_TERMINATE_STATE:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      terminateState(_state);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_UPDATE_WRITE_STATUS:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      status = action.status;
+      updateWriteStatus(_state, status);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_UPDATE_PROGRESS_STATUS:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      status = action.status;
+      updateProgressStatus(_state, status);
       RegDemStore.emitChange();
       break;
 

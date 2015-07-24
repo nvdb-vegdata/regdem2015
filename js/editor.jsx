@@ -1,7 +1,7 @@
 let React = require('react/addons');
 let RegDemActions = require('./actions');
 var RegDemConstants = require('./constants');
-var Validator = require('./validator.js');
+var Writer = require('./writer.js');
 let Helper = require('./helper.js');
 let Parser = require('./parser.js');
 
@@ -22,16 +22,18 @@ let Editor = React.createClass({
   mixins: [React.addons.LinkedStateMixin],
 
   closeDialog: function () {
-    RegDemActions.closeEditor();
+    RegDemActions.closeEditor(this.props.data.listPosition);
   },
 
   saveObjekt: function () {
-    Validator.validateObjekt(this.props.data);
+    Writer.validateObjekt(this.props.data);
   },
 
-  expandForm: function () {
-    if (!this.props.data.editor.expanded) {
-      RegDemActions.expandEditor();
+  tapEditor: function () {
+    if (!this.props.data.active) {
+      RegDemActions.makeThisStateActive(this.props.data.listPosition);
+    } else if (!this.props.data.editor.expanded) {
+      RegDemActions.expandEditor(this.props.data.listPosition);
     }
   },
 
@@ -41,7 +43,7 @@ let Editor = React.createClass({
     let objekt = this.props.data.objektEdited || this.props.data.objekt;
 
     if (objekt && objekt.egenskaper) {
-      for (var i = 0; i < objekt.egenskaper.length; i++) {
+      for (let i = 0; i < objekt.egenskaper.length; i++) {
         if (objekt.egenskaper[i].id === egenskap.id) {
           return returFunksjon(objekt.egenskaper[i]);
         }
@@ -70,7 +72,7 @@ let Editor = React.createClass({
 
     // Forbereder validering
     let warningsFull = {};
-    for (var i in egenskapsTyper) {
+    for (let i in egenskapsTyper) {
       let index = egenskapsTyper[i].id
       warningsFull[index] = warnings[index] ? warnings[index].kode : "";
     }
@@ -107,6 +109,7 @@ let Editor = React.createClass({
     let CardTitleClassName = 'Editor-hidden';
     let CardTextClassName = 'Editor-hidden';
     let CardActionsClassName = 'Editor-knapp-container Editor-hidden';
+    let MinimizedStatusClassName = 'Editor-hidden';
 
     // Hvis state er loading
     if (this.props.data.editor.loading) {
@@ -120,8 +123,11 @@ let Editor = React.createClass({
     }
 
     // Når objektet er hentet og ikke laster lenger
-    if ((objekt || objektId === -1)  && !this.props.data.editor.loading && !this.props.data.geometry.addingMarker) {
+    if ((objekt || objektId === -1)  && !this.props.data.editor.loading && !this.props.data.geometry.addingMarker && this.props.data.active) {
       EditorClassName = 'Editor';
+      if (this.props.numberOfInactive > 0) {
+        EditorClassName += ' Editor-other-inactive';
+      }
       EditorCloseClassName = 'Editor-lukk';
       EditorCardClassName = 'Editor-Card Editor-Card-loaded';
       CircularProgressClassName = 'Editor-loader Editor-hidden';
@@ -133,7 +139,7 @@ let Editor = React.createClass({
         CardActionsClassName = 'Editor-knapp-container';
 
         let geomEgenskaper = {};
-        for (var i = 0; i < egenskapsTyper.length; i++) {
+        for (let i = 0; i < egenskapsTyper.length; i++) {
           let navn = egenskapsTyper[i].navn;
           if (navn.indexOf('Geometri') === 0 ) {
             if (navn.indexOf('punkt') >= 0) {
@@ -147,7 +153,7 @@ let Editor = React.createClass({
         }
 
         let actualGeomEgenskaper = {};
-        for (var i = 0; i < objekt.egenskaper.length; i++) {
+        for (let i = 0; i < objekt.egenskaper.length; i++) {
           let navn = objekt.egenskaper[i].navn;
           if (navn.indexOf('Geometri') === 0 ) {
             if (navn.indexOf('punkt') >= 0) {
@@ -177,6 +183,7 @@ let Editor = React.createClass({
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
+                                        data={this.props.data}
                                       />);
                             case 'Tekst':
                               return (<Fields.Tekst
@@ -184,6 +191,7 @@ let Editor = React.createClass({
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
+                                        data={this.props.data}
                                       />);
                             case 'Tall':
                               return (<Fields.Tall
@@ -191,6 +199,7 @@ let Editor = React.createClass({
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
+                                        data={this.props.data}
                                       />);
                             case 'Klokkeslett':
                               return (<Fields.Klokkeslett
@@ -198,6 +207,7 @@ let Editor = React.createClass({
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
+                                        data={this.props.data}
                                         />);
                             case 'Dato':
                               return (<Fields.Dato
@@ -205,6 +215,7 @@ let Editor = React.createClass({
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
                                         key={objektId + '-' + egenskap.id}
+                                        data={this.props.data}
                                       />);
                             default:
                               break;
@@ -215,12 +226,24 @@ let Editor = React.createClass({
       }
     }
 
+    if (!this.props.data.active) {
+      EditorClassName = 'Editor Editor-inactive Editor-inactive-pos-' + this.props.inactiveNumber;
+      EditorCloseClassName = 'Editor-lukk Editor-hidden';
+      EditorCardClassName = 'Editor-Card Editor-Card-loaded Editor-pointer';
+      CircularProgressClassName = 'Editor-loader Editor-hidden';
+      CardTitleClassName = 'Editor-CardTitle Editor-hidden';
+      MinimizedStatusClassName = 'Editor-minimized-status';
+    }
+
     return (
       <div className={EditorClassName}>
-        <Card className={EditorCardClassName} onTouchTap={this.expandForm}>
+        <Card className={EditorCardClassName} onTouchTap={this.tapEditor}>
             <CardActions className={EditorCloseClassName}><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
             <CircularProgress mode="indeterminate" className={CircularProgressClassName} />
 
+            <CardText className={MinimizedStatusClassName}>
+              {this.props.data.objektId + '-' + (this.props.data.progressStatus.length > 0 ? this.props.data.progressStatus[this.props.data.progressStatus.length-1] : '')}
+            </CardText>
             <CardTitle title={formName} subtitle={subtitle} className={CardTitleClassName} />
             <CardText className={CardTextClassName}>
               {GeomFields}

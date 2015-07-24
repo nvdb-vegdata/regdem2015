@@ -44,7 +44,8 @@ let displayMarkers = function (kart, state) {
   let activeObjekt = state.objektEdited ? state.objektEdited : (state.objekt ? state.objekt : null);
   let activeObjektId = activeObjekt ? activeObjekt.objektId : null;
 
-  for (let vegObjekt of objekter) {
+  for (let index in objekter) {
+    let vegObjekt = objekter[index];
     if ((addingMarker && activeObjektId && vegObjekt.objektId === activeObjektId) || (savingMarker && vegObjekt.objektId === activeObjektId)) {
       continue;
     }
@@ -56,7 +57,7 @@ let displayMarkers = function (kart, state) {
     let geom = omnivore.wkt.parse(posisjon);
 
     geom.on('click', () => {
-      RegDemActions.setObjektID(vegObjekt.objektId);
+      RegDemActions.setObjektID(state.listPosition, vegObjekt.objektId);
     });
 
     markerList[vegObjekt.objektId] = {obj: geom, type: posisjon.charAt(0)};
@@ -68,7 +69,7 @@ let displayMarkers = function (kart, state) {
     let geom = omnivore.wkt.parse(posisjon);
 
     geom.on('click', () => {
-      RegDemActions.setObjektID(activeObjekt.objektId);
+      RegDemActions.setObjektID(state.listPosition, activeObjekt.objektId);
     });
 
     markerList[activeObjekt.objektId] = {obj: geom, type: posisjon.charAt(0)};
@@ -83,7 +84,7 @@ let displayMarkers = function (kart, state) {
 // ObjektID brukes for å håndtere opacity-endringer.
 let update = function (kart, state) {
   clearMarkers();
-  if (state.searchResults.totaltAntallReturnert > 0) {
+  if (state.searchResults && state.searchResults.totaltAntallReturnert > 0) {
     displayMarkers(kart, state);
   }
 };

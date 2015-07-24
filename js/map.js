@@ -67,7 +67,7 @@ let MapComponent = React.createClass({
 
     // PLassering av zoom kontrollene
     if (window.matchMedia('(min-width: ' + RegDemConstants.values.REGDEM_SIZE_DESKTOP + 'px)').matches) {
-      new L.Control.Zoom( {position: 'bottomleft'}).addTo(mapData);
+      new L.Control.Zoom( {position: 'topright'}).addTo(mapData);
     }
 
     // Min posisjon
@@ -85,11 +85,11 @@ let MapComponent = React.createClass({
 
     // Events
     mapData.on('locationfound', () => {
-      RegDemActions.locationHasBeenSet();
+      RegDemActions.locationHasBeenSet(this.props.data.listPosition);
     });
 
     mapData.on('locationerror', () => {
-      RegDemActions.locationHasBeenSet();
+      RegDemActions.locationHasBeenSet(this.props.data.listPosition);
     });
 
     mapData.on('move', () => {
@@ -100,7 +100,7 @@ let MapComponent = React.createClass({
 
     mapData.on('moveend', () => {
       if (this.props.data.objektTypeId) {
-        RegDemActions.fetchObjektPositions();
+        RegDemActions.fetchObjektPositions(this.props.data.listPosition);
       }
     });
   },
