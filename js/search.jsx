@@ -15,11 +15,6 @@ var injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
 let Sok = React.createClass({
-  getInitialState: function() {
-    return {
-      prevSelectedIndex: null
-    };
-  },
 
   render: function() {
     let leftMostIcon = (<i className="material-icons search-field-search-icon">search</i>);
@@ -86,6 +81,10 @@ let Sok = React.createClass({
   },
 
   componentDidUpdate: function (prevProps) {
+    if (prevProps.data.listPosition !== this.props.data.listPosition) {
+      this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
+    }
+
     if (prevProps.data.objektTypeId && !this.props.data.objektTypeId) {
       this.refs.typeahead.showDropdown();
       this.refs.typeahead.focus();
@@ -95,7 +94,7 @@ let Sok = React.createClass({
   handleInputClick: function(event) {
     if (this.props.data.objektTypeId) {
       this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
-      RegDemActions.goBackAndReset(this.refs.typeahead.userInputValue);
+      RegDemActions.goBackAndReset(this.props.data.listPosition, this.refs.typeahead.userInputValue);
     } else if (this.props.data.search.inputValue === ''){
       this.handleChange(event);
     }
@@ -108,7 +107,7 @@ let Sok = React.createClass({
   },
 
   getOptions: function(input) {
-    RegDemActions.fetchObjektTypes(input);
+    RegDemActions.fetchObjektTypes(this.props.data.listPosition, input);
   },
 
   handleOptionChange: function(event, option) {
@@ -121,7 +120,7 @@ let Sok = React.createClass({
   },
 
   setInputValue: function(value) {
-    RegDemActions.setInputValue(value);
+    RegDemActions.setInputValue(this.props.data.listPosition, value);
   },
 
   handleHint: function(inputValue, options) {
@@ -141,7 +140,7 @@ let Sok = React.createClass({
   },
 
   handleKeyDown: function(event, optionData, selectedIndex) {
-    if (selectedIndex === -1 && this.state.prevSelectedIndex !== selectedIndex) {
+    if (selectedIndex === -1 && this.props.data.search.selectedIndex !== selectedIndex) {
       this.setInputValue(optionData);
     }
     if (event.keyCode === 13) {
@@ -156,21 +155,21 @@ let Sok = React.createClass({
         }
       }
     }
-    this.state.prevSelectedIndex = selectedIndex;
+    RegDemActions.setPrevSelectedIndex(this.props.data.listPosition, selectedIndex);
   },
 
   executeSearch: function (objektTypeId) {
-    RegDemActions.executeSearch(objektTypeId);
+    RegDemActions.executeSearch(this.props.data.listPosition, objektTypeId);
     this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').setAttribute('disabled', 'disabled');
   },
 
   handleRemoveClick: function() {
     this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
-    RegDemActions.resetApp();
+    RegDemActions.terminateState(this.props.data.listPosition);
   },
 
   handleOpenList: function() {
-    RegDemActions.showList();
+    RegDemActions.showList(this.props.data.listPosition);
   }
 });
 

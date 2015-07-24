@@ -45,47 +45,47 @@ let createJSONFromState = function (data) {
   }
 };
 
-let validateObjekt = function (data) {
-  let queryJSON = createJSONFromState(data);
+let validateObjekt = function (_state) {
+  let queryJSON = createJSONFromState(_state);
   let url = '/nvdb/apiskriv/v2/endringssett/validator';
 
   if (queryJSON) {
     Fetch.sendQuery('POST', url, queryJSON, (returnData) => {
-      RegDemActions.updateValidatorResponse(returnData);
+      RegDemActions.updateValidatorResponse(_state.listPosition, returnData);
     });
   }
 };
 
-let registerObjekt = function (data) {
-  let queryJSON = createJSONFromState(data);
+let registerObjekt = function (_state) {
+  let queryJSON = createJSONFromState(_state);
   let url = '/nvdb/apiskriv/v2/endringssett';
   Fetch.sendQuery('POST', url, queryJSON, (responseData) => {
-    processObjekt(responseData)
+    processObjekt(_state, responseData);
   });
 };
 
-let processObjekt = function (data) {
+let processObjekt = function (_state, data) {
   // TODO: Mer robust trimming av lenken.
   let startURL = data[1].src.substring(27);
   let statusURL = data[4].src.substring(27);
   Fetch.sendQuery('POST', startURL, {}, (response) => {
     console.log('processing: ', response);
-    checkProgress(statusURL);
+    checkProgress(_state, statusURL);
   });
 }
 
-let checkProgress = function (url) {
+let checkProgress = function (_state, url) {
   Fetch.sendQuery('GET', url, {}, (response) => {
     console.log(response);
-    RegDemActions.updateProgressStatus(response);
+    RegDemActions.updateProgressStatus(_state.listPosition, response);
     if (response === 'UTFØRT') {
-      RegDemActions.updateWriteStatus('done');
+      RegDemActions.updateWriteStatus(_state.listPosition, 'done');
     } else if (response === 'AVVIST') {
-      RegDemActions.updateWriteStatus('error');
+      RegDemActions.updateWriteStatus(_state.listPosition, 'error');
     } else if (response == 'KANSELLERT') {
-      RegDemActions.updateWriteStatus('error');
+      RegDemActions.updateWriteStatus(_state.listPosition, 'error');
     } else {
-      checkProgress(url);
+      checkProgress(_state, url);
     }
   });
 }

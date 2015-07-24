@@ -34,7 +34,7 @@ let Fields = {
 
     handleChange: function (e) {
       this.setState({selectValue: e.target.value.payload});
-      RegDemActions.updateENUMValue(this.props.egenskaper.id, e.target.value);
+      RegDemActions.updateENUMValue(this.props.data.listPosition, this.props.egenskaper.id, e.target.value);
     },
 
     render: function() {
@@ -103,7 +103,7 @@ let Fields = {
 
     handleChange: function (e) {
       this.setState({textValue: e.target.value});
-      RegDemActions.updateFieldValue(this.props.egenskaper.id, e.target.value, 'Tekst');
+      RegDemActions.updateFieldValue(this.props.data.listPosition, this.props.egenskaper.id, e.target.value, 'Tekst');
     },
 
     render: function() {
@@ -163,7 +163,7 @@ let Fields = {
           numberValue: newValue,
           numberValueErrorText: ''
         });
-        RegDemActions.updateFieldValue(this.props.egenskaper.id, newValue, 'Tall');
+        RegDemActions.updateFieldValue(this.props.data.listPosition, this.props.egenskaper.id, newValue, 'Tall');
       } else {
         this.setState({
           numberValue: newValue,
@@ -226,7 +226,7 @@ let Fields = {
       let nyTid = new Date(time);
       let timeValue = Helper.twoDigits(nyTid.getHours()) + ':' + Helper.twoDigits(nyTid.getMinutes());
       this.setState({klokkeVerdi: timeValue});
-      RegDemActions.updateFieldValue(this.props.egenskaper.id, timeValue, 'Tid');
+      RegDemActions.updateFieldValue(this.props.data.listPosition, his.props.egenskaper.id, timeValue, 'Tid');
     },
 
     handleClear: function () {
@@ -235,7 +235,7 @@ let Fields = {
         klokkeVerdi: '',
         klokkeVerdiErrorText: ''
       });
-      RegDemActions.updateFieldValue(this.props.egenskaper.id, '', 'Tid');
+      RegDemActions.updateFieldValue(this.props.data.listPosition, this.props.egenskaper.id, '', 'Tid');
     },
 
     componentDidMount: function () {
@@ -318,7 +318,7 @@ let Fields = {
         datoVerdi: dateValue,
         datoVerdiErrorText: ''
       });
-      RegDemActions.updateFieldValue(this.props.egenskaper.id, dateValue, 'Dato');
+      RegDemActions.updateFieldValue(this.props.data.listPosition, this.props.egenskaper.id, dateValue, 'Dato');
     },
 
     handleClear: function () {
@@ -327,7 +327,7 @@ let Fields = {
         datoVerdi: '',
         datoVerdiErrorText: ''
       });
-      RegDemActions.updateFieldValue(this.props.egenskaper.id, '', 'Dato');
+      RegDemActions.updateFieldValue(this.props.data.listPosition, this.props.egenskaper.id, '', 'Dato');
     },
 
     componentDidMount: function () {
