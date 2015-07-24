@@ -29,8 +29,10 @@ let Editor = React.createClass({
     Validator.validateObjekt(this.props.data);
   },
 
-  expandForm: function () {
-    if (!this.props.data.editor.expanded) {
+  tapEditor: function () {
+    if (!this.props.data.active) {
+      RegDemActions.makeThisStateActive(this.props.data.listPosition);
+    } else if (!this.props.data.editor.expanded) {
       RegDemActions.expandEditor(this.props.data.listPosition);
     }
   },
@@ -233,7 +235,7 @@ let Editor = React.createClass({
 
     return (
       <div className={EditorClassName}>
-        <Card className={EditorCardClassName} onTouchTap={this.expandForm}>
+        <Card className={EditorCardClassName} onTouchTap={this.tapEditor}>
             <CardActions className={EditorCloseClassName}><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
             <CircularProgress mode="indeterminate" className={CircularProgressClassName} />
 
