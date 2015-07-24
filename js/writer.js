@@ -76,6 +76,16 @@ let registerObjekt = function (data) {
   });
 };
 
+let processObjekt = function (data) {
+  // TODO: Mer robust trimming av lenken.
+  let startURL = data[1].src.substring(27);
+  let statusURL = data[4].src.substring(27);
+  Fetch.sendQuery('POST', startURL, {}, (response) => {
+    console.log('processing: ', response);
+    checkProgress(statusURL);
+  });
+}
+
 
 module.exports = {
   validateObjekt: validateObjekt,
