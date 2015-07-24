@@ -117,6 +117,7 @@ let setActiveState = function (index) {
   _states.activeState = index;
 
   _states.list[index].active = true;
+  _states.list[index].map.myLocation = false;
 };
 
 let getInactiveState = function () {
