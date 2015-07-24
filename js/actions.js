@@ -127,6 +127,13 @@ var RegDemActions = {
       actionType: RegDemConstants.actions.REGDEM_UPDATE_VALIDATOR_RESPONSE,
       response: response
     });
+  },
+  updateWriteStatus: function (status) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_UPDATE_WRITE_STATUS,
+      status: status
+    })
+  },
   updateProgressStatus: function (status) {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_UPDATE_PROGRESS_STATUS,
