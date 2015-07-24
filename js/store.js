@@ -32,6 +32,7 @@ let _emptyState = {
 
   validatorResponse: null,
   writeStatus: null,
+  progressStatus: [],
 
   editor: {
     // Hvorvidt editor har lastet
@@ -119,7 +120,15 @@ let getInactiveState = function () {
   });
 };
 
+let updateState = function (index, _state) {
+  _states.list[index] = _state;
+  return _states.list[index];
+};
+
 let initializeStates = function () {
+  createNewState();
+  createNewState();
+  createNewState();
   createNewState();
   let newStatePosition = createNewState();
   setActiveState(newStatePosition);
@@ -236,6 +245,15 @@ let getNewData = function (_state) {
   }
 };
 
+let rebuildFromState = function (_state) {
+  // Markører
+  MapFunctions.clearEditGeom();
+  MapFunctions.updateMarkers(_state);
+
+  // GPS
+  _state.map.myLocation = false;
+};
+
 /*
 ===================== Functions called by Actions =====================
 */
@@ -337,8 +355,17 @@ let executeSearch = function (_state, objektTypeId) {
 let resetApp = function (_state) {
   MapFunctions.clearMarkers();
   MapFunctions.clearEditGeom();
-  _state = simpleDeepCopy(_emptyState);
+
+  let listPosition = _state.listPosition;
+  let active = _state.active;
+
+  _state = updateState(listPosition, simpleDeepCopy(_emptyState));
+
+  _state.listPosition = listPosition;
+  _state.active = active;
   _state.map.myLocation = false;
+
+  return _state;
 };
 
 let resetObjekt = function (_state) {
@@ -358,7 +385,7 @@ let resetObjekt = function (_state) {
 
 let goBackAndReset = function (_state, userInput) {
   let oldSearchState = simpleDeepCopy(_state.search);
-  resetApp(_state);
+  _state = resetApp(_state);
   _state.search = oldSearchState;
   _state.search.inputValue = userInput;
 };

@@ -81,6 +81,10 @@ let Sok = React.createClass({
   },
 
   componentDidUpdate: function (prevProps) {
+    if (prevProps.data.listPosition !== this.props.data.listPosition) {
+      this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
+    }
+    
     if (prevProps.data.objektTypeId && !this.props.data.objektTypeId) {
       this.refs.typeahead.showDropdown();
       this.refs.typeahead.focus();
