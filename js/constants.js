@@ -23,6 +23,7 @@ module.exports.actions = keyMirror({
   REGDEM_UPDATE_ENUM_VALUE: null,
   REGDEM_UPDATE_FIELD_VALUE: null,
   REGDEM_UPDATE_VALIDATOR_RESPONSE: null
+  REGDEM_UPDATE_PROGRESS_STATUS: null
 });
 
 module.exports.values = {

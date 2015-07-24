@@ -25,6 +25,7 @@ let _state = {
   searchResultsFull: null,
 
   validatorResponse: null,
+  progressStatus: [],
 
   editor: {
     // Hvorvidt editor har lastet
@@ -553,6 +554,10 @@ let updateValMessage = function (message) {
   _state.editor.validationMessage = message;
 };
 
+let updateProgressStatus = function (status) {
+  _state.progressStatus.push(status);
+};
+
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
   let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value, response, result;
@@ -674,6 +679,12 @@ AppDispatcher.register(function(action) {
     case RegDemConstants.actions.REGDEM_UPDATE_VALIDATOR_RESPONSE:
       response = action.response;
       updateValidatorResponse(response);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_UPDATE_PROGRESS_STATUS:
+      let status = action.status;
+      updateProgressStatus(status);
       RegDemStore.emitChange();
       break;
 
