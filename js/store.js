@@ -95,7 +95,9 @@ let deleteState = function (index) {
 };
 
 let getAllStates = function () {
-  return _states.list;
+  return _states.list.filter((value, index) => {
+    return (value);
+  });
 };
 
 let getStateAtIndex = function (index) {
@@ -107,13 +109,13 @@ let getActiveState = function () {
 };
 
 let setActiveState = function (index) {
-  if (_states.activeState) {
+  if (_states.activeState >= 0 && _states.list[_states.activeState]) {
     _states.list[_states.activeState].active = false;
   }
 
   _states.activeState = index;
 
-  _states.list[_states.activeState].active = true;
+  _states.list[index].active = true;
 };
 
 let getInactiveState = function () {
@@ -474,7 +476,7 @@ let minimizeEditor = function () {
 let terminateState = function (_state) {
   deleteState(_state.listPosition);
 
-  if (getActiveState.length === 0) {
+  if (!getActiveState() || getActiveState().length === 0) {
     let newState = createNewState();
     setActiveState(newState);
   }
