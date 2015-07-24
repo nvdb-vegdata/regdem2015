@@ -19,7 +19,6 @@ let _state = {
   objektEdited: null,
   // Hele objektType
   objektType: null,
-  objektEdited: null,
 
   searchResults: null,
   searchResultsFull: null,
@@ -370,7 +369,7 @@ let createObjektEdited = function () {
 let findiEgenskapByString = function (egenskap) {
   let returnEgenskap = null;
   _state.objektType.egenskapsTyper.every((element, index, array) => {
-    if (element.navn.toLowerCase().includes(egenskap)) {
+    if (element.navn && element.navn.toLowerCase().indexOf(egenskap) !== -1) {
       returnEgenskap = element;
       return false;
     }
