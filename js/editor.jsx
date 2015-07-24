@@ -109,6 +109,7 @@ let Editor = React.createClass({
     let CardTitleClassName = 'Editor-hidden';
     let CardTextClassName = 'Editor-hidden';
     let CardActionsClassName = 'Editor-knapp-container Editor-hidden';
+    let MinimizedStatusClassName = 'Editor-hidden';
 
     // Hvis state er loading
     if (this.props.data.editor.loading) {
@@ -230,7 +231,8 @@ let Editor = React.createClass({
       EditorCloseClassName = 'Editor-lukk Editor-hidden';
       EditorCardClassName = 'Editor-Card Editor-Card-loaded Editor-pointer';
       CircularProgressClassName = 'Editor-loader Editor-hidden';
-      CardTitleClassName = 'Editor-CardTitle';
+      CardTitleClassName = 'Editor-CardTitle Editor-hidden';
+      MinimizedStatusClassName = 'Editor-minimized-status';
     }
 
     return (
@@ -239,6 +241,9 @@ let Editor = React.createClass({
             <CardActions className={EditorCloseClassName}><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
             <CircularProgress mode="indeterminate" className={CircularProgressClassName} />
 
+            <CardText className={MinimizedStatusClassName}>
+              {this.props.data.objektId}
+            </CardText>
             <CardTitle title={formName} subtitle={subtitle} className={CardTitleClassName} />
             <CardText className={CardTextClassName}>
               {GeomFields}
