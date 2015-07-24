@@ -86,14 +86,15 @@ let Fields = {
       return {
         textValue: this.props.verdi,
         textValueErrorText: '',
-        //currentValueIsValidated: false
+        currentlyValidated: false
       };
     },
 
     componentWillReceiveProps: function (nextProps) {
-      if (this.props.verdi === nextProps.verdi && nextProps.warning) {
+      let validated = nextProps.data.editor.currentlyValidated;
+      if (nextProps.warning && validated) {
         this.setState({
-          textValueErrorText: nextProps.warning
+          textValueErrorText: nextProps.warning,
         });
       } else {
         this.setState({
@@ -104,7 +105,7 @@ let Fields = {
 
     handleChange: function (e) {
       this.setState({
-        textValue: e.target.value,
+        textValue: e.target.value
       });
       RegDemActions.updateFieldValue(this.props.data.listPosition, this.props.egenskaper.id, e.target.value, 'Tekst');
     },
@@ -142,7 +143,8 @@ let Fields = {
     getInitialState: function() {
       return {
         numberValue: this.props.verdi,
-        numberValueErrorText: ''
+        numberValueErrorText: '',
+        currentlyValidated: false
       };
     },
 
