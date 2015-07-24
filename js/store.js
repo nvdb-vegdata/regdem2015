@@ -793,7 +793,7 @@ AppDispatcher.register(function(action) {
       listPosition = action.listPosition;
       _state = getStateAtIndex(listPosition);
       id = action.id;
-      highlightMarker(_state, id);
+      highlightMarker(id);
       break;
 
     case RegDemConstants.actions.REGDEM_ADD_GEOM_START:
