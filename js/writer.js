@@ -47,9 +47,10 @@ let createJSONFromState = function (data) {
 
 let validateObjekt = function (data) {
   let queryJSON = createJSONFromState(data);
+  let url = '/nvdb/apiskriv/v2/endringssett/validator';
 
   if (queryJSON) {
-    Fetch.validateObjektSynchronized(queryJSON, (returnData) => {
+    Fetch.sendQuery('POST', url, queryJSON, (returnData) => {
       RegDemActions.updateValidatorResponse(returnData);
     });
   }
@@ -57,22 +58,9 @@ let validateObjekt = function (data) {
 
 let registerObjekt = function (data) {
   let queryJSON = createJSONFromState(data);
-
-  console.log('Start registration: ', queryJSON);
-  Fetch.registrerEndringssett(queryJSON, (returnData) => {
-    console.log(returnData);
-    let startURL = returnData[1].src.substring(27);
-    let statusURL = returnData[4].src.substring(27);
-    console.log(startURL);
-    Fetch.startBehandlingAvEndringssett('POST', startURL, (response) => {
-      console.log('Skrevet. Snakkes.', response);
-    });
-    setInterval(function () {
-      Fetch.startBehandlingAvEndringssett('GET', statusURL, (response) => {
-        console.log(response);
-      });
-    }, 2000);
-
+  let url = '/nvdb/apiskriv/v2/endringssett';
+  Fetch.sendQuery('POST', url, queryJSON, (responseData) => {
+    processObjekt(responseData)
   });
 };
 
@@ -86,6 +74,21 @@ let processObjekt = function (data) {
   });
 }
 
+let checkProgress = function (url) {
+  Fetch.sendQuery('GET', url, {}, (response) => {
+    console.log(response);
+    RegDemActions.updateProgressStatus(response);
+    if (response === 'UTFØRT') {
+      RegDemActions.updateWriteStatus('done');
+    } else if (response === 'AVVIST') {
+      RegDemActions.updateWriteStatus('error');
+    } else if (response == 'KANSELLERT') {
+      RegDemActions.updateWriteStatus('error');
+    } else {
+      checkProgress(url);
+    }
+  });
+}
 
 module.exports = {
   validateObjekt: validateObjekt,
