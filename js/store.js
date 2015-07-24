@@ -419,10 +419,29 @@ let updateValMessage = function (_state, message) {
   _state.editor.validationMessage = message;
 };
 
+let makeThisStateActive = function (_state) {
+  setActiveState(_state.listPosition);
+  rebuildFromState(_state);
+};
 
 let setPrevSelectedIndex = function (_state, selectedIndex) {
   _state.search.selectedIndex = selectedIndex;
 };
+
+let minimizeEditor = function () {
+  let newState = createNewState();
+  setActiveState(newState);
+};
+
+let terminateState = function (_state) {
+  deleteState(_state.listPosition);
+
+  if (getActiveState.length === 0) {
+    let newState = createNewState();
+    setActiveState(newState);
+  }
+};
+
 
 /*
 ===================== Create or update the model =====================
@@ -799,6 +818,12 @@ AppDispatcher.register(function(action) {
       RegDemStore.emitChange();
       break;
 
+    case RegDemConstants.actions.REGDEM_MAKE_THIS_STATE_ACTIVE:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      makeThisStateActive(_state);
+      RegDemStore.emitChange();
+      break;
 
     case RegDemConstants.actions.REGDEM_SET_PREV_SELECTED_INDEX:
       listPosition = action.listPosition;
@@ -807,6 +832,14 @@ AppDispatcher.register(function(action) {
       setPrevSelectedIndex(_state, selectedIndex);
       RegDemStore.emitChange();
       break;
+
+    case RegDemConstants.actions.REGDEM_TERMINATE_STATE:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      terminateState(_state);
+      RegDemStore.emitChange();
+      break;
+
     default:
       // no op
   }

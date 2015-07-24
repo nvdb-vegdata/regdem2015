@@ -150,11 +150,23 @@ var RegDemActions = {
       response: response
     });
   },
+  makeThisStateActive: function (listPosition) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_MAKE_THIS_STATE_ACTIVE,
+      listPosition: listPosition
+    });
+  },
   setPrevSelectedIndex: function (listPosition, selectedIndex) {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_SET_PREV_SELECTED_INDEX,
       listPosition: listPosition,
       selectedIndex: selectedIndex
+    });
+  },
+  terminateState: function (listPosition) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_TERMINATE_STATE,
+      listPosition: listPosition
     });
   }
 };
