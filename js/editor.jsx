@@ -182,7 +182,7 @@ let Editor = React.createClass({
                                         verdi={this.finnENUMVerdi(egenskap)}
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
-                                        key={objektId + '-' + egenskap.id}
+                                        key={objektId + '.' + this.props.data.version + '-' + egenskap.id}
                                         data={this.props.data}
                                       />);
                             case 'Tekst':
@@ -190,7 +190,7 @@ let Editor = React.createClass({
                                         verdi={this.finnTekstVerdi(egenskap)}
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
-                                        key={objektId + '-' + egenskap.id}
+                                        key={objektId + '.' + this.props.data.version + '-' + egenskap.id}
                                         data={this.props.data}
                                       />);
                             case 'Tall':
@@ -198,7 +198,7 @@ let Editor = React.createClass({
                                         verdi={this.finnTekstVerdi(egenskap)}
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
-                                        key={objektId + '-' + egenskap.id}
+                                        key={objektId + '.' + this.props.data.version + '-' + egenskap.id}
                                         data={this.props.data}
                                       />);
                             case 'Klokkeslett':
@@ -206,7 +206,7 @@ let Editor = React.createClass({
                                         verdi={this.finnTekstVerdi(egenskap)}
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
-                                        key={objektId + '-' + egenskap.id}
+                                        key={objektId + '.' + this.props.data.version + '-' + egenskap.id}
                                         data={this.props.data}
                                         />);
                             case 'Dato':
@@ -214,7 +214,7 @@ let Editor = React.createClass({
                                         verdi={this.finnTekstVerdi(egenskap)}
                                         egenskaper={egenskap}
                                         warning={warningsFull[egenskap.id]}
-                                        key={objektId + '-' + egenskap.id}
+                                        key={objektId + '.' + this.props.data.version + '-' + egenskap.id}
                                         data={this.props.data}
                                       />);
                             default:

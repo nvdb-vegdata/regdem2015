@@ -15,6 +15,7 @@ let CHANGE_EVENT = 'change';
 */
 
 let _emptyState = {
+  version: 0, // Brukers spesielt for å få React til å re-render alle felter når man trykker på nytt element knappen og editor allerede har innhold
   listPosition: null,
   active: false,
 
@@ -376,6 +377,7 @@ let resetApp = function (_state) {
 };
 
 let resetObjekt = function (_state) {
+  _state.version = _state.version + 1;
   _state.objektId = null;
   _state.objekt = null;
   _state.objektEdited = null;
