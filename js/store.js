@@ -6,6 +6,7 @@ let RegDemConstants = require('./constants');
 let omnivore = require('leaflet-omnivore');
 let Helper = require('./helper.js');
 let Fetch = require('./fetch.js');
+let Writer = require('./writer.js');
 
 let CHANGE_EVENT = 'change';
 
@@ -24,6 +25,8 @@ let _state = {
   searchResultsFull: null,
 
   validatorResponse: null,
+  writeStatus: null,  // "error", "processing", "done"
+  progressStatus: [],
 
   editor: {
     // Hvorvidt editor har lastet
@@ -169,6 +172,13 @@ let getNewData = function () {
     }
   }
 };
+
+let evaluateResponse = function (response) {
+  // Antar at vi sender ét objekt av gangen.
+  let result = response.resultat.vegObjekter[0];
+  return !(result.feil || result.advarsel);
+
+}
 
 /* Funksjoner for actions */
 
@@ -346,8 +356,13 @@ let locationHasBeenSet = function () {
 
 let updateValidatorResponse = function (response) {
   _state.validatorResponse = response;
+  if(evaluateResponse(response)) {
+    updateWriteStatus('processing');
+    Writer.registerObjekt(_state);
+  } else {
+    updateWriteStatus('error');
+  }
 };
-
 
 // Initaliserer skaping av objektEdited.
 let createObjektEdited = function () {
@@ -552,6 +567,14 @@ let updateValMessage = function (message) {
   _state.editor.validationMessage = message;
 };
 
+let updateWriteStatus = function (status) {
+  _state.writeStatus = status;
+};
+
+let updateProgressStatus = function (status) {
+  _state.progressStatus.push(status);
+};
+
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
   let id, objektType, inputValue, userInput, objektTypeId, extraEgenskap, type, value, response, result;
@@ -673,6 +696,18 @@ AppDispatcher.register(function(action) {
     case RegDemConstants.actions.REGDEM_UPDATE_VALIDATOR_RESPONSE:
       response = action.response;
       updateValidatorResponse(response);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_UPDATE_WRITE_STATUS:
+      let status = action.status;
+      updateWriteStatus(status);
+      RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_UPDATE_PROGRESS_STATUS:
+      let status = action.status;
+      updateProgressStatus(status);
       RegDemStore.emitChange();
       break;
 
