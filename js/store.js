@@ -251,7 +251,13 @@ let getNewData = function (_state) {
 let evaluateResponse = function (response) {
   // Antar at vi sender ét objekt av gangen.
   let result = response.resultat.vegObjekter[0];
-  return !(result.feil || result.advarsel);
+  if (result.feil && result.feil.length > 0) {
+    return 'feil';
+  } else if (result.advarsel && result.advarsel.length > 0) {
+    return 'advarsel';
+  } else {
+    return 'ok';
+  }
 
 }
 
