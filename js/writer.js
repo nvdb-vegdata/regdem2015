@@ -41,10 +41,15 @@ let createJSONFromState = function (data) {
     let egenskaper = objekt.egenskaper.map(function (egenskap) {
       let returnObj = {};
       returnObj['typeId'] = egenskap.id;
-      returnObj['verdi'] = [ egenskap.verdi ];
+
+      if (egenskap.verdi) {
+        returnObj['verdi'] = [ egenskap.verdi ];
+      } else {
+        returnObj['verdi'] = [];
+      }
 
       if (!newObj) {
-        if (returnObj.verdi[0]) {
+        if (egenskap.verdi) {
           returnObj['operasjon'] = 'oppdater';
         } else {
           returnObj['operasjon'] = 'slett';
@@ -98,6 +103,7 @@ let validateObjekt = function (_state) {
   RegDemActions.updateWriteStatus(_state.listPosition, 'validating');
   if (queryJSON) {
     Fetch.sendQuery('POST', url, queryJSON, (returnData) => {
+      console.log(returnData);
       RegDemActions.updateValidatorResponse(_state.listPosition, returnData);
     });
   }
