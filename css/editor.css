@@ -128,12 +128,12 @@
   color: blue;
 }
 .Editor-beskrivelse {
-  color: #999;
+  color: #666;
 }
 .Editor-beskrivelseTekst {
   font-size: 13px;
   line-height: 1.4em;
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.75);
 }
 .Editor-tomKnapp {
   user-select: none;
