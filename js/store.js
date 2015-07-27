@@ -459,12 +459,16 @@ let updateValidatorResponse = function (_state, response) {
   _state.version = _state.version + 1;
   _state.validatorResponse = response;
   _state.editor.currentlyValidated = true;
-  if(evaluateResponse(response)) {
+  var evalResponse = evaluateResponse(response);
+  if (evalResponse === 'ok' || (evalResponse === 'advarsel' && _state.writeStatus === 'warned') ) {
     updateWriteStatus(_state, 'processing');
     Writer.registerObjekt(_state);
+  } else if (evalResponse === 'advarsel') {
+    updateWriteStatus(_state, 'warned');
   } else {
     updateWriteStatus(_state, 'error');
   }
+  console.log(_state.writeStatus);
 };
 
 let updateValMessage = function (_state, message) {
