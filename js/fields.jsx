@@ -16,7 +16,7 @@ let Fields = {
     getInitialState: function() {
       return {
         selectValue: this.props.verdi,
-        selectValueErrorText: ''
+        selectValueErrorText: this.props.warning
       };
     },
 
@@ -73,7 +73,7 @@ let Fields = {
     getInitialState: function() {
       return {
         textValue: this.props.verdi,
-        textValueErrorText: '',
+        textValueErrorText: this.props.warning,
         currentlyValidated: false
       };
     },
@@ -118,7 +118,7 @@ let Fields = {
     getInitialState: function() {
       return {
         numberValue: this.props.verdi,
-        numberValueErrorText: '',
+        numberValueErrorText: this.props.warning,
         currentlyValidated: false
       };
     },
@@ -263,7 +263,7 @@ let Fields = {
     getInitialState: function() {
       return {
         datoVerdi: this.props.verdi,
-        datoVerdiErrorText: ''
+        datoVerdiErrorText: this.props.warning
       };
     },
 
