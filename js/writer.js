@@ -61,7 +61,7 @@ let createJSONFromState = function (data) {
 let validateObjekt = function (_state) {
   let queryJSON = createJSONFromState(_state);
   let url = '/nvdb/apiskriv/v2/endringssett/validator';
-
+  RegDemActions.updateWriteStatus(_state.listPosition, 'validating');
   if (queryJSON) {
     Fetch.sendQuery('POST', url, queryJSON, (returnData) => {
       RegDemActions.updateValidatorResponse(_state.listPosition, returnData);
