@@ -194,7 +194,8 @@
   transform-origin: left top;
 }
 .Editor-selectField > div:nth-of-type(2) > div {
-  overflow: scroll;
+  height: auto !important;
+  white-space: normal !important;
 }
 
 .Editor-permanentEtikett > label:first-child, .Editor-enum label {

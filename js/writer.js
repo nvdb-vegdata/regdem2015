@@ -8,51 +8,85 @@ let createJSONFromState = function (data) {
     let punkt, lokasjon, vegObjekter;
     let veglenke = null;
 
+    /*
+    ===================== Prepares variabler =====================
+    */
+    let typeId = data.objektTypeId;
+    let tempId = '-1';
+    let effektDato = Helper.todaysDate();
+    let datakatalogversjon = '2.03';
+    let newObj = false;
+
+    if (objekt.objektId === -1) {
+      newObj = true;
+    }
+
+    /*
+    ===================== Prepares veglenke =====================
+    */
     if (objekt.lokasjon.veglenker) {
       veglenke = objekt.lokasjon.veglenker[0];
 
       punkt = [{ lenkeId: veglenke.id, posisjon: veglenke.fra }];
-      lokasjon = { punkt: punkt };
+      lokasjon = {};
+      lokasjon['punkt'] = punkt;
+      if (!newObj) {
+        lokasjon['operasjon'] = 'oppdater';
+      }
     }
 
-    let typeId = data.objektTypeId;
-    let tempId = '-1';
-
+    /*
+    ===================== Prepares egenskaper =====================
+    */
     let egenskaper = objekt.egenskaper.map(function (egenskap) {
-      return {
-        typeId: egenskap.id,
-        verdi: [ egenskap.verdi ]
-      };
+      let returnObj = {};
+      returnObj['typeId'] = egenskap.id;
+      returnObj['verdi'] = [ egenskap.verdi ];
+
+      if (!newObj) {
+        if (returnObj.verdi[0]) {
+          returnObj['operasjon'] = 'oppdater';
+        } else {
+          returnObj['operasjon'] = 'slett';
+        }
+      }
+
+      return returnObj;
     });
 
-    egenskaper = egenskaper.filter(function (egenskap) {
-      return egenskap.verdi[0];
-    });
-
-    let effektDato = Helper.todaysDate();
-    let datakatalogversjon = '2.03';
+    /*
+    ===================== Prepares vegobjekt =====================
+    */
+    vegObjekter = [{}];
 
     if (objekt.lokasjon.veglenker) {
-      vegObjekter = [{
-        lokasjon: lokasjon,
-        typeId: typeId,
-        tempId: tempId,
-        egenskaper: egenskaper
-       }];
-     } else {
-       vegObjekter = [{
-         typeId: typeId,
-         tempId: tempId,
-         egenskaper: egenskaper
-        }];
+      vegObjekter[0]['lokasjon'] = lokasjon;
      }
 
-    let registrer = {vegObjekter: vegObjekter};
-    let job = {
-      registrer: registrer,
-      effektDato: effektDato,
-      datakatalogversjon: datakatalogversjon
-    };
+     vegObjekter[0]['typeId'] = typeId;
+     vegObjekter[0]['egenskaper'] = egenskaper;
+
+     if (!newObj) {
+       vegObjekter[0]['nvdbId'] = objekt.objektId;
+       vegObjekter[0]['versjon'] = objekt.versjonsId;
+     } else {
+       vegObjekter[0]['tempId'] = tempId;
+     }
+
+     /*
+     ===================== Finalize objekt construction =====================
+     */
+    let content = {vegObjekter: vegObjekter};
+    let job = {};
+
+    if (newObj) {
+      job['registrer'] = content;
+    } else {
+      job['delvisOppdater'] = content;
+    }
+
+    job['effektDato'] = effektDato;
+    job['datakatalogversjon'] = datakatalogversjon;
 
     return job;
   }
