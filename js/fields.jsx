@@ -20,18 +20,6 @@ let Fields = {
       };
     },
 
-    componentWillReceiveProps: function (nextProps) {
-      if (nextProps.warning && this.props.verdi === nextProps.verdi) {
-        this.setState({
-          selectValueErrorText: nextProps.warning
-        });
-      } else {
-        this.setState({
-          selectValueErrorText: ''
-        });
-      }
-    },
-
     handleChange: function (e) {
       this.setState({selectValue: e.target.value.payload});
       RegDemActions.updateENUMValue(this.props.data.listPosition, this.props.egenskaper.id, e.target.value);
@@ -90,19 +78,6 @@ let Fields = {
       };
     },
 
-    componentWillReceiveProps: function (nextProps) {
-      let validated = nextProps.data.editor.currentlyValidated;
-      if (nextProps.warning && validated) {
-        this.setState({
-          textValueErrorText: nextProps.warning,
-        });
-      } else {
-        this.setState({
-          textValueErrorText: ''
-        })
-      }
-    },
-
     handleChange: function (e) {
       this.setState({
         textValue: e.target.value
@@ -146,18 +121,6 @@ let Fields = {
         numberValueErrorText: '',
         currentlyValidated: false
       };
-    },
-
-    componentWillReceiveProps: function (nextProps) {
-      if (nextProps.warning) {
-        this.setState({
-          numberValueErrorText: nextProps.warning
-        });
-      }  else {
-        this.setState({
-          numberValueErrorText: ''
-        })
-      }
     },
 
     handleChange: function (event) {
@@ -302,18 +265,6 @@ let Fields = {
         datoVerdi: this.props.verdi,
         datoVerdiErrorText: ''
       };
-    },
-
-    componentWillReceiveProps: function (nextProps) {
-      if (nextProps.warning) {
-        this.setState({
-          datoVerdiErrorText: nextProps.warning
-        });
-      }  else {
-        this.setState({
-          datoVerdiErrorText: ''
-        })
-      }
     },
 
     handleChange: function (error, dato) {
