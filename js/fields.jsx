@@ -16,24 +16,15 @@ let Fields = {
     getInitialState: function() {
       return {
         selectValue: this.props.verdi,
-        selectValueErrorText: ''
+        selectValueErrorText: this.props.warning
       };
     },
 
-    componentWillReceiveProps: function (nextProps) {
-      if (nextProps.warning) {
-        this.setState({
-          selectValueErrorText: nextProps.warning
-        });
-      } else {
-        this.setState({
-          selectValueErrorText: ''
-        });
-      }
-    },
-
     handleChange: function (e) {
-      this.setState({selectValue: e.target.value.payload});
+      this.setState({
+        selectValue: e.target.value.payload,
+        selectValueErrorText: ''
+      });
       RegDemActions.updateENUMValue(this.props.data.listPosition, this.props.egenskaper.id, e.target.value);
     },
 
@@ -85,24 +76,16 @@ let Fields = {
     getInitialState: function() {
       return {
         textValue: this.props.verdi,
-        textValueErrorText: ''
+        textValueErrorText: this.props.warning,
+        currentlyValidated: false
       };
     },
 
-    componentWillReceiveProps: function (nextProps) {
-      if (nextProps.warning) {
-        this.setState({
-          textValueErrorText: nextProps.warning
-        });
-      } else {
-        this.setState({
-          textValueErrorText: ''
-        })
-      }
-    },
-
     handleChange: function (e) {
-      this.setState({textValue: e.target.value});
+      this.setState({
+        textValue: e.target.value,
+        textValueError: ''
+      });
       RegDemActions.updateFieldValue(this.props.data.listPosition, this.props.egenskaper.id, e.target.value, 'Tekst');
     },
 
@@ -139,20 +122,9 @@ let Fields = {
     getInitialState: function() {
       return {
         numberValue: this.props.verdi,
-        numberValueErrorText: ''
+        numberValueErrorText: this.props.warning,
+        currentlyValidated: false
       };
-    },
-
-    componentWillReceiveProps: function (nextProps) {
-      if (nextProps.warning) {
-        this.setState({
-          numberValueErrorText: nextProps.warning
-        });
-      }  else {
-        this.setState({
-          numberValueErrorText: ''
-        })
-      }
     },
 
     handleChange: function (event) {
@@ -225,7 +197,10 @@ let Fields = {
     handleChange: function (error, time) {
       let nyTid = new Date(time);
       let timeValue = Helper.twoDigits(nyTid.getHours()) + ':' + Helper.twoDigits(nyTid.getMinutes());
-      this.setState({klokkeVerdi: timeValue});
+      this.setState({
+        klokkeVerdi: timeValue,
+        klokkeVerdieErrorText: ''
+      });
       RegDemActions.updateFieldValue(this.props.data.listPosition, his.props.egenskaper.id, timeValue, 'Tid');
     },
 
@@ -295,20 +270,8 @@ let Fields = {
     getInitialState: function() {
       return {
         datoVerdi: this.props.verdi,
-        datoVerdiErrorText: ''
+        datoVerdiErrorText: this.props.warning
       };
-    },
-
-    componentWillReceiveProps: function (nextProps) {
-      if (nextProps.warning) {
-        this.setState({
-          datoVerdiErrorText: nextProps.warning
-        });
-      }  else {
-        this.setState({
-          datoVerdiErrorText: ''
-        })
-      }
     },
 
     handleChange: function (error, dato) {

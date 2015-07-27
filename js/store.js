@@ -43,7 +43,8 @@ let _emptyState = {
     // Hvorvidt editor er collapsed
     expanded: false,
     // Valideringsresultat
-    validationMessage: null
+    validationMessage: null,
+    currentlyValidated: false
   },
 
   search: {
@@ -449,7 +450,9 @@ let locationHasBeenSet = function (_state) {
 };
 
 let updateValidatorResponse = function (_state, response) {
+  _state.version = _state.version + 1;
   _state.validatorResponse = response;
+  _state.editor.currentlyValidated = true;
   if(evaluateResponse(response)) {
     updateWriteStatus(_state, 'processing');
     Writer.registerObjekt(_state);
@@ -611,12 +614,10 @@ let updateFieldValue = function (_state, egenskapsId, fieldValue, fieldType) {
   if (!_state.objektEdited) {
     createObjektEdited(_state);
   }
-
+  _state.editor.currentlyValidated = false;
   let egenskapFromObjektType = findEgenskapInObjektType(_state, egenskapsId);
-
   if (egenskapFromObjektType) {
     let newValue = null;
-
     switch (fieldType) {
       case 'Tekst':
       case 'Tall':
@@ -627,11 +628,10 @@ let updateFieldValue = function (_state, egenskapsId, fieldValue, fieldType) {
           navn: egenskapFromObjektType.navn,
           verdi: fieldValue
         };
-
         break;
       default:
-
     }
+
 
 
     let egenskapPositionFromObjektEdited = findPositionToEgenskapInObjektEdited(_state, egenskapsId);
