@@ -477,6 +477,8 @@ let minimizeEditor = function () {
 };
 
 let terminateState = function (_state) {
+  MapFunctions.clearMarkers();
+  MapFunctions.clearEditGeom();
   deleteState(_state.listPosition);
 
   if (!getActiveState() || getActiveState().length === 0) {
