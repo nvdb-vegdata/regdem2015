@@ -15,6 +15,7 @@ let CHANGE_EVENT = 'change';
 */
 
 let _emptyState = {
+  version: 0, // Brukers spesielt for å få React til å re-render alle felter når man trykker på nytt element knappen og editor allerede har innhold
   listPosition: null,
   active: false,
 
@@ -116,6 +117,7 @@ let setActiveState = function (index) {
   _states.activeState = index;
 
   _states.list[index].active = true;
+  _states.list[index].map.myLocation = false;
 };
 
 let getInactiveState = function () {
@@ -376,6 +378,7 @@ let resetApp = function (_state) {
 };
 
 let resetObjekt = function (_state) {
+  _state.version = _state.version + 1;
   _state.objektId = null;
   _state.objekt = null;
   _state.objektEdited = null;
@@ -791,7 +794,7 @@ AppDispatcher.register(function(action) {
       listPosition = action.listPosition;
       _state = getStateAtIndex(listPosition);
       id = action.id;
-      highlightMarker(_state, id);
+      highlightMarker(id);
       break;
 
     case RegDemConstants.actions.REGDEM_ADD_GEOM_START:
