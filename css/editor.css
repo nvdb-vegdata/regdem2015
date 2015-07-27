@@ -153,9 +153,8 @@
 
 /* Components */
 
-.Editor-enum, .Editor-tekst, .Editor-tall, .Editor-klokkeslett {
+.Editor-enum, .Editor-tekst, .Editor-tall, .Editor-klokkeslett, .Editor-datePicker {
   position: relative;
-  min-height: 100px;
   margin-bottom: 30px;
 }
 .Editor-klokkeslett {
