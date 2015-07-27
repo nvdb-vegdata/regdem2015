@@ -33,6 +33,7 @@
   "rules": {
     "quotes": [2, "single"],
     "new-cap": [2, { "capIsNew": false, "newIsCap": false }],
-    "no-underscore-dangle": 0
+    "no-underscore-dangle": 0,
+    "no-irregular-whitespace": 0
   }
 }
