@@ -450,6 +450,7 @@ let locationHasBeenSet = function (_state) {
 };
 
 let updateValidatorResponse = function (_state, response) {
+  _state.version = _state.version + 1;
   _state.validatorResponse = response;
   _state.editor.currentlyValidated = true;
   if(evaluateResponse(response)) {
