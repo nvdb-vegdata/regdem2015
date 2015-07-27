@@ -18,8 +18,6 @@ var injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
 let Editor = React.createClass({
-  // Mixins, for linked state
-  mixins: [React.addons.LinkedStateMixin],
 
   componentDidUpdate: function () {
     if (this.props.data.scrollToTop) {
