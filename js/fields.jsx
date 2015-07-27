@@ -21,7 +21,10 @@ let Fields = {
     },
 
     handleChange: function (e) {
-      this.setState({selectValue: e.target.value.payload});
+      this.setState({
+        selectValue: e.target.value.payload,
+        selectValueErrorText: ''
+      });
       RegDemActions.updateENUMValue(this.props.data.listPosition, this.props.egenskaper.id, e.target.value);
     },
 
@@ -80,7 +83,8 @@ let Fields = {
 
     handleChange: function (e) {
       this.setState({
-        textValue: e.target.value
+        textValue: e.target.value,
+        textValueError: ''
       });
       RegDemActions.updateFieldValue(this.props.data.listPosition, this.props.egenskaper.id, e.target.value, 'Tekst');
     },
@@ -193,7 +197,10 @@ let Fields = {
     handleChange: function (error, time) {
       let nyTid = new Date(time);
       let timeValue = Helper.twoDigits(nyTid.getHours()) + ':' + Helper.twoDigits(nyTid.getMinutes());
-      this.setState({klokkeVerdi: timeValue});
+      this.setState({
+        klokkeVerdi: timeValue,
+        klokkeVerdieErrorText: ''
+      });
       RegDemActions.updateFieldValue(this.props.data.listPosition, his.props.egenskaper.id, timeValue, 'Tid');
     },
 
