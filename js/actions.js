@@ -182,6 +182,12 @@ var RegDemActions = {
       listPosition: listPosition,
       status: status
     });
+  },
+  hasScrolledToTop: function (listPosition) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_HAS_SCROLLED_TO_TOP,
+      listPosition: listPosition
+    });
   }
 };
 

@@ -27,7 +27,8 @@ module.exports.actions = keyMirror({
   REGDEM_SET_PREV_SELECTED_INDEX: null,
   REGDEM_TERMINATE_STATE_AND_RESET: null,
   REGDEM_UPDATE_WRITE_STATUS: null,
-  REGDEM_UPDATE_PROGRESS_STATUS: null
+  REGDEM_UPDATE_PROGRESS_STATUS: null,
+  REGDEM_HAS_SCROLLED_TO_TOP: null
 });
 
 module.exports.values = {

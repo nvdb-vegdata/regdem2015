@@ -21,6 +21,16 @@ let Editor = React.createClass({
   // Mixins, for linked state
   mixins: [React.addons.LinkedStateMixin],
 
+  componentDidUpdate: function () {
+    if (this.props.data.scrollToTop) {
+      var node = document.querySelector('.Editor-CardText');
+      if (node) {
+        node.scrollTop = 0;
+        RegDemActions.hasScrolledToTop(this.props.data.listPosition);
+      }
+    }
+  },
+
   closeDialog: function () {
     RegDemActions.closeEditor(this.props.data.listPosition);
   },

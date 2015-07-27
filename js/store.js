@@ -21,6 +21,7 @@ let _emptyState = {
   version: 0, // Brukers spesielt for å få React til å re-render alle felter når man trykker på nytt element knappen og editor allerede har innhold
   listPosition: null,
   active: false,
+  scrollToTop: true,
 
   // APP
   objektId: null,
@@ -479,11 +480,16 @@ let updateEditedLocation = function (_state) {
 ===================== Functions called by Actions =====================
 */
 
+let hasScrolledToTop = function (_state) {
+  _state.scrollToTop = false;
+}
+
 let resetObjekt = function (_state) {
   _state.version = _state.version + 1;
   _state.objektId = null;
   _state.objekt = null;
   _state.objektEdited = null;
+  _state.scrollToTop = true;
 
   _state.geometry.result = null;
   _state.geometry.resultType = null;
@@ -960,6 +966,12 @@ AppDispatcher.register(function(action) {
       status = action.status;
       updateProgressStatus(_state, status);
       RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_HAS_SCROLLED_TO_TOP:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      hasScrolledToTop(_state);
       break;
 
     default:
