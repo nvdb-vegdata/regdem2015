@@ -163,9 +163,9 @@ var RegDemActions = {
       selectedIndex: selectedIndex
     });
   },
-  terminateState: function (listPosition) {
+  terminateStateAndReset: function (listPosition) {
     AppDispatcher.dispatch({
-      actionType: RegDemConstants.actions.REGDEM_TERMINATE_STATE,
+      actionType: RegDemConstants.actions.REGDEM_TERMINATE_STATE_AND_RESET,
       listPosition: listPosition
     });
   },

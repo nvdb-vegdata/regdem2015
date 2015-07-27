@@ -62,7 +62,7 @@ let Sok = React.createClass({
     if ((this.props.data.search.inputValue && this.props.data.search.inputValue.length > 0) || this.props.data.objektTypeId !== null) {
       return (
         <i
-          onTouchTap={this.handleRemoveClick}
+          onTouchTap={this.handleClearClick}
           className="material-icons search-field-clear-icon">clear</i>
       );
     }
@@ -163,9 +163,9 @@ let Sok = React.createClass({
     this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').setAttribute('disabled', 'disabled');
   },
 
-  handleRemoveClick: function() {
+  handleClearClick: function() {
     this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
-    RegDemActions.terminateState(this.props.data.listPosition);
+    RegDemActions.terminateStateAndReset(this.props.data.listPosition);
   },
 
   handleOpenList: function() {
