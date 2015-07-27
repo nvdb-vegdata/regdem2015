@@ -2,6 +2,7 @@ var Parser = {
   getKode: function (kode) {
     switch (kode) {
       case 'MANGLER_ANBEFALTE_EGENSKAPER':
+      case 'MANGLER_OBLIGATORISKE_EGENSKAPER':
         return 'Dette feltet er påkrevd.';
       case 'STØRRE_ENN_ABSOLUTT_MAKSIMUM':
         return 'Utfylt verdi overskrider feltets maksimumsverdi.';
@@ -20,8 +21,15 @@ var Parser = {
     // Legger til feil i listen.
     feil.forEach( function (obj) {
       var kode = parser.getKode(obj.kode);
-      var id = obj.egenskapTypeId || null;
-      errors[id] = {id:id, kode:kode, type:'feil'};
+      if (kode == 'Dette feltet er påkrevd.') {
+        let manglendeEgenskaper = parser.getEgenskaper(obj.melding);
+        manglendeEgenskaper.forEach( function (id) {
+          errors[id] = {id:id, kode:kode, type:'feil'};
+        });
+      } else {
+        var id = obj.egenskapTypeId || null;
+        errors[id] = {id:id, kode:kode, type:'feil'};
+      }
     });
 
     // Legger til advarsler i listen.

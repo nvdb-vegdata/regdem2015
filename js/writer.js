@@ -41,10 +41,15 @@ let createJSONFromState = function (data) {
     let egenskaper = objekt.egenskaper.map(function (egenskap) {
       let returnObj = {};
       returnObj['typeId'] = egenskap.id;
-      returnObj['verdi'] = [ egenskap.verdi ];
+
+      if (egenskap.verdi) {
+        returnObj['verdi'] = [ egenskap.verdi ];
+      } else {
+        returnObj['verdi'] = [];
+      }
 
       if (!newObj) {
-        if (returnObj.verdi[0]) {
+        if (egenskap.verdi) {
           returnObj['operasjon'] = 'oppdater';
         } else {
           returnObj['operasjon'] = 'slett';
@@ -95,9 +100,10 @@ let createJSONFromState = function (data) {
 let validateObjekt = function (_state) {
   let queryJSON = createJSONFromState(_state);
   let url = '/nvdb/apiskriv/v2/endringssett/validator';
-
+  RegDemActions.updateWriteStatus(_state.listPosition, 'validating');
   if (queryJSON) {
     Fetch.sendQuery('POST', url, queryJSON, (returnData) => {
+      console.log(returnData);
       RegDemActions.updateValidatorResponse(_state.listPosition, returnData);
     });
   }
@@ -116,14 +122,12 @@ let processObjekt = function (_state, data) {
   let startURL = data[1].src.substring(27);
   let statusURL = data[4].src.substring(27);
   Fetch.sendQuery('POST', startURL, {}, (response) => {
-    console.log('processing: ', response);
     checkProgress(_state, statusURL);
   });
 }
 
 let checkProgress = function (_state, url) {
   Fetch.sendQuery('GET', url, {}, (response) => {
-    console.log(response);
     RegDemActions.updateProgressStatus(_state.listPosition, response);
     if (response === 'UTFØRT') {
       RegDemActions.updateWriteStatus(_state.listPosition, 'done');
