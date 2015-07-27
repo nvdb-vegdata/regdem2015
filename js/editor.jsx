@@ -83,24 +83,12 @@ let Editor = React.createClass({
       warningsFull[index] = warnings[index] ? warnings[index].kode : '';
     }
 
-    // Forbereder tittel og subtittel
-    let formName, subtitle;
+    // Forbereder tittel
+    let formName;
     if (objektId && objektId !== -1) {
-      // Skjemanavn
-      formName = 'Rediger objekt';
-
-      // Subtitle
-      subtitle = (
-        <div style={{fontSize: '16px'}}>
-          <div style={{fontWeight: 'bold'}}>{objektTypeNavn}</div>
-          <div>Objektid: {objektId}</div>
-          <div>Vegreferanse: {vegreferanse}</div>
-        </div>
-      );
-
+      formName = 'Rediger objekt: ' + objektId;
     } else if (objektId === -1) {
       formName = 'Lag nytt objekt';
-      subtitle = ( <div style={{fontWeight: 'bold', fontSize: '16px'}}>{objektTypeNavn}</div> );
     }
 
     // Pre-compute forms
@@ -250,7 +238,7 @@ let Editor = React.createClass({
             <CardText className={MinimizedStatusClassName}>
               {this.props.data.objektId + '-' + (this.props.data.progressStatus.length > 0 ? this.props.data.progressStatus[this.props.data.progressStatus.length - 1] : '')}
             </CardText>
-            <CardTitle title={formName} subtitle={subtitle} className={CardTitleClassName} />
+            <CardTitle title={formName} className={CardTitleClassName} />
             <CardText className={CardTextClassName}>
               {GeomFields}
               {EditorFields}
