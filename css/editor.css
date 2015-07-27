@@ -110,16 +110,21 @@
 .Editor-viktighet {
   font-size: 10px;
   float: right;
-  margin: 8px;
+  margin: 5px 0 0 0;
+  padding: 4px 4px 2px 4px;
+  border-radius: 2px;
   letter-spacing: 1px;
 }
-.Editor-viktighet-1, .Editor-viktighet-2 {
+.Editor-viktighet-1::after, .Editor-viktighet-2::after {
+  content: " \25CF";
   color: #D0021B;
 }
-.Editor-viktighet-3 {
+.Editor-viktighet-3::after {
+  content: " \25CF";
   color: orange;
 }
-.Editor-viktighet-4 {
+.Editor-viktighet-4::after {
+  content: " \25CF";
   color: blue;
 }
 .Editor-beskrivelse {
