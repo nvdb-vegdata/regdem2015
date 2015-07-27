@@ -122,11 +122,20 @@ let setActiveState = function (index) {
 
   _states.list[index].active = true;
   _states.list[index].map.myLocation = false;
+
+  MapFunctions.updateMarkers(_states.list[index]);
 };
 
 let getInactiveState = function () {
   return _states.list.filter((value, index) => {
     return (index !== _states.activeState && value);
+  });
+};
+
+let getAvailableStates = function () {
+  // Returns all states that are not active, and that are not communicating with write API
+  return _states.list.filter((value, index) => {
+    return (index !== _states.activeState && value && !value.writeStatus);
   });
 };
 
@@ -676,17 +685,49 @@ let setPrevSelectedIndex = function (_state, selectedIndex) {
   _state.search.selectedIndex = selectedIndex;
 };
 
-let minimizeEditor = function () {
-  let newState = createNewState();
-  setActiveState(newState);
+let minimizeEditor = function (_state) {
+  let objektTypeId = simpleDeepCopy(_state.objektTypeId);
+  let searchResults = simpleDeepCopy(_state.searchResults);
+  let searchResultsFull = simpleDeepCopy(_state.searchResultsFull);
+  let search = simpleDeepCopy(_state.search);
+  let map  = simpleDeepCopy(_state.map);
+
+  // Create a new state
+  let newStatePosition = createNewState();
+
+  // Put in state attributes from previous state
+  let _newState = getStateAtIndex(newStatePosition);
+  _newState.objektTypeId = objektTypeId;
+  _newState.searchResults = searchResults;
+  _newState.searchResultsFull = searchResultsFull;
+  _newState.search = search;
+  _newState.map = map;
+
+  // Set new active state
+  setActiveState(newStatePosition);
 };
 
-let terminateState = function (_state) {
-  MapFunctions.clearMarkers();
-  MapFunctions.clearEditGeom();
+let terminateStateAndReset = function (_state) {
+  let wasTerminatedStateActive = _state.active;
+
   deleteState(_state.listPosition);
 
-  if (!getActiveState() || getActiveState().length === 0) {
+  // If the state we just terminated wasn't active and we have an active state, keep moving
+  if (!wasTerminatedStateActive && getActiveState()) {
+    return;
+  }
+
+  // Or else, reset the map
+  MapFunctions.clearMarkers();
+  MapFunctions.clearEditGeom();
+  MapFunctions.focusMarker(null);
+
+  // See if we can find an available state to set as active
+  if (getAvailableStates().length > 0) {
+    let positionToAvailableState = getAvailableStates().pop().listPosition;
+    setActiveState(positionToAvailableState);
+  // Or worst case, create a new state
+  } else {
     let newState = createNewState();
     setActiveState(newState);
   }
@@ -695,10 +736,10 @@ let terminateState = function (_state) {
 let updateWriteStatus = function (_state, status) {
   switch (status) {
     case 'processing':
-      minimizeEditor();
+      minimizeEditor(_state);
       break;
     case 'done':
-      // terminateState(_state);
+      terminateStateAndReset(_state);
       break;
     default:
   }
@@ -897,10 +938,11 @@ AppDispatcher.register(function(action) {
       RegDemStore.emitChange();
       break;
 
-    case RegDemConstants.actions.REGDEM_TERMINATE_STATE:
+    case RegDemConstants.actions.REGDEM_TERMINATE_STATE_AND_RESET:
       listPosition = action.listPosition;
       _state = getStateAtIndex(listPosition);
-      terminateState(_state);
+      terminateStateAndReset(_state);
+
       RegDemStore.emitChange();
       break;
 
