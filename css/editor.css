@@ -67,7 +67,7 @@
 .Editor-minimized-status {
   padding: 5px !important;
 }
-.Editor-CardTitle, .Editor-knapp-container {
+.Editor-CardTitle {
   flex-shrink: 0;
 }
 .Editor-CardText {

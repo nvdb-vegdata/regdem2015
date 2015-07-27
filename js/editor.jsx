@@ -246,10 +246,11 @@ let Editor = React.createClass({
             <CardText className={CardTextClassName}>
               {GeomFields}
               {EditorFields}
+
+              <CardActions className={CardActionsClassName}>
+                <FlatButton label="Lagre" primary={true} onTouchTap={this.saveObjekt} disabled={!this.props.data.objektEdited} />
+              </CardActions>
             </CardText>
-            <CardActions className={CardActionsClassName}>
-              <FlatButton label="Lagre" primary={true} onTouchTap={this.saveObjekt} disabled={!this.props.data.objektEdited} />
-            </CardActions>
         </Card>
       </div>
     );
