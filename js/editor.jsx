@@ -235,6 +235,14 @@ let Editor = React.createClass({
       MinimizedStatusClassName = 'Editor-minimized-status';
     }
 
+    var saveLabel = (this.props.data.writeStatus === 'validating')? 'Validerer':'Lagre';
+    var SaveButton = (<FlatButton
+        label={saveLabel}
+        primary={true}
+        onTouchTap={this.saveObjekt}
+        disabled={!this.props.data.objektEdited}
+      />);
+
     return (
       <div className={EditorClassName}>
         <Card className={EditorCardClassName} onTouchTap={this.tapEditor}>
@@ -250,7 +258,7 @@ let Editor = React.createClass({
               {EditorFields}
             </CardText>
             <CardActions className={CardActionsClassName}>
-              <FlatButton label="Lagre" primary={true} onTouchTap={this.saveObjekt} disabled={!this.props.data.objektEdited} />
+              {SaveButton}
               <FlatButton label="Avbryt" onTouchTap={this.closeDialog} />
             </CardActions>
         </Card>
