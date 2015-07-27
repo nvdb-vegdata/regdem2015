@@ -247,7 +247,11 @@ let getNewData = function (_state) {
         for (var i = 0; i < _state.searchResultsFull.resultater[0].vegObjekter.length; i++) {
           if (_state.searchResultsFull.resultater[0].vegObjekter[i].objektId === _state.objektId) {
             _state.objekt = _state.searchResultsFull.resultater[0].vegObjekter[i];
-            RegDemStore.emitChange();
+
+            setTimeout(function() { // Run after dispatcher has finished
+              RegDemStore.emitChange();
+            }, 0);
+
             return;
           }
         }
