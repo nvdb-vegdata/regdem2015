@@ -69,11 +69,19 @@ let validateObjekt = function (_state) {
   }
 };
 
-let registerObjekt = function (_state) {
-  let queryJSON = createJSONFromState(_state);
-  let url = '/nvdb/apiskriv/v2/endringssett';
-  Fetch.sendQuery('POST', url, queryJSON, (responseData) => {
-    processObjekt(_state, responseData);
+let checkProgress = function (_state, url) {
+  Fetch.sendQuery('GET', url, {}, (response) => {
+    console.log(response);
+    RegDemActions.updateProgressStatus(_state.listPosition, response);
+    if (response === 'UTFØRT') {
+      RegDemActions.updateWriteStatus(_state.listPosition, 'done');
+    } else if (response === 'AVVIST') {
+      RegDemActions.updateWriteStatus(_state.listPosition, 'error');
+    } else if (response === 'KANSELLERT') {
+      RegDemActions.updateWriteStatus(_state.listPosition, 'error');
+    } else {
+      checkProgress(_state, url);
+    }
   });
 };
 
@@ -85,25 +93,17 @@ let processObjekt = function (_state, data) {
     console.log('processing: ', response);
     checkProgress(_state, statusURL);
   });
-}
+};
 
-let checkProgress = function (_state, url) {
-  Fetch.sendQuery('GET', url, {}, (response) => {
-    console.log(response);
-    RegDemActions.updateProgressStatus(_state.listPosition, response);
-    if (response === 'UTFØRT') {
-      RegDemActions.updateWriteStatus(_state.listPosition, 'done');
-    } else if (response === 'AVVIST') {
-      RegDemActions.updateWriteStatus(_state.listPosition, 'error');
-    } else if (response == 'KANSELLERT') {
-      RegDemActions.updateWriteStatus(_state.listPosition, 'error');
-    } else {
-      checkProgress(_state, url);
-    }
+let registerObjekt = function (_state) {
+  let queryJSON = createJSONFromState(_state);
+  let url = '/nvdb/apiskriv/v2/endringssett';
+  Fetch.sendQuery('POST', url, queryJSON, (responseData) => {
+    processObjekt(_state, responseData);
   });
-}
+};
 
 module.exports = {
   validateObjekt: validateObjekt,
   registerObjekt: registerObjekt
-}
+};

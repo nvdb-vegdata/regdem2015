@@ -39,7 +39,6 @@ let Editor = React.createClass({
 
   // Finner verdien til egenskapen til objektet. Brukes til å pre-populate egenskapene
   finnVerdi: function (egenskap, returFunksjon) {
-    let dataTilEgenskap = [];
     let objekt = this.props.data.objektEdited || this.props.data.objekt;
 
     if (objekt && objekt.egenskaper) {
@@ -67,14 +66,13 @@ let Editor = React.createClass({
     let objektTypeNavn = this.props.data.objektType ? this.props.data.objektType.navn : '';
     let vegreferanse = (objekt && objekt.lokasjon && objekt.lokasjon.vegReferanser) ? Helper.vegReferanseString(objekt.lokasjon.vegReferanser[0]) : '';
     let egenskapsTyper = this.props.data.objektType ? this.props.data.objektType.egenskapsTyper : [];
-    let manglendeEgenskaper = this.props.data.editor.validationMessage ? Helper.getManglendeEgenskaper(this.props.data.editor.validationMessage) : [];
     let warnings = this.props.data.validatorResponse ? Parser.extractErrors(this.props.data.validatorResponse) : [];
 
     // Forbereder validering
     let warningsFull = {};
     for (let i in egenskapsTyper) {
-      let index = egenskapsTyper[i].id
-      warningsFull[index] = warnings[index] ? warnings[index].kode : "";
+      let index = egenskapsTyper[i].id;
+      warningsFull[index] = warnings[index] ? warnings[index].kode : '';
     }
 
     // Forbereder tittel og subtittel
@@ -242,7 +240,7 @@ let Editor = React.createClass({
             <CircularProgress mode="indeterminate" className={CircularProgressClassName} />
 
             <CardText className={MinimizedStatusClassName}>
-              {this.props.data.objektId + '-' + (this.props.data.progressStatus.length > 0 ? this.props.data.progressStatus[this.props.data.progressStatus.length-1] : '')}
+              {this.props.data.objektId + '-' + (this.props.data.progressStatus.length > 0 ? this.props.data.progressStatus[this.props.data.progressStatus.length - 1] : '')}
             </CardText>
             <CardTitle title={formName} subtitle={subtitle} className={CardTitleClassName} />
             <CardText className={CardTextClassName}>

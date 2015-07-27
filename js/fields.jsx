@@ -187,10 +187,10 @@ let Fields = {
         this.setState({
           klokkeVerdiErrorText: nextProps.warning
         });
-      }  else {
+      } else {
         this.setState({
           klokkeVerdieErrorText: ''
-        })
+        });
       }
     },
 
@@ -201,7 +201,7 @@ let Fields = {
         klokkeVerdi: timeValue,
         klokkeVerdieErrorText: ''
       });
-      RegDemActions.updateFieldValue(this.props.data.listPosition, his.props.egenskaper.id, timeValue, 'Tid');
+      RegDemActions.updateFieldValue(this.props.data.listPosition, this.props.egenskaper.id, timeValue, 'Tid');
     },
 
     handleClear: function () {
