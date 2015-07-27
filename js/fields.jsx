@@ -28,7 +28,7 @@ let Fields = {
       } else {
         this.setState({
           selectValueErrorText: ''
-        })
+        });
       }
     },
 

@@ -5,10 +5,15 @@ let Fetch = require('./fetch.js');
 let createJSONFromState = function (data) {
   if (data && data.objektEdited) {
     let objekt = data.objektEdited;
-    let veglenke = objekt.lokasjon.veglenker[0];
+    let punkt, lokasjon, vegObjekter;
+    let veglenke = null;
 
-    let punkt = [{ lenkeId: veglenke.id, posisjon: veglenke.fra }];
-    let lokasjon = { punkt: punkt };
+    if (objekt.lokasjon.veglenker) {
+      veglenke = objekt.lokasjon.veglenker[0];
+
+      punkt = [{ lenkeId: veglenke.id, posisjon: veglenke.fra }];
+      lokasjon = { punkt: punkt };
+    }
 
     let typeId = data.objektTypeId;
     let tempId = '-1';
@@ -27,12 +32,20 @@ let createJSONFromState = function (data) {
     let effektDato = Helper.todaysDate();
     let datakatalogversjon = '2.03';
 
-    let vegObjekter = [{
-      lokasjon: lokasjon,
-      typeId: typeId,
-      tempId: tempId,
-      egenskaper: egenskaper
-     }];
+    if (objekt.lokasjon.veglenker) {
+      vegObjekter = [{
+        lokasjon: lokasjon,
+        typeId: typeId,
+        tempId: tempId,
+        egenskaper: egenskaper
+       }];
+     } else {
+       vegObjekter = [{
+         typeId: typeId,
+         tempId: tempId,
+         egenskaper: egenskaper
+        }];
+     }
 
     let registrer = {vegObjekter: vegObjekter};
     let job = {
