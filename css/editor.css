@@ -153,9 +153,12 @@
 
 /* Components */
 
-.Editor-enum, .Editor-tekst, .Editor-tall, .Editor-klokkeslett, .Editor-datePicker {
+.Editor-enum, .Editor-tekst, .Editor-tall, .Editor-klokkeslett, .Editor-datePicker, .Editor-geom {
   position: relative;
   margin-bottom: 30px;
+}
+.Editor-geom {
+  text-align: right;
 }
 .Editor-klokkeslett {
   box-sizing: content-box;
@@ -196,6 +199,12 @@
   top: 22px;
   transform: perspective(1px) scale(0.75) translate3d(0, -18px, 0);
   transform-origin: left top;
+}
+.Editor-geom-etikett {
+  color: #666 !important;
+  transform: scale(0.8) !important;
+  transform-origin: left top 0px;
+  font-size: 16px;
 }
 .Editor-selectField > div:nth-of-type(2) > div {
   height: auto !important;
