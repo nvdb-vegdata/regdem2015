@@ -2,7 +2,9 @@ let omnivore = require('leaflet-omnivore');
 let RegDemActions = require('./actions');
 
 let L = window.L || {};
+let MapFunctions = window.MapFunctions || {};
 
+let veglenkeMarker = null;
 let editLayer = new L.FeatureGroup();
 let currentEditGeom = null;
 let markers = new L.MarkerClusterGroup({
@@ -25,8 +27,13 @@ let redIcon = L.icon({
 
 // Fjerner alle markører på kartet.
 let clearMarkers = function () {
+  let mapData = MapFunctions.mapData();
+
   markerList = {};
   markers.clearLayers();
+  if (mapData && veglenkeMarker) {
+    mapData.removeLayer(veglenkeMarker);
+  }
 };
 
 let clearEditGeom = function () {
@@ -44,6 +51,16 @@ let focusMarker = function ( id ) {
           setGeomOpacity(markerList[i].obj.getLayers()[0], 1, markerList[i].type);
         }
     }
+  }
+};
+
+let displayVeglenke = function (activeObjekt, mapData) {
+  if (mapData && veglenkeMarker) {
+    mapData.removeLayer(veglenkeMarker);
+  }
+
+  if (activeObjekt && activeObjekt.lokasjon && activeObjekt.lokasjon.geometriVeglenkeLatlng) {
+    veglenkeMarker = L.circleMarker(activeObjekt.lokasjon.geometriVeglenkeLatlng, {radius: 3}).addTo(mapData);
   }
 };
 
@@ -83,13 +100,13 @@ let displayMarkers = function (kart, state) {
     let posisjon = activeObjekt.lokasjon.geometriWgs84;
     let geom = omnivore.wkt.parse(posisjon);
 
-    geom.on('click', () => {
-      RegDemActions.setObjektID(state.listPosition, activeObjekt.objektId);
-    });
+    geom.on('click', onClickMarker.bind(null, activeObjekt));
 
     markerList[activeObjekt.objektId] = {obj: geom, type: posisjon.charAt(0)};
     markers.addLayer(geom);
   }
+
+  displayVeglenke(activeObjekt, kart);
 
   kart.addLayer(markers);
   focusMarker(activeObjektId);
@@ -177,5 +194,6 @@ module.exports = {
   removeGeom: removeGeom,
   focusMarker: focusMarker,
   unfocusMarker: unfocusMarker,
-  currentEditGeom: returnCurrentEditGeom
+  currentEditGeom: returnCurrentEditGeom,
+  displayVeglenke: displayVeglenke
 };
