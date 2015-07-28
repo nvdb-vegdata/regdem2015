@@ -2,7 +2,6 @@ let omnivore = require('leaflet-omnivore');
 let RegDemActions = require('./actions');
 
 let L = window.L || {};
-let MapFunctions = window.MapFunctions || {};
 
 let editLayer = new L.FeatureGroup();
 let currentEditGeom = null;
