@@ -155,6 +155,22 @@ let Fields = {
         NumberFieldClassName += ' Editor-feilmelding';
       }
 
+      let enhet = '';
+      if (egenskaper.enhet) {
+        enhet = (
+          <div>
+            Enhet: {egenskaper.enhet.navn}
+          </div>
+        );
+      }
+
+      let beskrivelse = (
+        <div>
+          {egenskaper.beskrivelse}
+          {enhet}
+        </div>
+      );
+
       return (
         <div className="Editor-tall">
           <Fields.Viktighet viktighet={egenskaper.viktighet} />
@@ -166,7 +182,7 @@ let Fields = {
             fullWidth={true}
             className={NumberFieldClassName}
           />
-          <Fields.Beskrivelse beskrivelse={egenskaper.beskrivelse} />
+        <Fields.Beskrivelse beskrivelse={beskrivelse} />
         </div>
       );
     }
