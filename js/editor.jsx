@@ -71,7 +71,7 @@ let Editor = React.createClass({
     // Initaliserer variabler
     let objektId = this.props.data.objektId;
     let objekt = this.props.data.objektEdited || this.props.data.objekt;
-    let vegreferanse = (objekt && objekt.lokasjon && objekt.lokasjon.vegReferanser) ? Helper.vegReferanseString(objekt.lokasjon.vegReferanser[0]) : '';
+    let vegreferanseStreng = (objekt && objekt.lokasjon && objekt.lokasjon.vegReferanser) ? Helper.vegReferanseString(objekt.lokasjon.vegReferanser[0]) : (objekt && objekt.lokasjon && objekt.lokasjon.vegReferanseStreng) ? objekt.lokasjon.vegReferanseStreng : '';
     let egenskapsTyper = this.props.data.objektType ? this.props.data.objektType.egenskapsTyper : [];
     let warnings = this.props.data.validatorResponse ? Parser.extractErrors(this.props.data.validatorResponse) : [];
 

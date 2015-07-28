@@ -425,6 +425,8 @@ let updateEditedLocation = function (_state) {
         let lng = _state.geometry.result._latlng.lng;
         let lat = _state.geometry.result._latlng.lat;
 
+        _state.objektEdited.lokasjon.vegReferanser = null;
+
         // Egengeometri
         let geometriEgenskap = findiEgenskapByString(_state, 'geometri, punkt');
         let WGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [lng, lat]);
@@ -453,6 +455,8 @@ let updateEditedLocation = function (_state) {
             _state.objektEdited.lokasjon.geometriForenkletWgs84 = koorData.sokePunkt;
             _state.objektEdited.lokasjon.geometriUtm33 = utm33Position;
             _state.objektEdited.lokasjon.geometriWgs84 = koorData.sokePunkt;
+            _state.objektEdited.lokasjon.geometriWgs84 = koorData.sokePunkt;
+            _state.objektEdited.lokasjon.vegReferanseStreng = koorData.kommuneNr + ' ' + koorData.visningsNavn;
           }
           _state.objektEdited.lokasjon.veglenker = [
             {
