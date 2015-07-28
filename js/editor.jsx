@@ -79,7 +79,7 @@ let Editor = React.createClass({
     let warningsFull = {};
     for (let i in egenskapsTyper) {
       let index = egenskapsTyper[i].id;
-      warningsFull[index] = warnings[index] ? warnings[index].kode : '';
+      warningsFull[index] = warnings[index] ? warnings[index].type + ": " + warnings[index].kode : '';
     }
 
     // Forbereder tittel
