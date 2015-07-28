@@ -245,13 +245,14 @@ let getNewData = function (_state) {
     if (!_state.objekt || _state.objektId !== _state.objekt.objektId) {
       // Sjekk om objektet finnes i searchResultsFull
       if (_state.searchResultsFull) {
+        let emitChangeFunction = function() { // Run after dispatcher has finished
+          RegDemStore.emitChange();
+        };
         for (var i = 0; i < _state.searchResultsFull.resultater[0].vegObjekter.length; i++) {
           if (_state.searchResultsFull.resultater[0].vegObjekter[i].objektId === _state.objektId) {
             _state.objekt = _state.searchResultsFull.resultater[0].vegObjekter[i];
 
-            setTimeout(function() { // Run after dispatcher has finished
-              RegDemStore.emitChange();
-            }, 0);
+            setTimeout(emitChangeFunction, 0);
 
             return;
           }
@@ -431,6 +432,8 @@ let updateEditedLocation = function (_state) {
         let lng = _state.geometry.result._latlng.lng;
         let lat = _state.geometry.result._latlng.lat;
 
+        _state.objektEdited.lokasjon.vegReferanser = null;
+
         // Egengeometri
         let geometriEgenskap = findiEgenskapByString(_state, 'geometri, punkt');
         let WGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [lng, lat]);
@@ -459,6 +462,8 @@ let updateEditedLocation = function (_state) {
             _state.objektEdited.lokasjon.geometriForenkletWgs84 = koorData.sokePunkt;
             _state.objektEdited.lokasjon.geometriUtm33 = utm33Position;
             _state.objektEdited.lokasjon.geometriWgs84 = koorData.sokePunkt;
+            _state.objektEdited.lokasjon.geometriWgs84 = koorData.sokePunkt;
+            _state.objektEdited.lokasjon.vegReferanseStreng = koorData.visningsNavn;
           }
           _state.objektEdited.lokasjon.veglenker = [
             {
@@ -493,7 +498,7 @@ let updateEditedLocation = function (_state) {
 
 let hasScrolledToTop = function (_state) {
   _state.scrollToTop = false;
-}
+};
 
 let resetObjekt = function (_state) {
   _state.version = _state.version + 1;
@@ -714,7 +719,7 @@ let minimizeEditor = function (_state) {
   let searchResults = simpleDeepCopy(_state.searchResults);
   let searchResultsFull = simpleDeepCopy(_state.searchResultsFull);
   let search = simpleDeepCopy(_state.search);
-  let map  = simpleDeepCopy(_state.map);
+  let map = simpleDeepCopy(_state.map);
 
   // Create a new state
   let newStatePosition = createNewState();

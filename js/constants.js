@@ -33,5 +33,5 @@ module.exports.actions = keyMirror({
 
 module.exports.values = {
   REGDEM_SIZE_DESKTOP: 800,
-  REGDEM_LOCAL_API_SERVER: 'http://localhost:8085/api/'
+  REGDEM_LOCAL_API_SERVER: '/api/'
 };

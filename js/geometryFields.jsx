@@ -1,7 +1,7 @@
 let React = require('react');
 let RegDemActions = require('./actions.js');
 
-let { RaisedButton } = require('material-ui');
+let { FlatButton, TextField } = require('material-ui');
 
 //Needed for onTouchTap
 //Can go away when react 1.0 release
@@ -13,26 +13,42 @@ injectTapEventPlugin();
 let Geom = React.createClass({
 
   render: function () {
+    let objekt = this.props.data.objektEdited || this.props.data.objekt;
+    let geometriStreng = '';
+
+    if (objekt.lokasjon.geometriWgs84) {
+      geometriStreng = objekt.lokasjon.geometriWgs84;
+    }
+
     return (
       <div className="Editor-geom">
-        <Marker
-          enabled={this.props.egenskaper.punkt}
-          objektId={this.props.objektId}
-          data={this.props.data}
-          selected={this.props.actualEgenskaper.punkt}
+        <TextField
+          floatingLabelText="Geometri"
+          value={geometriStreng}
+          fullWidth={true}
+          className="Editor-permanentEtikett"
         />
-        <Strekning
-          enabled={this.props.egenskaper.linje}
-          objektId={this.props.objektId}
-          data={this.props.data}
-          selected={this.props.actualEgenskaper.linje}
-        />
-        <Flate
-          enabled={this.props.egenskaper.flate}
-          objektId={this.props.objektId}
-          data={this.props.data}
-          selected={this.props.actualEgenskaper.flate}
-        />
+        <div className="Editor-geom-button-container">
+          <Marker
+            enabled={this.props.egenskaper.punkt}
+            objektId={this.props.objektId}
+            data={this.props.data}
+            selected={this.props.actualEgenskaper.punkt}
+          />
+          <Strekning
+            enabled={this.props.egenskaper.linje}
+            objektId={this.props.objektId}
+            data={this.props.data}
+            selected={this.props.actualEgenskaper.linje}
+          />
+          <Flate
+            enabled={this.props.egenskaper.flate}
+            objektId={this.props.objektId}
+            data={this.props.data}
+            selected={this.props.actualEgenskaper.flate}
+          />
+        </div>
+
       </div>
     );
   }
@@ -50,9 +66,9 @@ let Marker = React.createClass({
     }
 
     return (
-      <RaisedButton
+      <FlatButton
         style={{margin: '5px'}}
-        label="Plassér Punkt"
+        label={<i className="material-icons">place</i>}
         className='Editor-geom-button'
         onTouchTap={this.handleClick}
         disabled = {this.props.data.search.loading}
@@ -74,9 +90,9 @@ let Strekning = React.createClass({
     }
 
     return (
-    <RaisedButton
+    <FlatButton
       style={{margin: '5px'}}
-      label="Plassér Linje"
+      label={<i className="material-icons">trending_up</i>}
       className='Editor-geom-button'
       onTouchTap={this.handleClick}
       disabled = {true || this.props.data.search.loading} // TODO Midlertidig inaktivt siden vi ikke har implementert lagring av strekning
@@ -98,9 +114,9 @@ let Flate = React.createClass({
     }
 
     return (
-    <RaisedButton
+    <FlatButton
       style={{margin: '5px'}}
-      label="Plassér Flate"
+      label={<i className="material-icons">layers</i>}
       className='Editor-geom-button'
       onTouchTap={this.handleClick}
       disabled = {true || this.props.data.search.loading} // TODO Midlertidig inaktivt siden vi ikke har implementert lagring av flate
