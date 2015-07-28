@@ -700,7 +700,6 @@ let updateValidatorResponse = function (_state, response) {
   } else {
     updateWriteStatus(_state, 'error');
   }
-  console.log(_state.writeStatus);
 };
 
 let updateValMessage = function (_state, message) {
