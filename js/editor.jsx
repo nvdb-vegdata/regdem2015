@@ -8,7 +8,7 @@ let Parser = require('./parser.js');
 let GeometryFields = require('./geometryFields.jsx');
 let Fields = require('./fields.jsx');
 
-let { Card, CardActions, FlatButton, CardTitle, CardText, CircularProgress } = require('material-ui');
+let { Card, CardActions, FlatButton, CardTitle, CardText, CircularProgress, TextField } = require('material-ui');
 
 //Needed for onTouchTap
 //Can go away when react 1.0 release
@@ -71,8 +71,7 @@ let Editor = React.createClass({
     // Initaliserer variabler
     let objektId = this.props.data.objektId;
     let objekt = this.props.data.objektEdited || this.props.data.objekt;
-    let objektTypeNavn = this.props.data.objektType ? this.props.data.objektType.navn : '';
-    let vegreferanse = (objekt && objekt.lokasjon && objekt.lokasjon.vegReferanser) ? Helper.vegReferanseString(objekt.lokasjon.vegReferanser[0]) : '';
+    let vegreferanseStreng = (objekt && objekt.lokasjon && objekt.lokasjon.vegReferanser) ? Helper.vegReferanseString(objekt.lokasjon.vegReferanser[0]) : (objekt && objekt.lokasjon && objekt.lokasjon.vegReferanseStreng) ? objekt.lokasjon.vegReferanseStreng : '';
     let egenskapsTyper = this.props.data.objektType ? this.props.data.objektType.egenskapsTyper : [];
     let warnings = this.props.data.validatorResponse ? Parser.extractErrors(this.props.data.validatorResponse) : [];
 
@@ -229,13 +228,24 @@ let Editor = React.createClass({
       MinimizedStatusClassName = 'Editor-minimized-status';
     }
 
-    var saveLabel = (this.props.data.writeStatus === 'validating')? 'Validerer':'Lagre';
-    var SaveButton = (<FlatButton
+    let saveLabel = (this.props.data.writeStatus === 'validating') ? 'Validerer' : 'Lagre';
+    let SaveButton = (<FlatButton
         label={saveLabel}
         primary={true}
         onTouchTap={this.saveObjekt}
         disabled={!this.props.data.objektEdited}
       />);
+
+    let Vegreferanse = (
+      <div className="Editor-tekst">
+        <TextField
+          floatingLabelText="Vegreferanse"
+          value={vegreferanseStreng}
+          fullWidth={true}
+          className="Editor-permanentEtikett"
+        />
+      </div>
+    );
 
     return (
       <div className={EditorClassName}>
@@ -248,6 +258,7 @@ let Editor = React.createClass({
             </CardText>
             <CardTitle title={formName} className={CardTitleClassName} />
             <CardText className={CardTextClassName}>
+              {Vegreferanse}
               {GeomFields}
               {EditorFields}
 

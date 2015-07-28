@@ -29,9 +29,9 @@ let createJSONFromState = function (data) {
 
       punkt = [{ lenkeId: veglenke.id, posisjon: veglenke.fra }];
       lokasjon = {};
-      lokasjon['punkt'] = punkt;
+      lokasjon.punkt = punkt;
       if (!newObj) {
-        lokasjon['operasjon'] = 'oppdater';
+        lokasjon.operasjon = 'oppdater';
       }
     }
 
@@ -40,19 +40,19 @@ let createJSONFromState = function (data) {
     */
     let egenskaper = objekt.egenskaper.map(function (egenskap) {
       let returnObj = {};
-      returnObj['typeId'] = egenskap.id;
+      returnObj.typeId = egenskap.id;
 
       if (egenskap.verdi) {
-        returnObj['verdi'] = [ egenskap.verdi ];
+        returnObj.verdi = [ egenskap.verdi ];
       } else {
-        returnObj['verdi'] = [];
+        returnObj.verdi = [];
       }
 
       if (!newObj) {
         if (egenskap.verdi) {
-          returnObj['operasjon'] = 'oppdater';
+          returnObj.operasjon = 'oppdater';
         } else {
-          returnObj['operasjon'] = 'slett';
+          returnObj.operasjon = 'slett';
         }
       }
 
@@ -65,17 +65,17 @@ let createJSONFromState = function (data) {
     vegObjekter = [{}];
 
     if (objekt.lokasjon.veglenker) {
-      vegObjekter[0]['lokasjon'] = lokasjon;
+      vegObjekter[0].lokasjon = lokasjon;
      }
 
-     vegObjekter[0]['typeId'] = typeId;
-     vegObjekter[0]['egenskaper'] = egenskaper;
+     vegObjekter[0].typeId = typeId;
+     vegObjekter[0].egenskaper = egenskaper;
 
      if (!newObj) {
-       vegObjekter[0]['nvdbId'] = objekt.objektId;
-       vegObjekter[0]['versjon'] = objekt.versjonsId;
+       vegObjekter[0].nvdbId = objekt.objektId;
+       vegObjekter[0].versjon = objekt.versjonsId;
      } else {
-       vegObjekter[0]['tempId'] = tempId;
+       vegObjekter[0].tempId = tempId;
      }
 
      /*
@@ -85,13 +85,13 @@ let createJSONFromState = function (data) {
     let job = {};
 
     if (newObj) {
-      job['registrer'] = content;
+      job.registrer = content;
     } else {
-      job['delvisOppdater'] = content;
+      job.delvisOppdater = content;
     }
 
-    job['effektDato'] = effektDato;
-    job['datakatalogversjon'] = datakatalogversjon;
+    job.effektDato = effektDato;
+    job.datakatalogversjon = datakatalogversjon;
 
     return job;
   }
@@ -109,23 +109,6 @@ let validateObjekt = function (_state) {
   }
 };
 
-let registerObjekt = function (_state) {
-  let queryJSON = createJSONFromState(_state);
-  let url = '/nvdb/apiskriv/v2/endringssett';
-  Fetch.sendQuery('POST', url, queryJSON, (responseData) => {
-    processObjekt(_state, responseData);
-  });
-};
-
-let processObjekt = function (_state, data) {
-  // TODO: Mer robust trimming av lenken.
-  let startURL = data[1].src.substring(27);
-  let statusURL = data[4].src.substring(27);
-  Fetch.sendQuery('POST', startURL, {}, (response) => {
-    checkProgress(_state, statusURL);
-  });
-}
-
 let checkProgress = function (_state, url) {
   Fetch.sendQuery('GET', url, {}, (response) => {
     RegDemActions.updateProgressStatus(_state.listPosition, response);
@@ -138,6 +121,23 @@ let checkProgress = function (_state, url) {
     } else {
       checkProgress(_state, url);
     }
+  });
+};
+
+let processObjekt = function (_state, data) {
+  // TODO: Mer robust trimming av lenken.
+  let startURL = data[1].src.substring(27);
+  let statusURL = data[4].src.substring(27);
+  Fetch.sendQuery('POST', startURL, {}, () => {
+    checkProgress(_state, statusURL);
+  });
+};
+
+let registerObjekt = function (_state) {
+  let queryJSON = createJSONFromState(_state);
+  let url = '/nvdb/apiskriv/v2/endringssett';
+  Fetch.sendQuery('POST', url, queryJSON, (responseData) => {
+    processObjekt(_state, responseData);
   });
 };
 

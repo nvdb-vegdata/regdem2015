@@ -153,9 +153,13 @@
 
 /* Components */
 
-.Editor-enum, .Editor-tekst, .Editor-tall, .Editor-klokkeslett, .Editor-datePicker {
+.Editor-enum, .Editor-tekst, .Editor-tall, .Editor-klokkeslett, .Editor-datePicker, .Editor-geom {
   position: relative;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+}
+.Editor-geom {
+  text-align: right;
+  display: flex;
 }
 .Editor-klokkeslett {
   box-sizing: content-box;
@@ -163,6 +167,21 @@
 .Editor-timePicker {
   width: 100% !important;
   margin-top: 22px;
+}
+.Editor-geom .Editor-permanentEtikett {
+  width: auto !important;
+  flex-grow: 1;
+}
+.Editor-geom-button-container {
+  padding-top: 12px;
+  white-space : nowrap;
+}
+.Editor-geom-button-container button {
+  min-width: 0 !important;
+  padding-top: 10px !important;
+}
+.Editor-geom-button-container button span {
+  padding: 5px 4px 0 4px !important;
 }
 .Editor-datePickerContainer, .Editor-timePickerContainer {
   font-size: 16px;
@@ -196,6 +215,12 @@
   top: 22px;
   transform: perspective(1px) scale(0.75) translate3d(0, -18px, 0);
   transform-origin: left top;
+}
+.Editor-geom-etikett {
+  color: #666 !important;
+  transform: scale(0.8) !important;
+  transform-origin: left top 0px;
+  font-size: 16px;
 }
 .Editor-selectField > div:nth-of-type(2) > div {
   height: auto !important;

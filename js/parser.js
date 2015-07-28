@@ -22,14 +22,14 @@ var Parser = {
     feil.forEach( function (obj) {
       var kode = parser.getKode(obj.kode);
 
-      if (kode == 'Dette feltet er påkrevd.') {
+      if (kode === 'Dette feltet er påkrevd.') {
         let manglendeEgenskaper = parser.getEgenskaper(obj.melding);
         manglendeEgenskaper.forEach( function (id) {
-          errors[id] = {id:id, kode:kode, type:'feil'};
+          errors[id] = {id: id, kode: kode, type: 'feil'};
         });
       } else {
         var id = obj.egenskapTypeId || null;
-        errors[id] = {id:id, kode:kode, type:'feil'};
+        errors[id] = {id: id, kode: kode, type: 'feil'};
       }
     });
 
