@@ -21,6 +21,7 @@ var Parser = {
     // Legger til feil i listen.
     feil.forEach( function (obj) {
       var kode = parser.getKode(obj.kode);
+
       if (kode == 'Dette feltet er påkrevd.') {
         let manglendeEgenskaper = parser.getEgenskaper(obj.melding);
         manglendeEgenskaper.forEach( function (id) {
@@ -36,14 +37,14 @@ var Parser = {
     advarsler.forEach( function (obj) {
       var kode = parser.getKode(obj.kode);
       // Håndterer manglende påkrevde egenskaper.
-      if (kode == 'Dette feltet er påkrevd.') {
+      if (kode === 'Dette feltet er påkrevd.') {
         let manglendeEgenskaper = parser.getEgenskaper(obj.melding);
         manglendeEgenskaper.forEach( function (id) {
-          errors[id] = {id:id, kode:kode, type:'advarsel'};
+          errors[id] = {id: id, kode: kode, type: 'advarsel'};
         });
       } else {
         var id = obj.egenskapTypeId || null;
-        errors[id] = {id:id, kode:kode, type:'advarsel'};
+        errors[id] = {id: id, kode: kode, type: 'advarsel'};
       }
     });
     return errors;
@@ -53,7 +54,7 @@ var Parser = {
   getEgenskaper: function (validationMessage) {
     let listString = validationMessage.substring(validationMessage.indexOf(':'));
     return listString.match(/\d+(?=\))/g);
-  },
-}
+  }
+};
 
 module.exports = Parser;

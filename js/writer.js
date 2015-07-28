@@ -133,15 +133,15 @@ let checkProgress = function (_state, url) {
       RegDemActions.updateWriteStatus(_state.listPosition, 'done');
     } else if (response === 'AVVIST') {
       RegDemActions.updateWriteStatus(_state.listPosition, 'error');
-    } else if (response == 'KANSELLERT') {
+    } else if (response === 'KANSELLERT') {
       RegDemActions.updateWriteStatus(_state.listPosition, 'error');
     } else {
       checkProgress(_state, url);
     }
   });
-}
+};
 
 module.exports = {
   validateObjekt: validateObjekt,
   registerObjekt: registerObjekt
-}
+};
