@@ -511,7 +511,7 @@ let resetObjekt = function (_state) {
   _state.geometry.resultType = null;
 
   _state.validatorResponse = null;
-  _state.warning = false;
+  _state.warned = false;
 
   MapFunctions.clearEditGeom(); // Fjerner edit-objekt ved lukking av editor.
   MapFunctions.focusMarker(null);
