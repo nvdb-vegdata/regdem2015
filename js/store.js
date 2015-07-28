@@ -244,13 +244,14 @@ let getNewData = function (_state) {
     if (!_state.objekt || _state.objektId !== _state.objekt.objektId) {
       // Sjekk om objektet finnes i searchResultsFull
       if (_state.searchResultsFull) {
+        let emitChangeFunction = function() { // Run after dispatcher has finished
+          RegDemStore.emitChange();
+        };
         for (var i = 0; i < _state.searchResultsFull.resultater[0].vegObjekter.length; i++) {
           if (_state.searchResultsFull.resultater[0].vegObjekter[i].objektId === _state.objektId) {
             _state.objekt = _state.searchResultsFull.resultater[0].vegObjekter[i];
 
-            setTimeout(function() { // Run after dispatcher has finished
-              RegDemStore.emitChange();
-            }, 0);
+            setTimeout(emitChangeFunction, 0);
 
             return;
           }
@@ -486,7 +487,7 @@ let updateEditedLocation = function (_state) {
 
 let hasScrolledToTop = function (_state) {
   _state.scrollToTop = false;
-}
+};
 
 let resetObjekt = function (_state) {
   _state.version = _state.version + 1;
@@ -700,7 +701,7 @@ let minimizeEditor = function (_state) {
   let searchResults = simpleDeepCopy(_state.searchResults);
   let searchResultsFull = simpleDeepCopy(_state.searchResultsFull);
   let search = simpleDeepCopy(_state.search);
-  let map  = simpleDeepCopy(_state.map);
+  let map = simpleDeepCopy(_state.map);
 
   // Create a new state
   let newStatePosition = createNewState();

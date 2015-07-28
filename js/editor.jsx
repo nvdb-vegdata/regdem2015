@@ -71,7 +71,6 @@ let Editor = React.createClass({
     // Initaliserer variabler
     let objektId = this.props.data.objektId;
     let objekt = this.props.data.objektEdited || this.props.data.objekt;
-    let objektTypeNavn = this.props.data.objektType ? this.props.data.objektType.navn : '';
     let vegreferanse = (objekt && objekt.lokasjon && objekt.lokasjon.vegReferanser) ? Helper.vegReferanseString(objekt.lokasjon.vegReferanser[0]) : '';
     let egenskapsTyper = this.props.data.objektType ? this.props.data.objektType.egenskapsTyper : [];
     let warnings = this.props.data.validatorResponse ? Parser.extractErrors(this.props.data.validatorResponse) : [];
@@ -229,7 +228,7 @@ let Editor = React.createClass({
       MinimizedStatusClassName = 'Editor-minimized-status';
     }
 
-    var saveLabel = (this.props.data.writeStatus === 'validating')? 'Validerer':'Lagre';
+    var saveLabel = (this.props.data.writeStatus === 'validating') ? 'Validerer' : 'Lagre';
     var SaveButton = (<FlatButton
         label={saveLabel}
         primary={true}
