@@ -150,6 +150,9 @@ window.MapFunctions = {
   },
   getCurrentEditGeom: function () {
     return Marker.currentEditGeom();
+  },
+  displayVeglenke: function (position) {
+    Marker.displayVeglenke(position, mapData);
   }
 };
 

@@ -222,6 +222,7 @@ let fetchObjektData = function (_state) {
   Fetch.fetchObjekt(_state.objektId, (objektData) => {
     _state.objekt = objektData;
     _state.objektEdited = null;
+    setVeglenkeInMap(_state);
 
     fetchObjektTypeData(_state);
   });
@@ -250,7 +251,7 @@ let getNewData = function (_state) {
         for (var i = 0; i < _state.searchResultsFull.resultater[0].vegObjekter.length; i++) {
           if (_state.searchResultsFull.resultater[0].vegObjekter[i].objektId === _state.objektId) {
             _state.objekt = _state.searchResultsFull.resultater[0].vegObjekter[i];
-
+            setVeglenkeInMap(_state);
             setTimeout(emitChangeFunction, 0);
 
             return;
@@ -457,7 +458,15 @@ let updateEditedLocation = function (_state) {
             _state.objektEdited.lokasjon.geometriWgs84 = koorData.sokePunkt;
             _state.objektEdited.lokasjon.geometriWgs84 = koorData.sokePunkt;
             _state.objektEdited.lokasjon.vegReferanseStreng = koorData.visningsNavn;
+
+            // Sett veglenke geometri i lokasjon
+            // Trenger bare å oppdatere objektEdited siden en endring i objekt gjorde at vi kom hit
+            let positionVeglenkeObject = omnivore.wkt.parse(koorData.punktPaVegReferanseLinjeWGS84);
+            let positionVeglenkeLatLng = positionVeglenkeObject._layers[Object.keys(positionVeglenkeObject._layers)[0]]._latlng;
+            _state.objektEdited.lokasjon.geometriVeglenkeLatlng = positionVeglenkeLatLng;
+            MapFunctions.displayVeglenke(_state.objektEdited);
           }
+
           _state.objektEdited.lokasjon.veglenker = [
             {
               id: koorData.veglenkeId,
@@ -481,6 +490,42 @@ let updateEditedLocation = function (_state) {
         break;
       default:
 
+    }
+  }
+};
+
+let setVeglenkeInMap = function (_state) {
+  let objekt = _state.objektEdited || _state.objekt;
+  if (objekt && objekt.lokasjon && objekt.lokasjon.geometriWgs84 && !objekt.lokasjon.geometriVeglenkeLatlng) {
+    let positionObject = omnivore.wkt.parse(objekt.lokasjon.geometriWgs84);
+    let positionLatLng = positionObject._layers[Object.keys(positionObject._layers)[0]]._latlng;
+
+    if (positionLatLng) {
+      Fetch.fetchKoordinat(positionLatLng.lng, positionLatLng.lat, (koorData) => {
+        if (koorData.sokePunktSrid === 'LAT_LON_WGS84') {
+          let positionVeglenkeObject = omnivore.wkt.parse(koorData.punktPaVegReferanseLinjeWGS84);
+          let positionVeglenkeLatLng = positionVeglenkeObject._layers[Object.keys(positionVeglenkeObject._layers)[0]]._latlng;
+
+          // Set geometri veglenke on both objekt and objektedited
+          if (_state.objekt && _state.objekt.lokasjon) {
+            if (!_state.objekt.lokasjon.geometriVeglenkeLatlng) {
+              _state.objekt.lokasjon.geometriVeglenkeLatlng = null;
+            }
+
+            _state.objekt.lokasjon.geometriVeglenkeLatlng = positionVeglenkeLatLng;
+          }
+
+          if (_state.objektEdited && _state.objektEdited.lokasjon) {
+            if (!_state.objektEdited.lokasjon.geometriVeglenkeLatlng) {
+              _state.objektEdited.lokasjon.geometriVeglenkeLatlng = null;
+            }
+
+            _state.objektEdited.lokasjon.geometriVeglenkeLatlng = positionVeglenkeLatLng;
+          }
+
+          MapFunctions.displayVeglenke(objekt);
+        }
+      });
     }
   }
 };
