@@ -243,8 +243,9 @@
 }
 
 .Editor-ErrorInfo {
-  font-size: 13px;
+  font-size: 12px;
   float:left;
+  max-width:100%;
   width:300px;
   color:red;
   margin:8px;
