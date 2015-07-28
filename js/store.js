@@ -456,7 +456,7 @@ let updateEditedLocation = function (_state) {
             _state.objektEdited.lokasjon.geometriUtm33 = utm33Position;
             _state.objektEdited.lokasjon.geometriWgs84 = koorData.sokePunkt;
             _state.objektEdited.lokasjon.geometriWgs84 = koorData.sokePunkt;
-            _state.objektEdited.lokasjon.vegReferanseStreng = koorData.kommuneNr + ' ' + koorData.visningsNavn;
+            _state.objektEdited.lokasjon.vegReferanseStreng = koorData.visningsNavn;
           }
           _state.objektEdited.lokasjon.veglenker = [
             {
