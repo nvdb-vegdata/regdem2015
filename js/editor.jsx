@@ -231,11 +231,25 @@ let Editor = React.createClass({
 
     var saveLabel = (this.props.data.writeStatus === 'validating')? 'Validerer':'Lagre';
     var SaveButton = (<FlatButton
-        label={saveLabel}
-        primary={true}
-        onTouchTap={this.saveObjekt}
-        disabled={!this.props.data.objektEdited}
-      />);
+      label={saveLabel}
+      primary={true}
+      onTouchTap={this.saveObjekt}
+      disabled={!this.props.data.objektEdited}
+    />);
+    var infoText;
+    if(this.props.data.writeStatus === 'error') {
+      infoText = "Det finnes feil i utfylt skjema. Rett opp i de merkede feltene.";
+    } else if (this.props.data.warned) {
+      infoText = "Det finnes advarsler i utfylt skjema. Se over og trykk lagre igjen for å fortsette.";
+    } else {
+      infoText = "";
+    }
+    var InfoField
+    if (infoText) {
+      InfoField = (<Fields.ErrorInfo text={infoText}/>);
+    } else {
+      InfoField = null;
+    }
 
     return (
       <div className={EditorClassName}>
@@ -250,7 +264,7 @@ let Editor = React.createClass({
             <CardText className={CardTextClassName}>
               {GeomFields}
               {EditorFields}
-
+              {InfoField}
               <CardActions className={CardActionsClassName}>
                 {SaveButton}
               </CardActions>
