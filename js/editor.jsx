@@ -79,7 +79,7 @@ let Editor = React.createClass({
     let warningsFull = {};
     for (let i in egenskapsTyper) {
       let index = egenskapsTyper[i].id;
-      warningsFull[index] = warnings[index] ? warnings[index].type + ": " + warnings[index].kode : '';
+      warningsFull[index] = warnings[index] ? warnings[index].type + ': ' + warnings[index].kode : '';
     }
 
     // Forbereder tittel
@@ -227,7 +227,7 @@ let Editor = React.createClass({
       CardTitleClassName = 'Editor-CardTitle Editor-hidden';
       MinimizedStatusClassName = 'Editor-minimized-status';
     }
-    
+
     var saveLabel = (this.props.data.writeStatus === 'validating') ? 'Validerer' : 'Lagre';
     var SaveButton = (<FlatButton
       label={saveLabel}
@@ -237,13 +237,13 @@ let Editor = React.createClass({
     />);
     var infoText;
     if(this.props.data.writeStatus === 'error') {
-      infoText = "Det finnes feil i utfylt skjema. Rett opp i de merkede feltene.";
+      infoText = 'Det finnes feil i utfylt skjema. Rett opp i de merkede feltene.';
     } else if (this.props.data.warned) {
-      infoText = "Det finnes advarsler i utfylt skjema. Se over og trykk lagre igjen for å fortsette.";
+      infoText = 'Det finnes advarsler i utfylt skjema. Se over og trykk lagre igjen for å fortsette.';
     } else {
-      infoText = "";
+      infoText = '';
     }
-    var InfoField
+    var InfoField;
     if (infoText) {
       InfoField = (<Fields.ErrorInfo text={infoText}/>);
     } else {

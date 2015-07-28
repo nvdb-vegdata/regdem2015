@@ -20,7 +20,7 @@ let Geom = React.createClass({
     if (objekt.lokasjon.geometriWgs84) {
       geometriStreng = objekt.lokasjon.geometriWgs84;
     } else if (this.props.data.editor.currentlyValidated) {
-      errorText = "Vegobjektet må være stedfestet"
+      errorText = 'Vegobjektet må være stedfestet.';
     }
     return (
       <div className="Editor-geom">
