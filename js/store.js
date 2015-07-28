@@ -511,6 +511,7 @@ let resetObjekt = function (_state) {
   _state.geometry.resultType = null;
 
   _state.validatorResponse = null;
+  _state.writeStatus = null;
   _state.warned = false;
 
   MapFunctions.clearEditGeom(); // Fjerner edit-objekt ved lukking av editor.
@@ -533,6 +534,7 @@ let closeEditor = function (_state) {
   resetObjekt(_state);
   _state.editor.loading = false;
   _state.editor.expanded = false;
+  _state.editor.currentlyValidated = false;
 };
 
 let expandEditor = function (_state) {
