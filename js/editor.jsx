@@ -79,7 +79,7 @@ let Editor = React.createClass({
     let warningsFull = {};
     for (let i in egenskapsTyper) {
       let index = egenskapsTyper[i].id;
-      warningsFull[index] = warnings[index] ? warnings[index].kode : '';
+      warningsFull[index] = warnings[index] ? warnings[index].type + ": " + warnings[index].kode : '';
     }
 
     // Forbereder tittel
@@ -227,14 +227,28 @@ let Editor = React.createClass({
       CardTitleClassName = 'Editor-CardTitle Editor-hidden';
       MinimizedStatusClassName = 'Editor-minimized-status';
     }
-
-    let saveLabel = (this.props.data.writeStatus === 'validating') ? 'Validerer' : 'Lagre';
-    let SaveButton = (<FlatButton
-        label={saveLabel}
-        primary={true}
-        onTouchTap={this.saveObjekt}
-        disabled={!this.props.data.objektEdited}
-      />);
+    
+    var saveLabel = (this.props.data.writeStatus === 'validating') ? 'Validerer' : 'Lagre';
+    var SaveButton = (<FlatButton
+      label={saveLabel}
+      primary={true}
+      onTouchTap={this.saveObjekt}
+      disabled={!this.props.data.objektEdited}
+    />);
+    var infoText;
+    if(this.props.data.writeStatus === 'error') {
+      infoText = "Det finnes feil i utfylt skjema. Rett opp i de merkede feltene.";
+    } else if (this.props.data.warned) {
+      infoText = "Det finnes advarsler i utfylt skjema. Se over og trykk lagre igjen for å fortsette.";
+    } else {
+      infoText = "";
+    }
+    var InfoField
+    if (infoText) {
+      InfoField = (<Fields.ErrorInfo text={infoText}/>);
+    } else {
+      InfoField = null;
+    }
 
     let Vegreferanse = (
       <div className="Editor-tekst">
@@ -261,7 +275,7 @@ let Editor = React.createClass({
               {Vegreferanse}
               {GeomFields}
               {EditorFields}
-
+              {InfoField}
               <CardActions className={CardActionsClassName}>
                 {SaveButton}
               </CardActions>

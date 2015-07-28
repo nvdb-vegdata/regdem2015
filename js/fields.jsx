@@ -401,6 +401,14 @@ let Fields = {
       );
     }
 
+  }),
+
+  ErrorInfo: React.createClass({
+    render: function () {
+      return (
+        <div className='Editor-ErrorInfo'>{this.props.text}</div>
+      );
+    }
   })
 
 };

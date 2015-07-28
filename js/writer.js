@@ -103,7 +103,6 @@ let validateObjekt = function (_state) {
   RegDemActions.updateWriteStatus(_state.listPosition, 'validating');
   if (queryJSON) {
     Fetch.sendQuery('POST', url, queryJSON, (returnData) => {
-      console.log(returnData);
       RegDemActions.updateValidatorResponse(_state.listPosition, returnData);
     });
   }
@@ -116,13 +115,13 @@ let checkProgress = function (_state, url) {
       RegDemActions.updateWriteStatus(_state.listPosition, 'done');
     } else if (response === 'AVVIST') {
       RegDemActions.updateWriteStatus(_state.listPosition, 'error');
-    } else if (response === 'KANSELLERT') {
+    } else if (response == 'KANSELLERT') {
       RegDemActions.updateWriteStatus(_state.listPosition, 'error');
     } else {
       checkProgress(_state, url);
     }
   });
-};
+}
 
 let processObjekt = function (_state, data) {
   // TODO: Mer robust trimming av lenken.
@@ -144,4 +143,4 @@ let registerObjekt = function (_state) {
 module.exports = {
   validateObjekt: validateObjekt,
   registerObjekt: registerObjekt
-};
+}

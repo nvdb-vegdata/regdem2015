@@ -37,7 +37,8 @@ let _emptyState = {
   searchResultsFull: null,
 
   validatorResponse: null,
-  writeStatus: null,  // "error", "processing", "done"
+  writeStatus: null,  // "error", "validating", "processing", "done"
+  warned: false,
 
   progressStatus: [],
 
@@ -269,7 +270,13 @@ let getNewData = function (_state) {
 let evaluateResponse = function (response) {
   // Antar at vi sender ét objekt av gangen.
   let result = response.resultat.vegObjekter[0];
-  return !(result.feil || result.advarsel);
+  if (result.feil && result.feil.length > 0) {
+    return 'feil';
+  } else if (result.advarsel && result.advarsel.length > 0) {
+    return 'advarsel';
+  } else {
+    return 'ok';
+  }
 
 };
 
@@ -504,6 +511,7 @@ let resetObjekt = function (_state) {
   _state.geometry.resultType = null;
 
   _state.validatorResponse = null;
+  _state.warning = false;
 
   MapFunctions.clearEditGeom(); // Fjerner edit-objekt ved lukking av editor.
   MapFunctions.focusMarker(null);
@@ -679,12 +687,18 @@ let updateValidatorResponse = function (_state, response) {
   _state.version = _state.version + 1;
   _state.validatorResponse = response;
   _state.editor.currentlyValidated = true;
-  if(evaluateResponse(response)) {
+  var evalResponse = evaluateResponse(response);
+  if (evalResponse === 'ok' || (evalResponse === 'advarsel' && _state.warned ) ) {
     updateWriteStatus(_state, 'processing');
+    _state.warned = false;
     Writer.registerObjekt(_state);
+  } else if (evalResponse === 'advarsel') {
+    updateWriteStatus(_state, 'warned');
+    _state.warned = true;
   } else {
     updateWriteStatus(_state, 'error');
   }
+  console.log(_state.writeStatus);
 };
 
 let updateValMessage = function (_state, message) {
