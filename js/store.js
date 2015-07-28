@@ -556,7 +556,8 @@ let resetObjekt = function (_state) {
   _state.geometry.resultType = null;
 
   _state.validatorResponse = null;
-  _state.warning = false;
+  _state.writeStatus = null;
+  _state.warned = false;
 
   MapFunctions.clearEditGeom(); // Fjerner edit-objekt ved lukking av editor.
   MapFunctions.focusMarker(null);
@@ -578,6 +579,7 @@ let closeEditor = function (_state) {
   resetObjekt(_state);
   _state.editor.loading = false;
   _state.editor.expanded = false;
+  _state.editor.currentlyValidated = false;
 };
 
 let expandEditor = function (_state) {
@@ -743,7 +745,6 @@ let updateValidatorResponse = function (_state, response) {
   } else {
     updateWriteStatus(_state, 'error');
   }
-  console.log(_state.writeStatus);
 };
 
 let updateValMessage = function (_state, message) {

@@ -15,16 +15,19 @@ let Geom = React.createClass({
   render: function () {
     let objekt = this.props.data.objektEdited || this.props.data.objekt;
     let geometriStreng = '';
+    let errorText = '';
 
     if (objekt.lokasjon.geometriWgs84) {
       geometriStreng = objekt.lokasjon.geometriWgs84;
+    } else if (this.props.data.editor.currentlyValidated) {
+      errorText = 'Vegobjektet må være stedfestet.';
     }
-
     return (
       <div className="Editor-geom">
         <TextField
           floatingLabelText="Geometri"
           value={geometriStreng}
+          errorText={errorText}
           fullWidth={true}
           className="Editor-permanentEtikett"
         />

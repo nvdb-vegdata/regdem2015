@@ -121,8 +121,7 @@ let Fields = {
     getInitialState: function() {
       return {
         numberValue: this.props.verdi,
-        numberValueErrorText: this.props.warning,
-        currentlyValidated: false
+        numberValueErrorText: this.props.warning
       };
     },
 
