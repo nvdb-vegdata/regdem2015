@@ -2,8 +2,8 @@ let omnivore = require('leaflet-omnivore');
 let RegDemActions = require('./actions');
 
 let L = window.L || {};
+let MapFunctions = window.MapFunctions || {};
 
-let curPosLayer = new L.FeatureGroup();
 let editLayer = new L.FeatureGroup();
 let currentEditGeom = null;
 let markers = new L.MarkerClusterGroup({
@@ -34,6 +34,20 @@ let clearEditGeom = function () {
   editLayer.clearLayers();
 };
 
+let focusMarker = function ( id ) {
+  if(!id){
+    unfocusMarker();
+  } else {
+    for (var i in markerList) {
+        if (parseInt(id) !== parseInt(i)) {
+          setGeomOpacity(markerList[i].obj.getLayers()[0], 0.5, markerList[i].type);
+        } else {
+          setGeomOpacity(markerList[i].obj.getLayers()[0], 1, markerList[i].type);
+        }
+    }
+  }
+};
+
 // Viser listen av objekter på kartet som enten punkt, linje eller flate.
 let displayMarkers = function (kart, state) {
 
@@ -43,6 +57,10 @@ let displayMarkers = function (kart, state) {
 
   let activeObjekt = state.objektEdited ? state.objektEdited : (state.objekt ? state.objekt : null);
   let activeObjektId = activeObjekt ? activeObjekt.objektId : null;
+
+  let onClickMarker = (vegObjekt) => {
+    RegDemActions.setObjektID(state.listPosition, vegObjekt.objektId);
+  };
 
   for (let index in objekter) {
     let vegObjekt = objekter[index];
@@ -56,9 +74,7 @@ let displayMarkers = function (kart, state) {
     let posisjon = vegObjekt.lokasjon.geometriWgs84;
     let geom = omnivore.wkt.parse(posisjon);
 
-    geom.on('click', () => {
-      RegDemActions.setObjektID(state.listPosition, vegObjekt.objektId);
-    });
+    geom.on('click', onClickMarker.bind(null, vegObjekt));
 
     markerList[vegObjekt.objektId] = {obj: geom, type: posisjon.charAt(0)};
     markers.addLayer(geom);
@@ -89,20 +105,6 @@ let update = function (kart, state) {
   }
 };
 
-let focusMarker = function ( id ) {
-  if(!id){
-    unfocusMarker();
-  } else {
-    for (var i in markerList) {
-        if (id != i) {
-          setGeomOpacity(markerList[i].obj.getLayers()[0], 0.5, markerList[i].type);
-        } else {
-          setGeomOpacity(markerList[i].obj.getLayers()[0], 1, markerList[i].type);
-        }
-    }
-  }
-};
-
 let unfocusMarker = function () {
   if(markerList) {
     for (var i in markerList) {
@@ -113,7 +115,7 @@ let unfocusMarker = function () {
 
 let centerAroundMarker = function (id) {
   for (var i in markerList) {
-      if (id == i) {
+      if (parseInt(id) === parseInt(i)) {
         MapFunctions.mapData().panTo(markerList[i].obj.getLayers()[0]._latlng);
         break;
       }

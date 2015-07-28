@@ -2,7 +2,6 @@ let React = require('react');
 let mui = require('material-ui');
 
 var ThemeManager = new mui.Styles.ThemeManager();
-let Colors = mui.Styles.Colors;
 
 let MapComponent = require('./map.js');
 let Editor = require('./editor.jsx');

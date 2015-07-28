@@ -67,7 +67,7 @@
 .Editor-minimized-status {
   padding: 5px !important;
 }
-.Editor-CardTitle, .Editor-knapp-container {
+.Editor-CardTitle {
   flex-shrink: 0;
 }
 .Editor-CardText {
@@ -110,25 +110,30 @@
 .Editor-viktighet {
   font-size: 10px;
   float: right;
-  margin: 8px;
+  margin: 5px 0 0 0;
+  padding: 4px 4px 2px 4px;
+  border-radius: 2px;
   letter-spacing: 1px;
 }
-.Editor-viktighet-1, .Editor-viktighet-2 {
+.Editor-viktighet-1::after, .Editor-viktighet-2::after {
+  content: " \25CF";
   color: #D0021B;
 }
-.Editor-viktighet-3 {
+.Editor-viktighet-3::after {
+  content: " \25CF";
   color: orange;
 }
-.Editor-viktighet-4 {
+.Editor-viktighet-4::after {
+  content: " \25CF";
   color: blue;
 }
 .Editor-beskrivelse {
-  color: #999;
+  color: #666;
 }
 .Editor-beskrivelseTekst {
   font-size: 13px;
   line-height: 1.4em;
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.75);
 }
 .Editor-tomKnapp {
   user-select: none;
@@ -148,9 +153,8 @@
 
 /* Components */
 
-.Editor-enum, .Editor-tekst, .Editor-tall, .Editor-klokkeslett {
+.Editor-enum, .Editor-tekst, .Editor-tall, .Editor-klokkeslett, .Editor-datePicker {
   position: relative;
-  min-height: 100px;
   margin-bottom: 30px;
 }
 .Editor-klokkeslett {
@@ -199,8 +203,8 @@
 }
 
 .Editor-permanentEtikett > label:first-child, .Editor-enum label {
-  color: rgba(0, 0, 0, 0.5) !important;
-  transform: perspective(1px) scale(0.75) translate3d(0, -18px, 0) !important;
+  color: #666 !important;
+  transform: perspective(1px) scale(0.8) translate3d(0, -25px, 0) !important;
 }
 .Editor-endretVerdi > hr:last-of-type, .Editor-endretVerdi ~ hr:last-of-type {
   transform: scaleX(1) !important;

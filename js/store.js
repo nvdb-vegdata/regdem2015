@@ -8,6 +8,9 @@ let Helper = require('./helper.js');
 let Fetch = require('./fetch.js');
 let Writer = require('./writer.js');
 
+let MapFunctions = window.MapFunctions || {};
+let proj4 = window.proj4 || null;
+
 let CHANGE_EVENT = 'change';
 
 /*
@@ -18,6 +21,7 @@ let _emptyState = {
   version: 0, // Brukers spesielt for å få React til å re-render alle felter når man trykker på nytt element knappen og editor allerede har innhold
   listPosition: null,
   active: false,
+  scrollToTop: true,
 
   // APP
   objektId: null,
@@ -97,7 +101,7 @@ let deleteState = function (index) {
 };
 
 let getAllStates = function () {
-  return _states.list.filter((value, index) => {
+  return _states.list.filter((value) => {
     return (value);
   });
 };
@@ -119,11 +123,20 @@ let setActiveState = function (index) {
 
   _states.list[index].active = true;
   _states.list[index].map.myLocation = false;
+
+  MapFunctions.updateMarkers(_states.list[index]);
 };
 
 let getInactiveState = function () {
   return _states.list.filter((value, index) => {
     return (index !== _states.activeState && value);
+  });
+};
+
+let getAvailableStates = function () {
+  // Returns all states that are not active, and that are not communicating with write API
+  return _states.list.filter((value, index) => {
+    return (index !== _states.activeState && value && !value.writeStatus);
   });
 };
 
@@ -234,7 +247,11 @@ let getNewData = function (_state) {
         for (var i = 0; i < _state.searchResultsFull.resultater[0].vegObjekter.length; i++) {
           if (_state.searchResultsFull.resultater[0].vegObjekter[i].objektId === _state.objektId) {
             _state.objekt = _state.searchResultsFull.resultater[0].vegObjekter[i];
-            RegDemStore.emitChange();
+
+            setTimeout(function() { // Run after dispatcher has finished
+              RegDemStore.emitChange();
+            }, 0);
+
             return;
           }
         }
@@ -259,7 +276,7 @@ let evaluateResponse = function (response) {
     return 'ok';
   }
 
-}
+};
 
 let rebuildFromState = function (_state) {
   // Markører
@@ -268,254 +285,6 @@ let rebuildFromState = function (_state) {
 
   // GPS
   _state.map.myLocation = false;
-};
-
-/*
-===================== Functions called by Actions =====================
-*/
-
-let setObjektID = function (_state, objektId) {
-  if (objektId && !_state.geometry.addingMarker) {
-    resetObjekt(_state);
-    closeList(_state);
-    _state.objektId = objektId;
-    MapFunctions.focusMarker(objektId);
-    MapFunctions.clearEditGeom();
-    getNewData(_state);
-  }
-};
-
-let closeEditor = function (_state) {
-  resetObjekt(_state);
-  _state.editor.loading = false;
-  _state.editor.expanded = false;
-};
-
-let expandEditor = function (_state) {
-  _state.editor.expanded = true;
-};
-
-let fetchObjektPositions = function (_state) {
-  _state.search.loading = true;
-  RegDemStore.emitChange();
-
-  let id = _state.objektTypeId;
-
-  if (MapFunctions.mapData()) {
-    let mapbox = MapFunctions.getBounds();
-
-    Fetch.fetchAPIObjekter(id, mapbox, (data) => {
-      _state.searchResults = data;
-      _state.searchResultsFull = null;
-      _state.search.loading = false;
-
-      MapFunctions.updateMarkers(_state);
-
-      RegDemStore.emitChange();
-    });
-  }
-};
-
-let fetchAllDataFromObjektPosition = function (_state, extraEgenskap) {
-  if (_state.searchResultsFull) {
-    _state.list.extraEgenskap = extraEgenskap;
-    RegDemStore.emitChange();
-  } else {
-    _state.search.loading = true;
-    RegDemStore.emitChange();
-
-    let id = _state.objektTypeId;
-
-    if (MapFunctions.mapData()) {
-      var mapbox = MapFunctions.getBounds();
-
-      Fetch.fetchAPIObjekter(id, mapbox, (data) => {
-        _state.searchResultsFull = data;
-        _state.search.loading = false;
-        _state.list.extraEgenskap = extraEgenskap;
-        RegDemStore.emitChange();
-      }, true);
-    }
-  }
-};
-
-let fetchObjektTypes = function (_state, objektType) {
-  _state.search.loading = true;
-  RegDemStore.emitChange();
-
-  Fetch.fetchObjektTypes( objektType, function(data) {
-    _state.search.options = data;
-    _state.search.loading = false;
-    RegDemStore.emitChange();
-  });
-};
-
-let setInputValue = function (_state, inputValue) {
-  _state.search.inputValue = inputValue;
-  RegDemStore.emitChange();
-};
-
-let executeSearch = function (_state, objektTypeId) {
-  _state.objektId = null;
-  _state.objekt = null;
-  _state.objektEdited = null;
-
-  _state.objektTypeId = objektTypeId;
-  _state.objektType = null;
-
-  fetchObjektTypeData(_state);
-
-  fetchObjektPositions(_state);
-};
-
-let resetApp = function (_state) {
-  MapFunctions.clearMarkers();
-  MapFunctions.clearEditGeom();
-
-  let listPosition = _state.listPosition;
-  let active = _state.active;
-
-  _state = updateState(listPosition, simpleDeepCopy(_emptyState));
-
-  _state.listPosition = listPosition;
-  _state.active = active;
-  _state.map.myLocation = false;
-
-  return _state;
-};
-
-let resetObjekt = function (_state) {
-  _state.version = _state.version + 1;
-  _state.objektId = null;
-  _state.objekt = null;
-  _state.objektEdited = null;
-
-  _state.geometry.result = null;
-  _state.geometry.resultType = null;
-
-  _state.validatorResponse = null;
-
-  MapFunctions.clearEditGeom(); // Fjerner edit-objekt ved lukking av editor.
-  MapFunctions.focusMarker(null);
-  MapFunctions.updateMarkers(_state);
-};
-
-let goBackAndReset = function (_state, userInput) {
-  let oldSearchState = simpleDeepCopy(_state.search);
-  _state = resetApp(_state);
-  _state.search = oldSearchState;
-  _state.search.inputValue = userInput;
-};
-
-let closeList = function (_state) {
-  _state.list.open = false;
-};
-
-let showList = function (_state) {
-  if (_state.objektId) {
-    closeEditor(_state);
-  }
-  _state.list.open = !_state.list.open;
-};
-
-let highlightMarker = function (id) {
-  MapFunctions.focusMarker(id);
-};
-
-let addGeomStart = function (_state, id, type) {
-  if (!_state.search.loading) {
-    _state.geometry.addingMarker = true;
-    _state.geometry.current = id;
-    _state.geometry.resultType = type;
-    MapFunctions.addGeom(type, _state);
-  }
-};
-
-let addGeomAbort = function (_state) {
-  _state.geometry.addingMarker = false;
-  _state.geometry.current = null;
-  _state.geometry.result = null;
-  _state.geometry.resultType = null;
-  MapFunctions.removeGeom(_state);
-};
-
-let addGeomEnd = function (_state) {
-  _state.geometry.savingMarker = true;
-  _state.geometry.result = MapFunctions.getCurrentEditGeom();
-  _state.geometry.addingMarker = false;
-  updateEditedLocation(_state);
-};
-
-let getCurrentLocation = function (_state) {
-  _state.map.myLocation = true;
-  MapFunctions.findMyPosition();
-};
-
-let locationHasBeenSet = function (_state) {
-  _state.map.myLocation = false;
-};
-
-let updateValidatorResponse = function (_state, response) {
-  _state.version = _state.version + 1;
-  _state.validatorResponse = response;
-  _state.editor.currentlyValidated = true;
-  var evalResponse = evaluateResponse(response);
-  if (evalResponse === 'ok' || (evalResponse === 'advarsel' && _state.writeStatus === 'warned') ) {
-    updateWriteStatus(_state, 'processing');
-    Writer.registerObjekt(_state);
-  } else if (evalResponse === 'advarsel') {
-    updateWriteStatus(_state, 'warned');
-  } else {
-    updateWriteStatus(_state, 'error');
-  }
-  console.log(_state.writeStatus);
-};
-
-let updateValMessage = function (_state, message) {
-  _state.editor.validationMessage = message;
-};
-
-let makeThisStateActive = function (_state) {
-  setActiveState(_state.listPosition);
-  rebuildFromState(_state);
-};
-
-let setPrevSelectedIndex = function (_state, selectedIndex) {
-  _state.search.selectedIndex = selectedIndex;
-};
-
-let minimizeEditor = function () {
-  let newState = createNewState();
-  setActiveState(newState);
-};
-
-let terminateState = function (_state) {
-  MapFunctions.clearMarkers();
-  MapFunctions.clearEditGeom();
-  deleteState(_state.listPosition);
-
-  if (!getActiveState() || getActiveState().length === 0) {
-    let newState = createNewState();
-    setActiveState(newState);
-  }
-};
-
-let updateWriteStatus = function (_state, status) {
-  switch (status) {
-    case 'processing':
-      minimizeEditor();
-      break;
-    case 'done':
-      // terminateState(_state);
-      break;
-    default:
-  }
-
-  _state.writeStatus = status;
-};
-
-let updateProgressStatus = function (_state, status) {
-  _state.progressStatus.push(status);
 };
 
 /*
@@ -540,7 +309,7 @@ let createObjektEdited = function (_state) {
 
 let findiEgenskapByString = function (_state, egenskap) {
   let returnEgenskap = null;
-  _state.objektType.egenskapsTyper.every((element, index, array) => {
+  _state.objektType.egenskapsTyper.every((element) => {
     if (element.navn && element.navn.toLowerCase().indexOf(egenskap) !== -1) {
       returnEgenskap = element;
       return false;
@@ -552,7 +321,7 @@ let findiEgenskapByString = function (_state, egenskap) {
 };
 
 let findEnumValueFromObjektType = function (_state, egenskapFromObjektType, egenskapsId, enumId) {
-  if (egenskapFromObjektType.type === "ENUM") {
+  if (egenskapFromObjektType.type === 'ENUM') {
     for (var testEnumId in egenskapFromObjektType.enumVerdier) {
       if (String(testEnumId) === String(enumId)) {
         return egenskapFromObjektType.enumVerdier[enumId];
@@ -682,8 +451,8 @@ let updateEditedLocation = function (_state) {
             let positionObject = omnivore.wkt.parse(koorData.sokePunkt);
             let positionLatLng = positionObject._layers[Object.keys(positionObject._layers)[0]]._latlng;
 
-            let WGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [positionLatLng.lng, positionLatLng.lat]);
-            let utm33Position = 'POINT (' + WGS84ToUTM33[0] + ' ' + WGS84ToUTM33[1] + ')';
+            let lenkeWGS84ToUTM33 = proj4('+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', [positionLatLng.lng, positionLatLng.lat]);
+            let utm33Position = 'POINT (' + lenkeWGS84ToUTM33[0] + ' ' + lenkeWGS84ToUTM33[1] + ')';
 
             _state.objektEdited.lokasjon.geometriForenkletUtm33 = utm33Position;
             _state.objektEdited.lokasjon.geometriForenkletWgs84 = koorData.sokePunkt;
@@ -718,12 +487,297 @@ let updateEditedLocation = function (_state) {
 };
 
 /*
+===================== Functions called by Actions =====================
+*/
+
+let hasScrolledToTop = function (_state) {
+  _state.scrollToTop = false;
+}
+
+let resetObjekt = function (_state) {
+  _state.version = _state.version + 1;
+  _state.objektId = null;
+  _state.objekt = null;
+  _state.objektEdited = null;
+  _state.scrollToTop = true;
+
+  _state.geometry.result = null;
+  _state.geometry.resultType = null;
+
+  _state.validatorResponse = null;
+
+  MapFunctions.clearEditGeom(); // Fjerner edit-objekt ved lukking av editor.
+  MapFunctions.focusMarker(null);
+  MapFunctions.updateMarkers(_state);
+};
+
+let setObjektID = function (_state, objektId) {
+  if (objektId && !_state.geometry.addingMarker) {
+    resetObjekt(_state);
+    closeList(_state);
+    _state.objektId = objektId;
+    MapFunctions.focusMarker(objektId);
+    MapFunctions.clearEditGeom();
+    getNewData(_state);
+  }
+};
+
+let closeEditor = function (_state) {
+  resetObjekt(_state);
+  _state.editor.loading = false;
+  _state.editor.expanded = false;
+};
+
+let expandEditor = function (_state) {
+  _state.editor.expanded = true;
+};
+
+let fetchObjektPositions = function (_state) {
+  _state.search.loading = true;
+  RegDemStore.emitChange();
+
+  let id = _state.objektTypeId;
+
+  if (MapFunctions.mapData()) {
+    let mapbox = MapFunctions.getBounds();
+
+    Fetch.fetchAPIObjekter(id, mapbox, (data) => {
+      _state.searchResults = data;
+      _state.searchResultsFull = null;
+      _state.search.loading = false;
+
+      MapFunctions.updateMarkers(_state);
+
+      RegDemStore.emitChange();
+    });
+  }
+};
+
+let fetchAllDataFromObjektPosition = function (_state, extraEgenskap) {
+  if (_state.searchResultsFull) {
+    _state.list.extraEgenskap = extraEgenskap;
+    RegDemStore.emitChange();
+  } else {
+    _state.search.loading = true;
+    RegDemStore.emitChange();
+
+    let id = _state.objektTypeId;
+
+    if (MapFunctions.mapData()) {
+      var mapbox = MapFunctions.getBounds();
+
+      Fetch.fetchAPIObjekter(id, mapbox, (data) => {
+        _state.searchResultsFull = data;
+        _state.search.loading = false;
+        _state.list.extraEgenskap = extraEgenskap;
+        RegDemStore.emitChange();
+      }, true);
+    }
+  }
+};
+
+let fetchObjektTypes = function (_state, objektType) {
+  _state.search.loading = true;
+  RegDemStore.emitChange();
+
+  Fetch.fetchObjektTypes( objektType, function(data) {
+    _state.search.options = data;
+    _state.search.loading = false;
+    RegDemStore.emitChange();
+  });
+};
+
+let setInputValue = function (_state, inputValue) {
+  _state.search.inputValue = inputValue;
+  RegDemStore.emitChange();
+};
+
+let executeSearch = function (_state, objektTypeId) {
+  _state.objektId = null;
+  _state.objekt = null;
+  _state.objektEdited = null;
+
+  _state.objektTypeId = objektTypeId;
+  _state.objektType = null;
+
+  fetchObjektTypeData(_state);
+
+  fetchObjektPositions(_state);
+};
+
+let resetApp = function (_state) {
+  MapFunctions.clearMarkers();
+  MapFunctions.clearEditGeom();
+
+  let listPosition = _state.listPosition;
+  let active = _state.active;
+
+  _state = updateState(listPosition, simpleDeepCopy(_emptyState));
+
+  _state.listPosition = listPosition;
+  _state.active = active;
+  _state.map.myLocation = false;
+
+  return _state;
+};
+
+let goBackAndReset = function (_state, userInput) {
+  let oldSearchState = simpleDeepCopy(_state.search);
+  _state = resetApp(_state);
+  _state.search = oldSearchState;
+  _state.search.inputValue = userInput;
+};
+
+let closeList = function (_state) {
+  _state.list.open = false;
+};
+
+let showList = function (_state) {
+  if (_state.objektId) {
+    closeEditor(_state);
+  }
+  _state.list.open = !_state.list.open;
+};
+
+let highlightMarker = function (id) {
+  MapFunctions.focusMarker(id);
+};
+
+let addGeomStart = function (_state, id, type) {
+  if (!_state.search.loading) {
+    _state.geometry.addingMarker = true;
+    _state.geometry.current = id;
+    _state.geometry.resultType = type;
+    MapFunctions.addGeom(type, _state);
+  }
+};
+
+let addGeomAbort = function (_state) {
+  _state.geometry.addingMarker = false;
+  _state.geometry.current = null;
+  _state.geometry.result = null;
+  _state.geometry.resultType = null;
+  MapFunctions.removeGeom(_state);
+};
+
+let addGeomEnd = function (_state) {
+  _state.geometry.savingMarker = true;
+  _state.geometry.result = MapFunctions.getCurrentEditGeom();
+  _state.geometry.addingMarker = false;
+  updateEditedLocation(_state);
+};
+
+let getCurrentLocation = function (_state) {
+  _state.map.myLocation = true;
+  MapFunctions.findMyPosition();
+};
+
+let locationHasBeenSet = function (_state) {
+  _state.map.myLocation = false;
+};
+
+let updateValidatorResponse = function (_state, response) {
+  _state.version = _state.version + 1;
+  _state.validatorResponse = response;
+  _state.editor.currentlyValidated = true;
+  var evalResponse = evaluateResponse(response);
+  if (evalResponse === 'ok' || (evalResponse === 'advarsel' && _state.writeStatus === 'warned') ) {
+    updateWriteStatus(_state, 'processing');
+    Writer.registerObjekt(_state);
+  } else if (evalResponse === 'advarsel') {
+    updateWriteStatus(_state, 'warned');
+  } else {
+    updateWriteStatus(_state, 'error');
+  }
+  console.log(_state.writeStatus);
+};
+
+let updateValMessage = function (_state, message) {
+  _state.editor.validationMessage = message;
+};
+
+let makeThisStateActive = function (_state) {
+  setActiveState(_state.listPosition);
+  rebuildFromState(_state);
+};
+
+let setPrevSelectedIndex = function (_state, selectedIndex) {
+  _state.search.selectedIndex = selectedIndex;
+};
+
+let minimizeEditor = function (_state) {
+  let objektTypeId = simpleDeepCopy(_state.objektTypeId);
+  let searchResults = simpleDeepCopy(_state.searchResults);
+  let searchResultsFull = simpleDeepCopy(_state.searchResultsFull);
+  let search = simpleDeepCopy(_state.search);
+  let map  = simpleDeepCopy(_state.map);
+
+  // Create a new state
+  let newStatePosition = createNewState();
+
+  // Put in state attributes from previous state
+  let _newState = getStateAtIndex(newStatePosition);
+  _newState.objektTypeId = objektTypeId;
+  _newState.searchResults = searchResults;
+  _newState.searchResultsFull = searchResultsFull;
+  _newState.search = search;
+  _newState.map = map;
+
+  // Set new active state
+  setActiveState(newStatePosition);
+};
+
+let terminateStateAndReset = function (_state) {
+  let wasTerminatedStateActive = _state.active;
+
+  deleteState(_state.listPosition);
+
+  // If the state we just terminated wasn't active and we have an active state, keep moving
+  if (!wasTerminatedStateActive && getActiveState()) {
+    return;
+  }
+
+  // Or else, reset the map
+  MapFunctions.clearMarkers();
+  MapFunctions.clearEditGeom();
+  MapFunctions.focusMarker(null);
+
+  // See if we can find an available state to set as active
+  if (getAvailableStates().length > 0) {
+    let positionToAvailableState = getAvailableStates().pop().listPosition;
+    setActiveState(positionToAvailableState);
+  // Or worst case, create a new state
+  } else {
+    let newState = createNewState();
+    setActiveState(newState);
+  }
+};
+
+let updateWriteStatus = function (_state, status) {
+  switch (status) {
+    case 'processing':
+      minimizeEditor(_state);
+      break;
+    case 'done':
+      terminateStateAndReset(_state);
+      break;
+    default:
+  }
+
+  _state.writeStatus = status;
+};
+
+let updateProgressStatus = function (_state, status) {
+  _state.progressStatus.push(status);
+};
+
+/*
 ===================== Actions =====================
 */
 
 AppDispatcher.register(function(action) {
   let listPosition, _state, id, objektType, inputValue, userInput, objektTypeId;
-  let selectedIndex, extraEgenskap, type, value, response, result, status;
+  let selectedIndex, extraEgenskap, type, value, response, status;
 
   switch(action.actionType) {
     case RegDemConstants.actions.REGDEM_SET_OBJEKT_ID:
@@ -904,10 +958,11 @@ AppDispatcher.register(function(action) {
       RegDemStore.emitChange();
       break;
 
-    case RegDemConstants.actions.REGDEM_TERMINATE_STATE:
+    case RegDemConstants.actions.REGDEM_TERMINATE_STATE_AND_RESET:
       listPosition = action.listPosition;
       _state = getStateAtIndex(listPosition);
-      terminateState(_state);
+      terminateStateAndReset(_state);
+
       RegDemStore.emitChange();
       break;
 
@@ -925,6 +980,12 @@ AppDispatcher.register(function(action) {
       status = action.status;
       updateProgressStatus(_state, status);
       RegDemStore.emitChange();
+      break;
+
+    case RegDemConstants.actions.REGDEM_HAS_SCROLLED_TO_TOP:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      hasScrolledToTop(_state);
       break;
 
     default:

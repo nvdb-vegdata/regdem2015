@@ -144,4 +144,4 @@ module.exports.fetchAPIObjekter = function(objectID, box, callback, extraEgenska
 
 module.exports.sendQuery = function (method, url, queryJSON, callback) {
   cookiemonsterApi(method, url, queryJSON, callback);
-}
+};

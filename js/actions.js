@@ -163,9 +163,9 @@ var RegDemActions = {
       selectedIndex: selectedIndex
     });
   },
-  terminateState: function (listPosition) {
+  terminateStateAndReset: function (listPosition) {
     AppDispatcher.dispatch({
-      actionType: RegDemConstants.actions.REGDEM_TERMINATE_STATE,
+      actionType: RegDemConstants.actions.REGDEM_TERMINATE_STATE_AND_RESET,
       listPosition: listPosition
     });
   },
@@ -174,14 +174,20 @@ var RegDemActions = {
       actionType: RegDemConstants.actions.REGDEM_UPDATE_WRITE_STATUS,
       listPosition: listPosition,
       status: status
-    })
+    });
   },
   updateProgressStatus: function (listPosition, status) {
     AppDispatcher.dispatch({
       actionType: RegDemConstants.actions.REGDEM_UPDATE_PROGRESS_STATUS,
       listPosition: listPosition,
       status: status
-    })
+    });
+  },
+  hasScrolledToTop: function (listPosition) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_HAS_SCROLLED_TO_TOP,
+      listPosition: listPosition
+    });
   }
 };
 

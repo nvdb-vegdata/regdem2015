@@ -2,7 +2,6 @@ let React = require('react');
 let Marker = require('./marker');
 let RegDemActions = require('./actions');
 var RegDemConstants = require('./constants');
-let Editable = require('leaflet-editable');
 let mapData = null;
 let locationControl = null;
 
