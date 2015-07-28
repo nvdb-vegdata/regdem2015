@@ -186,6 +186,42 @@ let RegDemStore = assign({}, EventEmitter.prototype, {
 ===================== Helpers for actions =====================
 */
 
+let setVeglenkeInMap = function (_state) {
+  let objekt = _state.objektEdited || _state.objekt;
+  if (objekt && objekt.lokasjon && objekt.lokasjon.geometriWgs84 && !objekt.lokasjon.geometriVeglenkeLatlng) {
+    let positionObject = omnivore.wkt.parse(objekt.lokasjon.geometriWgs84);
+    let positionLatLng = positionObject._layers[Object.keys(positionObject._layers)[0]]._latlng;
+
+    if (positionLatLng) {
+      Fetch.fetchKoordinat(positionLatLng.lng, positionLatLng.lat, (koorData) => {
+        if (koorData.sokePunktSrid === 'LAT_LON_WGS84') {
+          let positionVeglenkeObject = omnivore.wkt.parse(koorData.punktPaVegReferanseLinjeWGS84);
+          let positionVeglenkeLatLng = positionVeglenkeObject._layers[Object.keys(positionVeglenkeObject._layers)[0]]._latlng;
+
+          // Set geometri veglenke on both objekt and objektedited
+          if (_state.objekt && _state.objekt.lokasjon) {
+            if (!_state.objekt.lokasjon.geometriVeglenkeLatlng) {
+              _state.objekt.lokasjon.geometriVeglenkeLatlng = null;
+            }
+
+            _state.objekt.lokasjon.geometriVeglenkeLatlng = positionVeglenkeLatLng;
+          }
+
+          if (_state.objektEdited && _state.objektEdited.lokasjon) {
+            if (!_state.objektEdited.lokasjon.geometriVeglenkeLatlng) {
+              _state.objektEdited.lokasjon.geometriVeglenkeLatlng = null;
+            }
+
+            _state.objektEdited.lokasjon.geometriVeglenkeLatlng = positionVeglenkeLatLng;
+          }
+
+          MapFunctions.displayVeglenke(objekt);
+        }
+      });
+    }
+  }
+};
+
 let fetchObjektTypeData = function (_state) {
   // Hvis objektType allerede er lastet, trenger vi ikke hente den igjen
   if (_state.objektTypeId && _state.objektType && _state.objektType.id === _state.objektTypeId) {
@@ -490,42 +526,6 @@ let updateEditedLocation = function (_state) {
         break;
       default:
 
-    }
-  }
-};
-
-let setVeglenkeInMap = function (_state) {
-  let objekt = _state.objektEdited || _state.objekt;
-  if (objekt && objekt.lokasjon && objekt.lokasjon.geometriWgs84 && !objekt.lokasjon.geometriVeglenkeLatlng) {
-    let positionObject = omnivore.wkt.parse(objekt.lokasjon.geometriWgs84);
-    let positionLatLng = positionObject._layers[Object.keys(positionObject._layers)[0]]._latlng;
-
-    if (positionLatLng) {
-      Fetch.fetchKoordinat(positionLatLng.lng, positionLatLng.lat, (koorData) => {
-        if (koorData.sokePunktSrid === 'LAT_LON_WGS84') {
-          let positionVeglenkeObject = omnivore.wkt.parse(koorData.punktPaVegReferanseLinjeWGS84);
-          let positionVeglenkeLatLng = positionVeglenkeObject._layers[Object.keys(positionVeglenkeObject._layers)[0]]._latlng;
-
-          // Set geometri veglenke on both objekt and objektedited
-          if (_state.objekt && _state.objekt.lokasjon) {
-            if (!_state.objekt.lokasjon.geometriVeglenkeLatlng) {
-              _state.objekt.lokasjon.geometriVeglenkeLatlng = null;
-            }
-
-            _state.objekt.lokasjon.geometriVeglenkeLatlng = positionVeglenkeLatLng;
-          }
-
-          if (_state.objektEdited && _state.objektEdited.lokasjon) {
-            if (!_state.objektEdited.lokasjon.geometriVeglenkeLatlng) {
-              _state.objektEdited.lokasjon.geometriVeglenkeLatlng = null;
-            }
-
-            _state.objektEdited.lokasjon.geometriVeglenkeLatlng = positionVeglenkeLatLng;
-          }
-
-          MapFunctions.displayVeglenke(objekt);
-        }
-      });
     }
   }
 };

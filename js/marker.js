@@ -2,6 +2,7 @@ let omnivore = require('leaflet-omnivore');
 let RegDemActions = require('./actions');
 
 let L = window.L || {};
+let MapFunctions = window.MapFunctions || {};
 
 let veglenkeMarker = null;
 let editLayer = new L.FeatureGroup();
@@ -50,6 +51,16 @@ let focusMarker = function ( id ) {
           setGeomOpacity(markerList[i].obj.getLayers()[0], 1, markerList[i].type);
         }
     }
+  }
+};
+
+let displayVeglenke = function (activeObjekt, mapData) {
+  if (mapData && veglenkeMarker) {
+    mapData.removeLayer(veglenkeMarker);
+  }
+
+  if (activeObjekt && activeObjekt.lokasjon && activeObjekt.lokasjon.geometriVeglenkeLatlng) {
+    veglenkeMarker = L.circleMarker(activeObjekt.lokasjon.geometriVeglenkeLatlng, {radius: 3}).addTo(mapData);
   }
 };
 
@@ -172,16 +183,6 @@ let removeGeom = function (kart, state) {
 
 let returnCurrentEditGeom = function () {
   return currentEditGeom;
-};
-
-let displayVeglenke = function (activeObjekt, mapData) {
-  if (mapData && veglenkeMarker) {
-    mapData.removeLayer(veglenkeMarker);
-  }
-
-  if (activeObjekt && activeObjekt.lokasjon && activeObjekt.lokasjon.geometriVeglenkeLatlng) {
-    veglenkeMarker = L.circleMarker(activeObjekt.lokasjon.geometriVeglenkeLatlng, {radius: 3}).addTo(mapData);
-  }
 };
 
 module.exports = {
