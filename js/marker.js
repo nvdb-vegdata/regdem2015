@@ -2,7 +2,6 @@ let omnivore = require('leaflet-omnivore');
 let RegDemActions = require('./actions');
 
 let L = window.L || {};
-let MapFunctions = window.MapFunctions || {};
 
 let veglenkeMarker = null;
 let editLayer = new L.FeatureGroup();
@@ -27,13 +26,18 @@ let redIcon = L.icon({
 
 // Fjerner alle markører på kartet.
 let clearMarkers = function () {
-  let mapData = MapFunctions.mapData();
+  let MapFunctions = window.MapFunctions || null;
+
+  if (MapFunctions) {
+    let mapData = MapFunctions.mapData();
+
+    if (mapData && veglenkeMarker) {
+      mapData.removeLayer(veglenkeMarker);
+    }
+  }
 
   markerList = {};
   markers.clearLayers();
-  if (mapData && veglenkeMarker) {
-    mapData.removeLayer(veglenkeMarker);
-  }
 };
 
 let clearEditGeom = function () {
