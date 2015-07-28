@@ -76,15 +76,14 @@ let Fields = {
     getInitialState: function() {
       return {
         textValue: this.props.verdi,
-        textValueErrorText: this.props.warning,
-        currentlyValidated: false
+        textValueErrorText: this.props.warning
       };
     },
 
     handleChange: function (e) {
       this.setState({
         textValue: e.target.value,
-        textValueError: ''
+        textValueErrorText: ''
       });
       RegDemActions.updateFieldValue(this.props.data.listPosition, this.props.egenskaper.id, e.target.value, 'Tekst');
     },
