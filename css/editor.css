@@ -98,8 +98,7 @@
   margin-right: 0 !important;
 }
 .Editor-knapp-container {
-  margin-top: 5px;
-  text-align: right;
+  float:right;
 }
 .Editor-viktighetContainer {
   display: inline-block;
@@ -216,4 +215,12 @@
 .Editor-enum .Editor-selectField.Editor-feilmelding ~ div {
   position:relative !important;
   margin-top: 22px !important;
+}
+
+.Editor-ErrorInfo {
+  font-size: 13px;
+  float:left;
+  width:300px;
+  color:red;
+  margin:8px;
 }
