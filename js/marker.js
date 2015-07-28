@@ -113,10 +113,10 @@ let unfocusMarker = function () {
   }
 };
 
-let centerAroundMarker = function (id) {
+let centerAroundMarker = function (kart, id) {
   for (var i in markerList) {
       if (parseInt(id) === parseInt(i)) {
-        MapFunctions.mapData().panTo(markerList[i].obj.getLayers()[0]._latlng);
+        kart.panTo(markerList[i].obj.getLayers()[0]._latlng);
         break;
       }
   }
@@ -143,7 +143,7 @@ let addGeom = function (kart, type, state) {
     kart.options.scrollWheelZoom = 'center';
     kart.options.doubleClickZoom = 'center';
 
-    centerAroundMarker(state.geometry.current);
+    centerAroundMarker(kart, state.geometry.current);
     currentEditGeom = L.marker(kart.getCenter(), {icon: redIcon}).addTo(kart);
     update(kart, state);
   } else if (type === 'strekning') {
