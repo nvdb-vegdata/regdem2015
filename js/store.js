@@ -1,6 +1,9 @@
 let AppDispatcher = require('./dispatcher');
 let EventEmitter = require('events').EventEmitter;
 let assign = require('object-assign');
+let moment = require('moment');
+
+moment.locale('nb');
 
 let RegDemConstants = require('./constants');
 let omnivore = require('leaflet-omnivore');
@@ -99,6 +102,7 @@ let createNewState = function () {
 
 let deleteState = function (index) {
   _states.list[index] = null;
+  RegDemStore.emitChange();
 };
 
 let getAllStates = function () {
@@ -734,10 +738,13 @@ let updateValidatorResponse = function (_state, response) {
   _state.version = _state.version + 1;
   _state.validatorResponse = response;
   _state.editor.currentlyValidated = true;
+  _state.progressStatus = [];
+  _state.scrollToTop = false;
   var evalResponse = evaluateResponse(response);
   if (evalResponse === 'ok' || (evalResponse === 'advarsel' && _state.warned ) ) {
     updateWriteStatus(_state, 'processing');
     _state.warned = false;
+    _state.validatorResponse = null;
     Writer.registerObjekt(_state);
   } else if (evalResponse === 'advarsel') {
     updateWriteStatus(_state, 'warned');
@@ -761,34 +768,44 @@ let setPrevSelectedIndex = function (_state, selectedIndex) {
 };
 
 let minimizeEditor = function (_state) {
-  let objektTypeId = simpleDeepCopy(_state.objektTypeId);
-  let searchResults = simpleDeepCopy(_state.searchResults);
-  let searchResultsFull = simpleDeepCopy(_state.searchResultsFull);
-  let search = simpleDeepCopy(_state.search);
-  let map = simpleDeepCopy(_state.map);
+  // See if we can find an available state to set as active
+  if (getAvailableStates().length > 0) {
+    let positionToAvailableState = getAvailableStates().pop().listPosition;
+    setActiveState(positionToAvailableState);
+  // Or worst case, create a new state
+  } else {
+    let objektTypeId = simpleDeepCopy(_state.objektTypeId);
+    let searchResults = simpleDeepCopy(_state.searchResults);
+    let searchResultsFull = simpleDeepCopy(_state.searchResultsFull);
+    let search = simpleDeepCopy(_state.search);
+    let map = simpleDeepCopy(_state.map);
 
-  // Create a new state
-  let newStatePosition = createNewState();
+    // Create a new state
+    let newStatePosition = createNewState();
 
-  // Put in state attributes from previous state
-  let _newState = getStateAtIndex(newStatePosition);
-  _newState.objektTypeId = objektTypeId;
-  _newState.searchResults = searchResults;
-  _newState.searchResultsFull = searchResultsFull;
-  _newState.search = search;
-  _newState.map = map;
+    // Put in state attributes from previous state
+    let _newState = getStateAtIndex(newStatePosition);
+    _newState.objektTypeId = objektTypeId;
+    _newState.searchResults = searchResults;
+    _newState.searchResultsFull = searchResultsFull;
+    _newState.search = search;
+    _newState.map = map;
 
-  // Set new active state
-  setActiveState(newStatePosition);
+    // Set new active state
+    setActiveState(newStatePosition);
+  }
 };
 
 let terminateStateAndReset = function (_state) {
   let wasTerminatedStateActive = _state.active;
-
-  deleteState(_state.listPosition);
+  let pos = _state.listPosition;
 
   // If the state we just terminated wasn't active and we have an active state, keep moving
   if (!wasTerminatedStateActive && getActiveState()) {
+    setTimeout(function () {
+      deleteState(pos);
+    }, 1000);
+
     return;
   }
 
@@ -806,6 +823,10 @@ let terminateStateAndReset = function (_state) {
     let newState = createNewState();
     setActiveState(newState);
   }
+
+  setTimeout(function () {
+    deleteState(pos);
+  }, 1000);
 };
 
 let updateWriteStatus = function (_state, status) {
@@ -823,7 +844,7 @@ let updateWriteStatus = function (_state, status) {
 };
 
 let updateProgressStatus = function (_state, status) {
-  _state.progressStatus.push(status);
+  _state.progressStatus.push([status, moment().format('h:mm:ss')]);
 };
 
 /*
@@ -1041,6 +1062,12 @@ AppDispatcher.register(function(action) {
       listPosition = action.listPosition;
       _state = getStateAtIndex(listPosition);
       hasScrolledToTop(_state);
+      break;
+
+    case RegDemConstants.actions.REGDEM_MINIMIZE_EDITOR:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      minimizeEditor(_state);
       break;
 
     default:
