@@ -234,8 +234,9 @@ let Editor = React.createClass({
       label={saveLabel}
       primary={true}
       onTouchTap={this.saveObjekt}
-      disabled={!this.props.data.objektEdited}
+      disabled={(!this.props.data.objektEdited || saveLabel === 'Validerer')}
     />);
+
     var infoText;
     if(this.props.data.writeStatus === 'error') {
       infoText = 'Det finnes feil i utfylt skjema. Rett opp i de merkede feltene.';
