@@ -768,25 +768,32 @@ let setPrevSelectedIndex = function (_state, selectedIndex) {
 };
 
 let minimizeEditor = function (_state) {
-  let objektTypeId = simpleDeepCopy(_state.objektTypeId);
-  let searchResults = simpleDeepCopy(_state.searchResults);
-  let searchResultsFull = simpleDeepCopy(_state.searchResultsFull);
-  let search = simpleDeepCopy(_state.search);
-  let map = simpleDeepCopy(_state.map);
+  // See if we can find an available state to set as active
+  if (getAvailableStates().length > 0) {
+    let positionToAvailableState = getAvailableStates().pop().listPosition;
+    setActiveState(positionToAvailableState);
+  // Or worst case, create a new state
+  } else {
+    let objektTypeId = simpleDeepCopy(_state.objektTypeId);
+    let searchResults = simpleDeepCopy(_state.searchResults);
+    let searchResultsFull = simpleDeepCopy(_state.searchResultsFull);
+    let search = simpleDeepCopy(_state.search);
+    let map = simpleDeepCopy(_state.map);
 
-  // Create a new state
-  let newStatePosition = createNewState();
+    // Create a new state
+    let newStatePosition = createNewState();
 
-  // Put in state attributes from previous state
-  let _newState = getStateAtIndex(newStatePosition);
-  _newState.objektTypeId = objektTypeId;
-  _newState.searchResults = searchResults;
-  _newState.searchResultsFull = searchResultsFull;
-  _newState.search = search;
-  _newState.map = map;
+    // Put in state attributes from previous state
+    let _newState = getStateAtIndex(newStatePosition);
+    _newState.objektTypeId = objektTypeId;
+    _newState.searchResults = searchResults;
+    _newState.searchResultsFull = searchResultsFull;
+    _newState.search = search;
+    _newState.map = map;
 
-  // Set new active state
-  setActiveState(newStatePosition);
+    // Set new active state
+    setActiveState(newStatePosition);
+  }
 };
 
 let terminateStateAndReset = function (_state) {
