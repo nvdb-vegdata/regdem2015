@@ -804,7 +804,7 @@ let terminateStateAndReset = function (_state) {
   if (!wasTerminatedStateActive && getActiveState()) {
     setTimeout(function () {
       deleteState(pos);
-    }, 1000);
+    }, 2000);
 
     return;
   }
@@ -826,7 +826,7 @@ let terminateStateAndReset = function (_state) {
 
   setTimeout(function () {
     deleteState(pos);
-  }, 1000);
+  }, 2000);
 };
 
 let updateWriteStatus = function (_state, status) {
