@@ -10,10 +10,8 @@ __Innhold__
 
 1. [Systemkrav](#systemkrav)
 2. [Installasjon av regdem2015](#installasjon-av-regdem2015)
-  1. [Alternativ kjøring](#alternativ-kjøring)
 3. [Installasjon av regdem2015-server (backend)](#installasjon-av-regdem2015-server-backend)
 4. [Testing](#testing)
-  1. [Robohydra](#robohydra)
 
 ## Systemkrav
 
