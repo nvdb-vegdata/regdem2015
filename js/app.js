@@ -57,9 +57,11 @@ let RegDemApp = React.createClass({
       <div>
         <div>
         {
-          this.state.all.map((obj) => {
-            let inactiveNumber = obj.listPosition + (this.state.active.listPosition <= obj.listPosition ? -1 : 0);
-            return (<Editor data={obj} numberOfInactive={numberOfInactive} inactiveNumber={inactiveNumber} key={'listNo-' + obj.listPosition} />);
+          this.state.all.map((obj, index) => {
+            let inactiveNumber = index + ((this.state.active && this.state.active.listPosition < obj.listPosition) ? -1 : 0);
+            if (obj) {
+              return (<Editor data={obj} numberOfInactive={numberOfInactive} inactiveNumber={inactiveNumber} key={'listNo-' + obj.listPosition} />);
+            }
           })
         }
         </div>
