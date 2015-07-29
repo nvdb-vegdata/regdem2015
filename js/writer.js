@@ -114,8 +114,14 @@ let checkProgress = function (_state, url) {
     if (response === 'UTFØRT') {
       RegDemActions.updateWriteStatus(_state.listPosition, 'done');
     } else if (response === 'AVVIST') {
-      RegDemActions.updateWriteStatus(_state.listPosition, 'error');
+      let statusUrl = url.substring(0, url.lastIndexOf('/')) + '/status';
+
+      Fetch.sendQuery('GET', statusUrl, {}, (returnData) => {
+        RegDemActions.updateValidatorResponse(_state.listPosition, returnData);
+        RegDemActions.updateWriteStatus(_state.listPosition, 'error');
+      });
     } else if (response === 'KANSELLERT') {
+      // Har ikke implementert en kanseler knapp
       RegDemActions.updateWriteStatus(_state.listPosition, 'error');
     } else {
       checkProgress(_state, url);
