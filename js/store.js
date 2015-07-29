@@ -737,10 +737,13 @@ let updateValidatorResponse = function (_state, response) {
   _state.version = _state.version + 1;
   _state.validatorResponse = response;
   _state.editor.currentlyValidated = true;
+  _state.progressStatus = [];
+  _state.scrollToTop = false;
   var evalResponse = evaluateResponse(response);
   if (evalResponse === 'ok' || (evalResponse === 'advarsel' && _state.warned ) ) {
     updateWriteStatus(_state, 'processing');
     _state.warned = false;
+    _state.validatorResponse = null;
     Writer.registerObjekt(_state);
   } else if (evalResponse === 'advarsel') {
     updateWriteStatus(_state, 'warned');
