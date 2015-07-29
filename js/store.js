@@ -1043,6 +1043,12 @@ AppDispatcher.register(function(action) {
       hasScrolledToTop(_state);
       break;
 
+    case RegDemConstants.actions.REGDEM_MINIMIZE_EDITOR:
+      listPosition = action.listPosition;
+      _state = getStateAtIndex(listPosition);
+      minimizeEditor(_state);
+      break;
+
     default:
       // no op
   }

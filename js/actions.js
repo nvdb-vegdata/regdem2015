@@ -188,6 +188,12 @@ var RegDemActions = {
       actionType: RegDemConstants.actions.REGDEM_HAS_SCROLLED_TO_TOP,
       listPosition: listPosition
     });
+  },
+  minimizeEditor: function (listPosition) {
+    AppDispatcher.dispatch({
+      actionType: RegDemConstants.actions.REGDEM_MINIMIZE_EDITOR,
+      listPosition: listPosition
+    });
   }
 };
 
