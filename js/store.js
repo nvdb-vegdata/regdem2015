@@ -102,6 +102,7 @@ let createNewState = function () {
 
 let deleteState = function (index) {
   _states.list[index] = null;
+  RegDemStore.emitChange();
 };
 
 let getAllStates = function () {
@@ -790,11 +791,14 @@ let minimizeEditor = function (_state) {
 
 let terminateStateAndReset = function (_state) {
   let wasTerminatedStateActive = _state.active;
-
-  deleteState(_state.listPosition);
+  let pos = _state.listPosition;
 
   // If the state we just terminated wasn't active and we have an active state, keep moving
   if (!wasTerminatedStateActive && getActiveState()) {
+    setTimeout(function () {
+      deleteState(pos);
+    }, 1000);
+
     return;
   }
 
@@ -812,6 +816,10 @@ let terminateStateAndReset = function (_state) {
     let newState = createNewState();
     setActiveState(newState);
   }
+
+  setTimeout(function () {
+    deleteState(pos);
+  }, 1000);
 };
 
 let updateWriteStatus = function (_state, status) {
