@@ -20,13 +20,14 @@ injectTapEventPlugin();
 let Editor = React.createClass({
 
   componentDidUpdate: function () {
-    if (this.props.data.scrollToTop) {
-      var node = document.querySelector('.Editor-CardText');
-      if (node) {
-        node.scrollTop = 0;
-        RegDemActions.hasScrolledToTop(this.props.data.listPosition);
-      }
-    }
+    // TODO Bug: Cannot dispatch in the middle of a dispatch. Trigges av updateValidatorResponse
+    // if (this.props.data.scrollToTop) {
+    //   var node = document.querySelector('.Editor-CardText');
+    //   if (node) {
+    //     node.scrollTop = 0;
+    //     RegDemActions.hasScrolledToTop(this.props.data.listPosition);
+    //   }
+    // }
   },
 
   closeDialog: function () {
