@@ -8,7 +8,7 @@ let Parser = require('./parser.js');
 let GeometryFields = require('./geometryFields.jsx');
 let Fields = require('./fields.jsx');
 
-let { Card, CardActions, FlatButton, CardTitle, CardText, CircularProgress, TextField } = require('material-ui');
+let { Card, CardActions, FlatButton, CardTitle, CardText, CircularProgress, TextField, List, ListItem } = require('material-ui');
 
 //Needed for onTouchTap
 //Can go away when react 1.0 release
@@ -32,6 +32,11 @@ let Editor = React.createClass({
 
   closeDialog: function () {
     RegDemActions.closeEditor(this.props.data.listPosition);
+  },
+
+  minimizeEditor: function (e) {
+    e.stopPropagation();
+    RegDemActions.minimizeEditor(this.props.data.listPosition);
   },
 
   saveObjekt: function () {
@@ -104,6 +109,9 @@ let Editor = React.createClass({
     let CardTextClassName = 'Editor-hidden';
     let CardActionsClassName = 'Editor-knapp-container Editor-hidden';
     let MinimizedStatusClassName = 'Editor-hidden';
+    let LoggClassName = 'Editor-hidden';
+    let EditorMinimizeClassName = 'Editor-hidden';
+    let displayWritingLoader = 'Editor-hidden';
 
     // Hvis state er loading
     if (this.props.data.editor.loading) {
@@ -117,7 +125,7 @@ let Editor = React.createClass({
     }
 
     // Når objektet er hentet og ikke laster lenger
-    if ((objekt || objektId === -1)  && !this.props.data.editor.loading && !this.props.data.geometry.addingMarker && this.props.data.active) {
+    if ((objekt || objektId === -1)  && !this.props.data.editor.loading && !this.props.data.geometry.addingMarker && this.props.data.active && this.props.data.writeStatus !== 'processing') {
       EditorClassName = 'Editor';
       if (this.props.numberOfInactive > 0) {
         EditorClassName += ' Editor-other-inactive';
@@ -220,6 +228,27 @@ let Editor = React.createClass({
       }
     }
 
+    if (this.props.data.active && this.props.data.writeStatus === 'processing') {
+      EditorClassName = 'Editor';
+      if (this.props.numberOfInactive > 0) {
+        EditorClassName += ' Editor-other-inactive';
+      }
+      EditorCloseClassName = 'Editor-lukk';
+      EditorCardClassName = 'Editor-Card Editor-Card-loaded';
+      CircularProgressClassName = 'Editor-loader Editor-hidden';
+      CardTitleClassName = 'Editor-CardTitle';
+      LoggClassName = 'Editor-logg';
+      EditorMinimizeClassName = 'Editor-lukk';
+      EditorCloseClassName = 'Editor-hidden';
+
+      if (objektId && objektId !== -1) {
+        formName = 'Logg for objekt: ' + objektId;
+      } else if (objektId === -1) {
+        formName = 'Logg for nytt objekt';
+      }
+
+    }
+
     if (!this.props.data.active) {
       EditorClassName = 'Editor Editor-inactive Editor-inactive-pos-' + this.props.inactiveNumber;
       EditorCloseClassName = 'Editor-lukk Editor-hidden';
@@ -227,6 +256,22 @@ let Editor = React.createClass({
       CircularProgressClassName = 'Editor-loader Editor-hidden';
       CardTitleClassName = 'Editor-CardTitle Editor-hidden';
       MinimizedStatusClassName = 'Editor-minimized-status';
+
+      // processing
+      switch (this.props.data.writeStatus) {
+        case 'processing':
+          EditorCardClassName += ' Editor-minimized-processing';
+          displayWritingLoader = 'Editor-writing-loader';
+          break;
+        case 'done':
+          EditorCardClassName += ' Editor-minimized-done';
+          break;
+        case 'error':
+          EditorCardClassName += ' Editor-minimized-error';
+          break;
+        default:
+
+      }
     }
 
     var saveLabel = (this.props.data.writeStatus === 'validating') ? 'Validerer' : 'Lagre';
@@ -252,6 +297,8 @@ let Editor = React.createClass({
       InfoField = null;
     }
 
+    let previousLog = null;
+
     let Vegreferanse = (
       <div className="Editor-tekst">
         <TextField
@@ -267,12 +314,27 @@ let Editor = React.createClass({
       <div className={EditorClassName}>
         <Card className={EditorCardClassName} onTouchTap={this.tapEditor}>
             <CardActions className={EditorCloseClassName}><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
+            <CardActions className={EditorMinimizeClassName}><i className="material-icons" onTouchTap={this.minimizeEditor}>remove</i></CardActions>
             <CardTitle title={formName} className={CardTitleClassName} />
+
             <CircularProgress mode="indeterminate" className={CircularProgressClassName} />
 
-            <CardText className={MinimizedStatusClassName}>
-              {this.props.data.objektId + '-' + (this.props.data.progressStatus.length > 0 ? this.props.data.progressStatus[this.props.data.progressStatus.length - 1] : '')}
+            <CardText className={LoggClassName}>
+              <List className="Editor-logg-list" >
+              { this.props.data.progressStatus.map((log) => {
+                if (previousLog && previousLog[0] === log[0] && previousLog[1] === log[1]) {
+                  previousLog = log;
+                  return;
+                }
+                previousLog = log;
+                return (<ListItem primaryText={log[0]} secondaryText={log[1]} disabled={true} />);
+              })}
+                <ListItem primaryText={[<CircularProgress mode="indeterminate" size={0.5} />]} disabled={true} />
+              </List>
             </CardText>
+            <div className={MinimizedStatusClassName}>
+              <CircularProgress mode="indeterminate" size={0.3} className={displayWritingLoader} />
+            </div>
             <CardText className={CardTextClassName}>
               {Vegreferanse}
               {GeomFields}

@@ -826,7 +826,7 @@ let updateWriteStatus = function (_state, status) {
 };
 
 let updateProgressStatus = function (_state, status) {
-  _state.progressStatus.push(status);
+  _state.progressStatus.push([status, moment().format('h:mm:ss')]);
 };
 
 /*
