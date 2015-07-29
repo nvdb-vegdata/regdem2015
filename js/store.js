@@ -1,6 +1,9 @@
 let AppDispatcher = require('./dispatcher');
 let EventEmitter = require('events').EventEmitter;
 let assign = require('object-assign');
+let moment = require('moment');
+
+moment.locale('nb');
 
 let RegDemConstants = require('./constants');
 let omnivore = require('leaflet-omnivore');
