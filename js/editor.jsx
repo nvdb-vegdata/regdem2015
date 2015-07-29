@@ -267,12 +267,12 @@ let Editor = React.createClass({
       <div className={EditorClassName}>
         <Card className={EditorCardClassName} onTouchTap={this.tapEditor}>
             <CardActions className={EditorCloseClassName}><i className="material-icons" onTouchTap={this.closeDialog}>clear</i></CardActions>
+            <CardTitle title={formName} className={CardTitleClassName} />
             <CircularProgress mode="indeterminate" className={CircularProgressClassName} />
 
             <CardText className={MinimizedStatusClassName}>
               {this.props.data.objektId + '-' + (this.props.data.progressStatus.length > 0 ? this.props.data.progressStatus[this.props.data.progressStatus.length - 1] : '')}
             </CardText>
-            <CardTitle title={formName} className={CardTitleClassName} />
             <CardText className={CardTextClassName}>
               {Vegreferanse}
               {GeomFields}
