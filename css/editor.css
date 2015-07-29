@@ -106,6 +106,10 @@
 .Editor-CardTitle {
   flex-shrink: 0;
 }
+.Editor-CardTitle span {
+  font-weight: 200 !important;
+  font-size: 20px !important;
+}
 .Editor-CardText {
   flex-grow: 1;
   overflow: auto;
@@ -272,6 +276,10 @@
 .Editor-feilmelding > div:last-of-type {
   position: relative !important;
   bottom: 2px !important;
+}
+.Editor-selectField.Editor-feilmelding > div:last-of-type {
+  position: absolute !important;
+  bottom: auto !important;
 }
 .Editor-enum .Editor-selectField.Editor-feilmelding ~ div {
   position:relative !important;
