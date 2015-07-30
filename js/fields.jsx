@@ -125,8 +125,8 @@ let Fields = {
       };
     },
 
-    handleChange: function (event) {
-      let newValue = event.target.value;
+    handleChange: function (e) {
+      let newValue = e.target.value;
 
       if (Helper.isNumber(newValue) || newValue === '') {
         this.setState({
@@ -208,7 +208,7 @@ let Fields = {
       }
     },
 
-    handleChange: function (error, time) {
+    handleChange: function (e, time) {
       let nyTid = new Date(time);
       let timeValue = Helper.twoDigits(nyTid.getHours()) + ':' + Helper.twoDigits(nyTid.getMinutes());
       this.setState({
@@ -218,7 +218,8 @@ let Fields = {
       RegDemActions.updateFieldValue(this.props.data.listPosition, this.props.egenskaper.id, timeValue, 'Tid');
     },
 
-    handleClear: function () {
+    handleClear: function (e) {
+      e.stopPropagation();
       this.refs.tidvelger.refs.input.clearValue();
       this.setState({
         klokkeVerdi: '',
@@ -288,7 +289,7 @@ let Fields = {
       };
     },
 
-    handleChange: function (error, dato) {
+    handleChange: function (e, dato) {
       let nyDato = new Date(dato);
       let dateValue = Helper.twoDigits(nyDato.getFullYear()) + '-' + Helper.twoDigits(nyDato.getMonth() + 1) + '-' + Helper.twoDigits(nyDato.getDate());
       this.setState({
@@ -298,7 +299,8 @@ let Fields = {
       RegDemActions.updateFieldValue(this.props.data.listPosition, this.props.egenskaper.id, dateValue, 'Dato');
     },
 
-    handleClear: function () {
+    handleClear: function (e) {
+      e.stopPropagation();
       this.refs.datovelger.refs.input.clearValue();
       this.setState({
         datoVerdi: '',

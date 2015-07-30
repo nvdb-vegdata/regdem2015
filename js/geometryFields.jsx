@@ -59,7 +59,8 @@ let Geom = React.createClass({
 
 let Marker = React.createClass({
 
-  handleClick: function () {
+  handleClick: function (e) {
+    e.stopPropagation();
     RegDemActions.addGeomStart(this.props.data.listPosition, this.props.objektId, 'marker');
   },
 
@@ -83,7 +84,8 @@ let Marker = React.createClass({
 
 let Strekning = React.createClass({
 
-  handleClick: function () {
+  handleClick: function (e) {
+    e.stopPropagation();
     RegDemActions.addGeomStart(this.props.data.listPosition, this.props.objektId, 'strekning');
   },
 
@@ -107,7 +109,8 @@ let Strekning = React.createClass({
 
 let Flate = React.createClass({
 
-  handleClick: function () {
+  handleClick: function (e) {
+    e.stopPropagation();
     RegDemActions.addGeomStart(this.props.data.listPosition, this.props.objektId, 'flate');
   },
 

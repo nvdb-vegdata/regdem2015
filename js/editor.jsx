@@ -31,7 +31,8 @@ let Editor = React.createClass({
     // }
   },
 
-  closeDialog: function () {
+  closeDialog: function (e) {
+    e.stopPropagation();
     RegDemActions.closeEditor(this.props.data.listPosition);
   },
 
@@ -40,11 +41,13 @@ let Editor = React.createClass({
     RegDemActions.minimizeEditor(this.props.data.listPosition);
   },
 
-  saveObjekt: function () {
+  saveObjekt: function (e) {
+    e.stopPropagation();
     Writer.validateObjekt(this.props.data);
   },
 
-  tapEditor: function () {
+  tapEditor: function (e) {
+    e.stopPropagation();
     if (!this.props.data.active) {
       RegDemActions.makeThisStateActive(this.props.data.listPosition);
     } else if (!this.props.data.editor.expanded) {

@@ -92,6 +92,7 @@ let Sok = React.createClass({
   },
 
   handleInputClick: function(event) {
+    event.stopPropagation();
     if (this.props.data.objektTypeId) {
       this.refs.typeahead.getDOMNode().querySelector('input[role="combobox"]').removeAttribute('disabled');
       RegDemActions.goBackAndReset(this.props.data.listPosition, this.refs.typeahead.userInputValue);
@@ -115,6 +116,7 @@ let Sok = React.createClass({
   },
 
   handleOptionClick: function(event, option) {
+    event.stopPropagation();
     this.setInputValue(option.label);
     this.executeSearch(option.value);
   },
