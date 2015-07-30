@@ -79,6 +79,9 @@
 .Editor-Card-loaded {
   max-height: 100%;
 }
+.Editor-CardText {
+  -webkit-overflow-scrolling: touch;
+}
 .Editor-loader {
   margin: 50px auto !important;
   display: inherit;
