@@ -10,11 +10,13 @@ var injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
 let EditGeometry = React.createClass({
-  handleCancel: function () {
+  handleCancel: function (e) {
+    e.stopPropagation();
     RegDemActions.addGeomAbort(this.props.data.listPosition);
   },
 
-  handleSave: function () {
+  handleSave: function (e) {
+    e.stopPropagation();
     RegDemActions.addGeomEnd(this.props.data.listPosition);
   },
 

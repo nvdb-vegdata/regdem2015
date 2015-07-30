@@ -84,6 +84,7 @@ module.exports.fetchObjektTypes = function(input, callback) {
 
   var filterCallback = (responseData) => {
     var listObjects = convert(responseData.vegObjektTyper).filter(containsInput).sort(comparator);
+    listObjects = listObjects.slice(0, 13);
     callback(listObjects);
   };
 

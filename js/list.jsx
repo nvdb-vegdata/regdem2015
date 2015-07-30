@@ -18,11 +18,13 @@ injectTapEventPlugin();
 
 let ListComponent = React.createClass({
 
-  closeList: function () {
+  closeList: function (e) {
+    e.stopPropagation();
     RegDemActions.closeList(this.props.data.listPosition);
   },
 
   handleEgenskapChange: function (e, value) {
+    e.stopPropagation();
     RegDemActions.selectExtraEgenskap(this.props.data.listPosition, value);
   },
 
@@ -115,7 +117,8 @@ let ListElement = React.createClass({
     RegDemActions.highlightMarker(this.props.data.listPosition, null);
   },
 
-  handleClick: function () {
+  handleClick: function (e) {
+    e.stopPropagation();
     let id = this.props.objekt.objektId;
 
     RegDemActions.closeList(this.props.data.listPosition);

@@ -60,7 +60,7 @@
 }
 .Editor-Card {
   overflow: auto !important;
-  min-height: 100px;
+  min-height: 80px;
   max-height: 200px;
   text-align: left;
   padding: 5px;
@@ -78,6 +78,9 @@
 }
 .Editor-Card-loaded {
   max-height: 100%;
+}
+.Editor-CardText {
+  -webkit-overflow-scrolling: touch;
 }
 .Editor-loader {
   margin: 50px auto !important;
