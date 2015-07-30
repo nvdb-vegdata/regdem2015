@@ -8,7 +8,6 @@ let Parser = require('./parser.js');
 let GeometryFields = require('./geometryFields.jsx');
 let Fields = require('./fields.jsx');
 
-var preventOverscroll = require('prevent-overscroll');
 
 let { Card, CardActions, FlatButton, CardTitle, CardText, CircularProgress, TextField, List, ListItem } = require('material-ui');
 
@@ -22,14 +21,6 @@ injectTapEventPlugin();
 let Editor = React.createClass({
 
   componentDidUpdate: function () {
-    var node = document.querySelector('.Editor-CardText');
-
-    if (node) {
-      var cleanup = preventOverscroll(node);
-    }
-
-    console.log(cleanup);
-
     // TODO Bug: Cannot dispatch in the middle of a dispatch. Trigges av updateValidatorResponse
     // if (this.props.data.scrollToTop) {
     //   var node = document.querySelector('.Editor-CardText');
